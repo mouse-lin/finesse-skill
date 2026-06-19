@@ -168,6 +168,43 @@ addEventListener('pointermove', e => {
 
 ---
 
+## Brand Technique: Inline Typography Images
+
+A high-soul brand move: embed a small image or short video clip directly inside a headline as a visual punctuation mark. Removes the need for a separate image row; the image becomes part of the typographic rhythm.
+
+```html
+<h1 class="inline-headline">
+  Where
+  <span class="inline-img" aria-hidden="true">
+    <img src="your-image.jpg" alt="" />
+  </span>
+  craft meets code
+</h1>
+```
+
+```css
+.inline-img {
+  display: inline-block;
+  vertical-align: middle;
+  width: clamp(60px, 8vw, 140px);
+  height: .85em;               /* match the cap height, not the line-height */
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+  top: -.05em;                 /* optical lift to align with cap line */
+}
+.inline-img img { width: 100%; height: 100%; object-fit: cover; }
+```
+
+**Rules:**
+- Gate on `SOUL ≥ 8` — it's a strong personality statement; wrong at lower soul values.
+- Image must be a narrow portrait crop or square — wide landscape crops break the text rhythm.
+- Font must be at display size (`clamp(56px, 9vw, 140px)+`); the technique collapses at body sizes.
+- Best for: agency heroes, portfolio headlines, editorial product announcements, fashion/culture pages.
+- Provide `@media (prefers-reduced-motion: reduce)` — freeze any video variant to a still frame.
+
+---
+
 ## Framework Integration Checklist
 
 When embedding a hero engine inside a component framework, follow these rules to prevent memory leaks, stale animations, and broken reduced-motion gates.

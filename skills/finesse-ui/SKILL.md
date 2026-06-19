@@ -30,6 +30,17 @@ license: MIT
 
 The `references/*.md` files are the deep material. Load the one you need for the current phase — do not inline all of them.
 
+| Reference | When to load |
+|-----------|-------------|
+| `design-dna.md` | Laying the premium substrate (grain, vignette, type, color tokens) |
+| `hero-engines.md` | Building the hero engine (brand register) |
+| `style-personas.md` | Picking a soul (brand register) |
+| `anti-cheap.md` | Before any delivery — cheapness scan |
+| `product-ui.md` | Dashboard / admin / data app (product register) |
+| `preflight.md` | Final checklist before saying "done" |
+| `design-model.md` | Multi-page projects — token consistency |
+| `redesign-mode.md` | Upgrading an existing page — audit-first protocol |
+
 ---
 
 ## 0. BRAND READ (Before Anything Else)

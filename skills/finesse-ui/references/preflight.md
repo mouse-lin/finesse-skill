@@ -77,7 +77,20 @@ If "removal" or "context" fails, the spectacle is decoration, not finesse. Cut o
 
 ---
 
-## I. Self-Grading Loop (run last, before saying "done")
+## I. Strategic Omissions (soft — but separate a prototype from a real deliverable)
+
+These don't affect visual output but are what get noticed after launch:
+
+- [ ] **Custom 404 page** — a framework default is not acceptable for a brand page.
+- [ ] **Legal links** (Privacy Policy, Terms of Service) in the footer — required for any real launch.
+- [ ] **Skip-to-content link** (`<a href="#main" class="sr-only focus:not-sr-only">`) for keyboard users — satisfies WCAG 2.4.1.
+- [ ] **"Back" navigation** — every page is reachable from at least one other page. No dead ends in user flows.
+- [ ] **No placeholder data left** ("Jane Doe", lorem ipsum, `email@example.com`) in shipped output.
+- [ ] **Form validation wired** — client-side on blur, errors state cause + fix ("Password needs 8+ chars", not "Invalid").
+
+---
+
+## J. Self-Grading Loop (run last, before saying "done")
 
 Generate 5 sharp questions about your specific output, then answer each with concrete evidence from the code/copy you wrote — not a generic "yes." If any answer reveals a failure, fix it before shipping.
 

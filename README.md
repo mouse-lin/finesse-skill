@@ -86,11 +86,12 @@ finesse-skill/
 │       ├── SKILL.md                      # 主入口：方法论 + 流程
 │       ├── references/
 │       │   ├── design-dna.md             # 高级感物理层（配色/字体/grain/vignette）
-│       │   ├── hero-engines.md           # 五类视觉引擎骨架 + reduced-motion
+│       │   ├── hero-engines.md           # 五类视觉引擎骨架 + reduced-motion + inline-image 技法
 │       │   ├── style-personas.md         # 行业→灵魂 决策矩阵
 │       │   ├── anti-cheap.md             # 反廉价黑名单（AI tells + 禁区 + reflex-reject）
 │       │   ├── product-ui.md             # product 路线：仪表盘/表格/图表/表单/状态/组件
-│       │   ├── preflight.md              # 起飞前自检清单
+│       │   ├── preflight.md              # 起飞前自检清单（含战略遗漏清单）
+│       │   ├── redesign-mode.md          # 改造模式：审计优先 + 六步改造协议
 │       │   └── design-model.md           # 多页一致性的 token 锁定模板
 │       └── examples/
 │           ├── EXAMPLES.md               # 5 个正例对应的 persona/engine

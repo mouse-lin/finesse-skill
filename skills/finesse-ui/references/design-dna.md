@@ -37,6 +37,18 @@ Every page declares a small, named token set. Dark is the default (28 of 37 page
 
 Rules: no `#fff`/`#000` anywhere. Tint neutrals a few points toward the brand hue (add 0.005–0.015 OKLCH chroma). One accent, locked across the whole page.
 
+**Color naming convention (three-part — mandatory for any named token):**
+Every color in a finesse system must have all three: `Descriptive name (hex) — functional role and constraint`.
+
+```
+Void (#04060D)       — Page background. Near-black tinted toward brand hue.
+Star Dust (#EAEDF8)  — Primary text. Slightly cool; never pure white.
+Pulse (#6C63FF)      — Accent. Owns the page — no second accent unless duotone.
+Iron (#4A4A5E)       — Hairlines and tertiary text only.
+```
+
+Never write just a hex, just a name, or just a role. The triple makes tokens self-documenting and prevents silent drift when values change across files.
+
 ---
 
 ## 2. Grain (mandatory)

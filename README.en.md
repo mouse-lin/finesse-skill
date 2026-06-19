@@ -88,11 +88,12 @@ finesse-skill/
 │       ├── SKILL.md                      # Main entry: methodology + workflow
 │       ├── references/
 │       │   ├── design-dna.md             # Premium substrate (palette/type/grain/vignette)
-│       │   ├── hero-engines.md           # Five engine skeletons + reduced-motion fallbacks
+│       │   ├── hero-engines.md           # Five engine skeletons + reduced-motion fallbacks + inline-image technique
 │       │   ├── style-personas.md         # Industry → soul decision matrix
 │       │   ├── anti-cheap.md             # Anti-slop blacklist (AI tells + bans + reflex-reject)
 │       │   ├── product-ui.md             # Product route: dashboards/tables/charts/forms/states
-│       │   ├── preflight.md              # Pre-flight checklist
+│       │   ├── preflight.md              # Pre-flight checklist (includes strategic omissions)
+│       │   ├── redesign-mode.md          # Redesign protocol: audit-first, six-step upgrade
 │       │   └── design-model.md           # Multi-page token consistency template
 │       └── examples/
 │           ├── EXAMPLES.md               # 5 showcase pages with persona/engine annotations

@@ -84,6 +84,17 @@ Three-layer tokens: **primitive** (`--blue-600:#2563EB`, `--space-4:1rem`) → *
 - **Radius/elevation:** lock one scale. Most components md radius + md shadow; cards lg+lg; inputs sm, shadow on focus only; modal lg + xl shadow.
 - **UI font:** high-readability sans (`-apple-system, 'Segoe UI', Roboto, Inter, sans-serif`); mono for data/code. No serif/script in UI labels. Dark mode tested independently, not inverted.
 
+## 8.A Typography Precision (add to the product substrate)
+
+Details that separate a polished product from a rough one:
+
+- **Orphan prevention:** `text-wrap: balance` on headings; `text-wrap: pretty` on multi-line body copy. Prevents single-word last lines without manual `&nbsp;`.
+- **Card CTA alignment:** in a card grid, CTA buttons must be bottom-locked — use `display: flex; flex-direction: column` on the card, `margin-top: auto` on the CTA. Buttons floating at different heights based on copy length is a layout bug, not a style choice.
+- **Pricing table baseline:** when comparing plans side-by-side, feature lists must start at the same Y coordinate across all columns. Use matching `min-height` or `align-items: start` + fixed padding on the description block, not variable-height text pushing features down.
+- **Optical compensation:** mathematical centering ≠ visual centering. Apply 1–2px `translateY` or asymmetric padding to: play buttons inside circles, icons in icon-buttons, and avatar initials in circular containers. Never skip this on any centered symbol with visual weight asymmetry.
+
+---
+
 ## 9. Product-Specific Anti-Patterns (add to the blacklist)
 
 - **Decorative motion** that conveys no state (bounce/elastic on hover). → `ease-out` shadow/opacity feedback only.
