@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FORMA — 空间建筑设计</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;600;800;900&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --bg:#EFEFED; --ink:#141414; --muted:#787878; --dim:#C0C0BE;
+    --dark:#0B0B0B; --line:rgba(255,255,255,0.16); --red:#D64030;
+  }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+
+  /* ── HEADER ── */
+  header { position:fixed; top:0; left:0; right:0; z-index:200;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:24px 52px; mix-blend-mode:normal; }
+  .brand { font-family:'Raleway',sans-serif; font-size:13px; font-weight:800;
+    letter-spacing:.38em; color:var(--ink); }
+  nav { display:flex; gap:36px; font-size:11px; letter-spacing:.18em; color:var(--muted); }
+  nav a { color:inherit; text-decoration:none; transition:color .2s; }
+  nav a:hover { color:var(--ink); }
+  .cta-hdr { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.16em;
+    border:1px solid var(--ink); padding:9px 20px; cursor:pointer; transition:.2s; color:var(--ink); text-decoration:none; }
+  .cta-hdr:hover { background:var(--ink); color:var(--bg); }
+
+  /* ── HERO DUAL LAYER ── */
+  .hero { position:relative; width:100vw; height:100vh; overflow:hidden; cursor:none; }
+
+  /* Base layer — dark desaturated */
+  .layer-day {
+    position:absolute; inset:0;
+    background: url('_assets/studio_hero.jpg') center/cover no-repeat;
+    filter: brightness(0.28) saturate(0.2);
+  }
+  .layer-day::after {
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 55%);
+  }
+
+  /* Reveal layer — different photo (black couch, white wall), revealed by mask */
+  .layer-night {
+    position:absolute; inset:0;
+    background: url('_assets/studio_reveal.jpg') center 50%/cover no-repeat;
+    filter: brightness(1.05) saturate(1.1);
+    /* soft-edge radial mask */
+    mask: radial-gradient(circle 0px at -400px -400px, black 45%, rgba(0,0,0,0.7) 68%, transparent 100%);
+    -webkit-mask: radial-gradient(circle 0px at -400px -400px, black 45%, rgba(0,0,0,0.7) 68%, transparent 100%);
+    will-change: mask, -webkit-mask;
+  }
+
+  /* Custom cursor — dot + large glowing ring at reveal boundary */
+  .cursor-dot {
+    position:fixed; z-index:200; pointer-events:none;
+    width:5px; height:5px; border-radius:50%;
+    background:rgba(255,255,255,0.95);
+    transform:translate(-50%,-50%);
+    transition:opacity .3s;
+    opacity:0;
+  }
+  .cursor-ring {
+    position:fixed; z-index:199; pointer-events:none;
+    width:300px; height:300px; border-radius:50%;
+    border:1.5px solid rgba(255,255,255,0.55);
+    box-shadow:
+      0 0 18px rgba(255,255,255,0.18),
+      inset 0 0 18px rgba(255,255,255,0.06);
+    transform:translate(-50%,-50%);
+    transition:opacity .35s;
+    opacity:0;
+  }
+
+  /* Hero text overlay — white against dark photo */
+  .hero-text { position:absolute; bottom:0; left:0; right:0; z-index:30;
+    padding:0 52px 64px; display:flex; justify-content:space-between; align-items:flex-end; }
+  .hero-title { pointer-events:none; }
+  .hero-kicker { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.3em;
+    color:rgba(255,255,255,0.5); margin-bottom:16px; }
+  h1 { font-family:'Raleway',sans-serif; font-size:clamp(60px,10vw,140px);
+    font-weight:900; line-height:.86; letter-spacing:-.04em; color:#F5F2EC; }
+  h1 .thin { font-weight:100; color:rgba(245,242,236,0.55); }
+  .hero-right { text-align:right; pointer-events:none; }
+  .hero-tagline { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.9; max-width:280px; font-weight:300; }
+  .hero-hint { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.24em;
+    color:rgba(255,255,255,0.28); margin-top:20px; }
+
+  /* Scrolldown indicator */
+  .scroll-down { position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
+    z-index:30; display:flex; flex-direction:column; align-items:center; gap:8px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.24em;
+    color:rgba(255,255,255,0.3); }
+  .scroll-line { width:1px; height:32px; background:linear-gradient(rgba(255,255,255,0.3),transparent);
+    animation:spulse 2s ease-in-out infinite; }
+  @keyframes spulse { 0%,100%{opacity:.2} 50%{opacity:1} }
+
+  /* ── POST HERO ── */
+  section { padding:120px 52px; max-width:1280px; margin:0 auto; }
+  .sec-tag { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.3em;
+    color:var(--dim); margin-bottom:56px; display:flex; align-items:center; gap:14px; }
+  .sec-tag::after { content:''; flex:1; height:1px; background:rgba(0,0,0,0.08); max-width:120px; }
+
+  /* Philosophy */
+  .philosophy-quote { font-family:'Raleway',sans-serif; font-size:clamp(28px,4vw,56px);
+    font-weight:200; line-height:1.3; letter-spacing:-.02em; max-width:860px; color:var(--ink); }
+  .philosophy-quote strong { font-weight:800; }
+
+  /* Projects */
+  .project-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2px; margin-top:72px; }
+  .project { position:relative; overflow:hidden; cursor:pointer; }
+  .project-img { aspect-ratio:4/5; width:100%; }
+  .project:nth-child(1) .project-img { background:linear-gradient(160deg,#1A2830 0%,#0D1820 60%,#08101A 100%); }
+  .project:nth-child(2) .project-img { background:linear-gradient(160deg,#2A2018 0%,#1A1410 60%,#100C08 100%); }
+  .project:nth-child(3) .project-img { background:linear-gradient(160deg,#182018 0%,#101814 60%,#080C08 100%); }
+  .project-img::after { content:''; position:absolute; inset:0;
+    background:linear-gradient(to top, rgba(0,0,0,.7) 0%, transparent 55%);
+    transition:opacity .4s; }
+  .project:hover .project-img::after { opacity:.5; }
+  .project-info { position:absolute; bottom:0; left:0; right:0; padding:24px; z-index:2; }
+  .project-num { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.22em;
+    color:rgba(255,255,255,.35); margin-bottom:6px; }
+  .project-name { font-family:'Raleway',sans-serif; font-size:20px; font-weight:700;
+    letter-spacing:.04em; color:#fff; margin-bottom:3px; }
+  .project-loc { font-size:12px; color:rgba(255,255,255,.45); letter-spacing:.06em; }
+  .project-arrow { position:absolute; top:20px; right:20px; z-index:2; width:32px; height:32px;
+    border:1px solid rgba(255,255,255,.25); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px;
+    opacity:0; transform:scale(0.8); transition:all .3s cubic-bezier(.16,1,.3,1); }
+  .project:hover .project-arrow { opacity:1; transform:scale(1); }
+
+  /* Wide project */
+  .project-wide { grid-column:1/3; }
+  .project-wide .project-img { aspect-ratio:unset; height:380px; }
+
+  /* Process */
+  .process-list { display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-left:1px solid rgba(0,0,0,.08); }
+  .process-item { padding:40px 36px; border-right:1px solid rgba(0,0,0,.08); }
+  .pn { font-family:'Raleway',sans-serif; font-size:56px; font-weight:900; letter-spacing:-.04em;
+    color:rgba(0,0,0,.05); line-height:1; margin-bottom:20px; }
+  .pt { font-family:'Raleway',sans-serif; font-size:16px; font-weight:700; margin-bottom:12px; letter-spacing:.04em; }
+  .pb { font-size:13px; line-height:1.85; color:var(--muted); font-weight:300; }
+
+  /* Clients */
+  .clients-strip { border-top:1px solid rgba(0,0,0,.06); border-bottom:1px solid rgba(0,0,0,.06);
+    overflow:hidden; padding:20px 0; background:var(--bg); }
+  .clients-track { display:inline-flex; gap:64px; white-space:nowrap;
+    animation:ctrack 30s linear infinite;
+    font-family:'Raleway',sans-serif; font-weight:800; font-size:13px;
+    letter-spacing:.28em; color:var(--dim); }
+  @keyframes ctrack { to { transform:translateX(-50%); } }
+
+  /* Contact */
+  .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+  .contact-big { font-family:'Raleway',sans-serif; font-size:clamp(40px,6vw,80px);
+    font-weight:900; line-height:.92; letter-spacing:-.04em; color:var(--ink); }
+  .contact-big em { font-style:normal; font-weight:100; display:block; }
+  .contact-info { display:flex; flex-direction:column; gap:28px; padding-top:16px; }
+  .contact-row { display:flex; flex-direction:column; gap:4px; }
+  .contact-label { font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.26em; color:var(--dim); }
+  .contact-val { font-size:14px; color:var(--ink); font-weight:400; }
+
+  footer { border-top:1px solid rgba(0,0,0,.06); padding:36px 52px;
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.16em; color:var(--dim); }
+
+  /* Reveals */
+  .reveal { opacity:0; transform:translateY(28px); }
+  .reveal-left { opacity:0; transform:translateX(-28px); }
+  .reveal-scale { opacity:0; transform:scale(0.96); }
+
+  @media (max-width:900px) {
+    header { padding:20px 24px; } nav { display:none; }
+    h1 { font-size:clamp(48px,12vw,80px); }
+    .hero-text { padding:0 24px 52px; }
+    section { padding:80px 24px; }
+    .project-grid { grid-template-columns:1fr 1fr; }
+    .project-wide { grid-column:1/3; }
+    .process-list { grid-template-columns:1fr 1fr; }
+    .contact-grid { grid-template-columns:1fr; gap:40px; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    .reveal, .reveal-left, .reveal-scale { opacity:1; transform:none; }
+  }
+</style>
+</head>
+<body>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<header>
+  <div class="brand">FORMA</div>
+  <nav>
+    <a href="#">ABOUT</a>
+    <a href="#">WORKS</a>
+    <a href="#">SERVICES</a>
+    <a href="#">PROCESS</a>
+    <a href="#">CONTACT</a>
+  </nav>
+  <a class="cta-hdr" href="#">GET IN TOUCH ↗</a>
+</header>
+
+<!-- HERO with dual-layer mask -->
+<div class="hero" id="hero">
+  <!-- Base dark photo -->
+  <div class="layer-day"></div>
+  <!-- Glow reveal layer — backdrop-filter creates overexposed blurry white circle -->
+  <div class="layer-night" id="nightLayer"></div>
+
+  <!-- Hero text -->
+  <div class="hero-text">
+    <div class="hero-title">
+      <div class="hero-kicker" id="hk">INTERIOR ARCHITECTURE · BEIJING</div>
+      <h1 id="h1main"><span class="thin">FORMA</span><br>空间</h1>
+    </div>
+    <div class="hero-right">
+      <p class="hero-tagline" id="htagline">设计空间，提升生活感知。<br>我们在建筑与生活之间<br>寻找那道精确的分缝线。</p>
+      <div class="hero-hint" id="hhint">MOVE CURSOR TO REVEAL BLUEPRINT</div>
+    </div>
+  </div>
+  <div class="scroll-down"><span>SCROLL</span><div class="scroll-line"></div></div>
+</div>
+
+<!-- MARQUEE -->
+<div class="clients-strip" style="border-top:1px solid rgba(0,0,0,.06)">
+  <div class="clients-track">
+    SPATIAL DESIGN &nbsp;·&nbsp; INTERIOR ARCHITECTURE &nbsp;·&nbsp; RESIDENTIAL &nbsp;·&nbsp; COMMERCIAL &nbsp;·&nbsp; HOSPITALITY &nbsp;·&nbsp; CONCEPT DEVELOPMENT &nbsp;·&nbsp; PROJECT MANAGEMENT &nbsp;·&nbsp;
+    SPATIAL DESIGN &nbsp;·&nbsp; INTERIOR ARCHITECTURE &nbsp;·&nbsp; RESIDENTIAL &nbsp;·&nbsp; COMMERCIAL &nbsp;·&nbsp; HOSPITALITY &nbsp;·&nbsp; CONCEPT DEVELOPMENT &nbsp;·&nbsp; PROJECT MANAGEMENT &nbsp;·&nbsp;
+  </div>
+</div>
+
+<!-- PHILOSOPHY -->
+<section>
+  <div class="sec-tag">PHILOSOPHY / 01</div>
+  <p class="philosophy-quote reveal">
+    空间不是被<strong>填满</strong>的容器。<br>
+    它是人与时间之间的<strong>对话</strong>，<br>
+    设计的任务是让这段对话<strong>不间断</strong>。
+  </p>
+</section>
+
+<!-- WORKS -->
+<section style="padding-top:0">
+  <div class="sec-tag reveal">SELECTED WORKS / 02</div>
+  <div class="project-grid">
+    <div class="project project-wide reveal">
+      <div class="project-img" style="position:relative">
+        <div style="position:absolute;inset:0;background:url('_assets/studio_p1.jpg') center/cover no-repeat"></div>
+      </div>
+      <div class="project-info">
+        <div class="project-num">01 · 2025</div>
+        <div class="project-name">CEDAR RESIDENCE</div>
+        <div class="project-loc">北京 · 东城区 · 320 m²</div>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+    <div class="project reveal">
+      <div class="project-img" style="position:relative">
+        <div style="position:absolute;inset:0;background:url('_assets/studio_p2.jpg') center/cover no-repeat"></div>
+      </div>
+      <div class="project-info">
+        <div class="project-num">02 · 2025</div>
+        <div class="project-name">LOFT STUDIO</div>
+        <div class="project-loc">上海 · 徐汇 · 180 m²</div>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+    <div class="project reveal" style="margin-top:-2px">
+      <div class="project-img" style="position:relative">
+        <div style="position:absolute;inset:0;background:url('_assets/studio_p3.jpg') center/cover no-repeat"></div>
+      </div>
+      <div class="project-info">
+        <div class="project-num">03 · 2024</div>
+        <div class="project-name">GALLERY HOUSE</div>
+        <div class="project-loc">杭州 · 滨江 · 240 m²</div>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section>
+  <div class="sec-tag reveal">PROCESS / 03</div>
+  <div class="process-list reveal">
+    <div class="process-item">
+      <div class="pn">01</div>
+      <div class="pt">深度沟通</div>
+      <p class="pb">理解居住者的生活节奏与情感需求，在动笔之前，先听懂你的空间语言。</p>
+    </div>
+    <div class="process-item">
+      <div class="pn">02</div>
+      <div class="pt">概念生成</div>
+      <p class="pb">从平面分析到三维推演，每个方案都经过多轮空间叙事的验证与否定。</p>
+    </div>
+    <div class="process-item">
+      <div class="pn">03</div>
+      <div class="pt">材料筛选</div>
+      <p class="pb">材料是空间的皮肤。我们坚持亲赴产地甄选，拒绝样本册上的盲目决策。</p>
+    </div>
+    <div class="process-item">
+      <div class="pn">04</div>
+      <div class="pt">现场把控</div>
+      <p class="pb">全程驻场监理，精确到每一条收口线。设计图纸与最终空间的误差以毫米计算。</p>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTS MARQUEE -->
+<div class="clients-strip">
+  <div class="clients-track">
+    CEDAR GROUP &nbsp;&nbsp; BOULEVARD HOTEL &nbsp;&nbsp; AXIS GALLERY &nbsp;&nbsp; MERIDIAN OFFICE &nbsp;&nbsp; STILL HOUSE &nbsp;&nbsp; LUMEN STUDIO &nbsp;&nbsp; PEAK RESIDENCE &nbsp;&nbsp; CLOUD CLINIC &nbsp;&nbsp;
+    CEDAR GROUP &nbsp;&nbsp; BOULEVARD HOTEL &nbsp;&nbsp; AXIS GALLERY &nbsp;&nbsp; MERIDIAN OFFICE &nbsp;&nbsp; STILL HOUSE &nbsp;&nbsp; LUMEN STUDIO &nbsp;&nbsp; PEAK RESIDENCE &nbsp;&nbsp; CLOUD CLINIC &nbsp;&nbsp;
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section class="reveal">
+  <div class="sec-tag">GET IN TOUCH / 04</div>
+  <div class="contact-grid">
+    <div>
+      <div class="contact-big">LET'S<em>BUILD</em>TOGETHER.</div>
+    </div>
+    <div class="contact-info">
+      <div class="contact-row">
+        <span class="contact-label">EMAIL</span>
+        <span class="contact-val">hello@forma-design.cn</span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-label">STUDIO</span>
+        <span class="contact-val">北京市东城区建国门内大街甲1号</span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-label">HOURS</span>
+        <span class="contact-val">Mon–Fri 10:00–19:00</span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-label">PROJECTS OPEN</span>
+        <span class="contact-val">2026 Q3 · 3 slots remaining</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>FORMA INTERIOR ARCHITECTURE © 2026</span>
+  <span>BEIJING · SHANGHAI · HANGZHOU</span>
+</footer>
+
+<script src="lib/gsap.min.js"></script>
+<script src="lib/ScrollTrigger.min.js"></script>
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ── DUAL-LAYER MOUSE MASK ── */
+  const night      = document.getElementById('nightLayer');
+  const hero       = document.getElementById('hero');
+  const cursorDot  = document.getElementById('cursorDot');
+  const cursorRing = document.getElementById('cursorRing');
+
+  let cx = -400, cy = -400;   // layer coords (relative to hero)
+  let tx = -400, ty = -400;
+  let mx = -400, my = -400;   // cursor coords (fixed/viewport)
+  let tmx = -400, tmy = -400;
+  let radius = 0, targetRadius = 0;
+
+  hero.addEventListener('mousemove', e => {
+    const r = hero.getBoundingClientRect();
+    tx = e.clientX - r.left;
+    ty = e.clientY - r.top;
+    tmx = e.clientX;
+    tmy = e.clientY;
+    targetRadius = 300;
+    cursorDot.style.opacity  = '1';
+    cursorRing.style.opacity = '1';
+  });
+  hero.addEventListener('mouseleave', () => {
+    targetRadius = 0;
+    cursorDot.style.opacity  = '0';
+    cursorRing.style.opacity = '0';
+  });
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  (function tick() {
+    cx  = lerp(cx,  tx,  0.1);
+    cy  = lerp(cy,  ty,  0.1);
+    mx  = lerp(mx,  tmx, 0.14);
+    my  = lerp(my,  tmy, 0.14);
+    radius = lerp(radius, targetRadius, 0.09);
+
+    const r = radius.toFixed(1);
+    const mask = `radial-gradient(circle ${r}px at ${cx.toFixed(1)}px ${cy.toFixed(1)}px, black 38%, rgba(0,0,0,0.5) 62%, transparent 100%)`;
+    night.style.mask = mask;
+    night.style.webkitMask = mask;
+
+    cursorDot.style.left = mx.toFixed(1) + 'px';
+    cursorDot.style.top  = my.toFixed(1) + 'px';
+    cursorRing.style.left = mx.toFixed(1) + 'px';
+    cursorRing.style.top  = my.toFixed(1) + 'px';
+
+    requestAnimationFrame(tick);
+  })();
+
+  /* ── HERO ENTRANCE ── */
+  gsap.timeline({ delay: 0.2 })
+    .from('#hk',       { opacity: 0, y: 16, duration: 0.7, ease: 'power2.out' })
+    .from('#h1main',   { opacity: 0, y: 40, duration: 1,   ease: 'power3.out' }, '-=0.3')
+    .from('#htagline', { opacity: 0, y: 20, duration: 0.8, ease: 'power2.out' }, '-=0.5')
+    .from('#hhint',    { opacity: 0, duration: 0.6, ease: 'power2.out' }, '-=0.3');
+
+  /* ── SCROLL REVEALS ── */
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.fromTo(el,
+      { opacity: 0, y: 36 },
+      { opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 86%', once: true } }
+    );
+  });
+
+  /* ── PROJECT IMAGES: subtle parallax on hover ── */
+  document.querySelectorAll('.project').forEach(p => {
+    const img = p.querySelector('.project-img');
+    p.addEventListener('mouseenter', () => gsap.to(img, { scale: 1.04, duration: 0.7, ease: 'power2.out' }));
+    p.addEventListener('mouseleave', () => gsap.to(img, { scale: 1,    duration: 0.7, ease: 'power2.out' }));
+  });
+</script>
+</body>
+</html>

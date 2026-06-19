@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SIGNAL — 量化交易引擎</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;700&display=swap');
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --bg:#020806; --surface:#060E0A; --border:rgba(0,220,80,.1);
+    --ink:#C8F0D8; --muted:#3A6A4A; --dim:#1A3028;
+    --green:#00DC50; --green2:#00A038; --red:#FF3048; --yellow:#D8B020;
+  }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:var(--ink);
+    font-family:'JetBrains Mono',monospace;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+
+  /* ── SCANLINES ── */
+  body::after { content:''; position:fixed; inset:0; z-index:2; pointer-events:none;
+    background:repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,20,10,.18) 2px, rgba(0,20,10,.18) 4px);
+    animation:flicker 8s ease-in-out infinite; }
+  @keyframes flicker { 0%,100%{opacity:1} 49%{opacity:1} 50%{opacity:.96} 51%{opacity:1} 74%{opacity:1} 75%{opacity:.94} 76%{opacity:1} }
+
+  #c { position:fixed; inset:0; width:100%; height:100%; z-index:0; }
+  .grain { position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.025;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .content { position:relative; z-index:5; }
+
+  /* ── HEADER ── */
+  header { position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between; padding:20px 48px;
+    background:rgba(2,8,6,.9); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border); }
+  .brand { font-size:14px; font-weight:700; letter-spacing:.38em; color:var(--green); }
+  .header-status { display:flex; align-items:center; gap:24px; font-size:10px; letter-spacing:.18em; color:var(--muted); }
+  .live-dot { width:6px; height:6px; border-radius:50%; background:var(--green);
+    animation:ldot 1.4s ease-in-out infinite; }
+  @keyframes ldot { 0%,100%{opacity:1;box-shadow:0 0 6px var(--green)} 50%{opacity:.3;box-shadow:none} }
+  .header-price { font-size:13px; font-weight:700; color:var(--green); }
+  .login-btn { font-size:10px; letter-spacing:.18em; border:1px solid var(--border);
+    padding:8px 18px; color:var(--muted); cursor:pointer; transition:.2s; background:none; }
+  .login-btn:hover { border-color:var(--green); color:var(--green); }
+
+  /* ── HERO ── */
+  .hero { width:100vw; height:100vh; display:flex; align-items:flex-end; position:relative; }
+  .hero-body { padding:0 48px 72px; pointer-events:none; }
+  .kicker { font-size:10px; letter-spacing:.32em; color:var(--muted); margin-bottom:24px;
+    display:flex; align-items:center; gap:14px; }
+  .kicker i { width:30px; height:1px; background:var(--green); display:inline-block; }
+  h1 { font-size:clamp(56px,9vw,140px); font-weight:700; line-height:.82;
+    letter-spacing:-.04em; color:var(--green);
+    text-shadow:0 0 40px rgba(0,220,80,.25); }
+  h1 small { font-size:.38em; font-weight:300; color:var(--muted);
+    display:block; letter-spacing:.12em; margin-top:12px; }
+  .hero-sub { margin-top:24px; font-size:12px; line-height:2; color:var(--muted);
+    max-width:420px; font-weight:300; }
+
+  /* Ticker bar */
+  .ticker-bar { background:rgba(2,8,6,.95); border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border); overflow:hidden; padding:12px 0; }
+  .ticker-track { display:inline-flex; gap:0; white-space:nowrap;
+    animation:ttick 22s linear infinite; font-size:10px; letter-spacing:.12em; }
+  @keyframes ttick { to { transform:translateX(-50%); } }
+  .tick-item { padding:0 20px; border-right:1px solid var(--border);
+    display:flex; align-items:center; gap:10px; }
+  .tick-sym { color:var(--ink); font-weight:700; font-size:11px; }
+  .tick-price { color:var(--muted); }
+  .tick-up { color:var(--green); }
+  .tick-dn { color:var(--red); }
+
+  /* ── SECTIONS ── */
+  section { padding:100px 48px; max-width:1300px; margin:0 auto; }
+  .sec-label { font-size:10px; letter-spacing:.3em; color:var(--muted); margin-bottom:52px;
+    display:flex; align-items:center; gap:14px; }
+  .sec-label::after { content:''; flex:1; height:1px; background:var(--border); max-width:200px; }
+
+  /* Strategy cards */
+  .strategy-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); }
+  .strat-card { background:var(--bg); padding:40px 32px; }
+  .strat-num { font-size:36px; font-weight:700; color:var(--dim); line-height:1; margin-bottom:20px; letter-spacing:-.04em; }
+  .strat-title { font-size:16px; font-weight:700; color:var(--ink); margin-bottom:14px; letter-spacing:.08em; }
+  .strat-body { font-size:11px; line-height:2; color:var(--muted); font-weight:300; }
+  .strat-tag { display:inline-block; margin-top:20px; font-size:9px; letter-spacing:.18em;
+    border:1px solid var(--border); padding:4px 12px; color:var(--muted); }
+
+  /* Performance */
+  .perf-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); }
+  .perf-item { background:var(--surface); padding:36px 28px; }
+  .perf-val { font-size:clamp(28px,4vw,52px); font-weight:700; line-height:1; letter-spacing:-.04em; }
+  .perf-val.up { color:var(--green); }
+  .perf-val.dn { color:var(--red); }
+  .perf-val.neu { color:var(--ink); }
+  .perf-label { font-size:9.5px; letter-spacing:.22em; color:var(--muted); margin-top:10px; }
+  .perf-sub { font-size:9px; color:var(--dim); margin-top:4px; }
+
+  /* Tech stack */
+  .tech-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--border); }
+  .tech-item { background:var(--bg); padding:32px; display:flex; gap:20px; align-items:flex-start; }
+  .tech-dot { width:6px; height:6px; border-radius:50%; background:var(--green); margin-top:5px; flex-shrink:0; }
+  .tech-title { font-size:13px; font-weight:700; color:var(--ink); margin-bottom:8px; letter-spacing:.12em; }
+  .tech-body { font-size:11px; line-height:1.9; color:var(--muted); font-weight:300; }
+
+  /* CTA */
+  .cta-block { padding:100px 48px; text-align:center; border-top:1px solid var(--border); }
+  .cta-big { font-size:clamp(36px,6vw,80px); font-weight:700; color:var(--green); line-height:.9;
+    letter-spacing:-.04em; text-shadow:0 0 60px rgba(0,220,80,.2); margin-bottom:32px; }
+  .cta-sub { font-size:12px; color:var(--muted); max-width:440px; margin:0 auto 40px; line-height:1.9; }
+  .apply-btn { display:inline-flex; gap:12px; align-items:center;
+    border:1px solid var(--green); color:var(--green); padding:16px 40px;
+    font-size:11px; letter-spacing:.26em; cursor:pointer; transition:.25s; background:none; }
+  .apply-btn:hover { background:var(--green); color:var(--bg); }
+
+  footer { padding:28px 48px; border-top:1px solid var(--border);
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:9.5px; letter-spacing:.16em; color:var(--dim); }
+
+  .reveal { opacity:0; transform:translateY(24px); }
+  @media (max-width:900px) {
+    header { padding:16px 20px; }
+    .header-status { display:none; }
+    .hero-body { padding:0 20px 56px; }
+    section { padding:72px 20px; }
+    .strategy-grid,.tech-grid { grid-template-columns:1fr; }
+    .perf-row { grid-template-columns:repeat(2,1fr); }
+  }
+  @media (prefers-reduced-motion:reduce) { .reveal { opacity:1; transform:none; } body::after { display:none; } }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="grain"></div>
+<div class="content">
+
+<header>
+  <div class="brand">SIGNAL</div>
+  <div class="header-status">
+    <span class="live-dot"></span>
+    <span>LIVE TRADING</span>
+    <span id="livetime">14:32:08</span>
+    <span class="header-price" id="liveprice">SPX 5,492.10</span>
+  </div>
+  <button class="login-btn">LOG IN</button>
+</header>
+
+<div class="hero">
+  <div class="hero-body">
+    <div class="kicker"><i></i>ALGORITHMIC TRADING ENGINE · v4.2</div>
+    <h1>SIGNAL<small>量化·择时·执行</small></h1>
+    <p class="hero-sub">毫秒级信号捕捉。自适应仓位管理。跨市场多因子策略。在噪音中看见秩序。</p>
+  </div>
+</div>
+
+<div class="ticker-bar">
+  <div class="ticker-track">
+    <div class="tick-item"><span class="tick-sym">BTC</span><span class="tick-price">$67,204</span><span class="tick-up">+2.34%</span></div>
+    <div class="tick-item"><span class="tick-sym">SPX</span><span class="tick-price">5,492</span><span class="tick-up">+0.82%</span></div>
+    <div class="tick-item"><span class="tick-sym">NVDA</span><span class="tick-price">$892.40</span><span class="tick-up">+3.16%</span></div>
+    <div class="tick-item"><span class="tick-sym">GOLD</span><span class="tick-price">$2,384</span><span class="tick-dn">-0.44%</span></div>
+    <div class="tick-item"><span class="tick-sym">ETH</span><span class="tick-price">$3,601</span><span class="tick-up">+1.88%</span></div>
+    <div class="tick-item"><span class="tick-sym">TSM</span><span class="tick-price">$178.60</span><span class="tick-up">+0.96%</span></div>
+    <div class="tick-item"><span class="tick-sym">USD/JPY</span><span class="tick-price">152.38</span><span class="tick-dn">-0.12%</span></div>
+    <div class="tick-item"><span class="tick-sym">QQQ</span><span class="tick-price">$472.20</span><span class="tick-up">+1.04%</span></div>
+    <div class="tick-item"><span class="tick-sym">BTC</span><span class="tick-price">$67,204</span><span class="tick-up">+2.34%</span></div>
+    <div class="tick-item"><span class="tick-sym">SPX</span><span class="tick-price">5,492</span><span class="tick-up">+0.82%</span></div>
+    <div class="tick-item"><span class="tick-sym">NVDA</span><span class="tick-price">$892.40</span><span class="tick-up">+3.16%</span></div>
+    <div class="tick-item"><span class="tick-sym">GOLD</span><span class="tick-price">$2,384</span><span class="tick-dn">-0.44%</span></div>
+    <div class="tick-item"><span class="tick-sym">ETH</span><span class="tick-price">$3,601</span><span class="tick-up">+1.88%</span></div>
+    <div class="tick-item"><span class="tick-sym">TSM</span><span class="tick-price">$178.60</span><span class="tick-up">+0.96%</span></div>
+    <div class="tick-item"><span class="tick-sym">USD/JPY</span><span class="tick-price">152.38</span><span class="tick-dn">-0.12%</span></div>
+    <div class="tick-item"><span class="tick-sym">QQQ</span><span class="tick-price">$472.20</span><span class="tick-up">+1.04%</span></div>
+  </div>
+</div>
+
+<section class="reveal">
+  <div class="sec-label">STRATEGY / 01</div>
+  <div class="strategy-grid">
+    <div class="strat-card">
+      <div class="strat-num">α</div>
+      <div class="strat-title">MOMENTUM ALPHA</div>
+      <p class="strat-body">基于多周期动量因子的趋势跟踪策略，通过波动率过滤机制降低噪音干扰，在趋势明确市场中实现稳定超额收益。</p>
+      <div class="strat-tag">A股 · 港股 · 美股</div>
+    </div>
+    <div class="strat-card">
+      <div class="strat-num">β</div>
+      <div class="strat-title">MEAN REVERSION</div>
+      <p class="strat-body">利用统计套利原理，在跨品种价差偏离均值时建立对冲头寸，对市场方向中性，捕捉短期定价错误。</p>
+      <div class="strat-tag">期货 · ETF · 指数</div>
+    </div>
+    <div class="strat-card">
+      <div class="strat-num">γ</div>
+      <div class="strat-title">MACRO OVERLAY</div>
+      <p class="strat-body">宏观因子驱动的资产配置层，通过实时分析经济数据与政策信号，动态调整各策略权重与总体风险敞口。</p>
+      <div class="strat-tag">全球多资产</div>
+    </div>
+  </div>
+</section>
+
+<section class="reveal">
+  <div class="sec-label">PERFORMANCE / 02</div>
+  <div class="perf-row">
+    <div class="perf-item">
+      <div class="perf-val up">+31.4%</div>
+      <div class="perf-label">ANNUAL RETURN</div>
+      <div class="perf-sub">2025 YTD · NET OF FEES</div>
+    </div>
+    <div class="perf-item">
+      <div class="perf-val neu">1.87</div>
+      <div class="perf-label">SHARPE RATIO</div>
+      <div class="perf-sub">3-YEAR ROLLING AVERAGE</div>
+    </div>
+    <div class="perf-item">
+      <div class="perf-val dn">-8.2%</div>
+      <div class="perf-label">MAX DRAWDOWN</div>
+      <div class="perf-sub">SINCE INCEPTION 2019</div>
+    </div>
+    <div class="perf-item">
+      <div class="perf-val neu">0.12</div>
+      <div class="perf-label">BETA TO SPX</div>
+      <div class="perf-sub">MARKET NEUTRAL TARGET</div>
+    </div>
+  </div>
+</section>
+
+<section class="reveal">
+  <div class="sec-label">TECHNOLOGY / 03</div>
+  <div class="tech-grid">
+    <div class="tech-item">
+      <div class="tech-dot"></div>
+      <div><div class="tech-title">LOW-LATENCY EXECUTION</div><p class="tech-body">专有 FIX 协议接入，主机托管于上交所及纳斯达克数据中心。平均订单延迟 0.38 毫秒，支持每秒 120,000+ 笔订单处理。</p></div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-dot"></div>
+      <div><div class="tech-title">REAL-TIME SIGNAL ENGINE</div><p class="tech-body">基于 C++ 核心的信号计算框架，结合 Python 快速策略原型，支持 500+ 因子并行计算，全天候运行无停机维护。</p></div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-dot"></div>
+      <div><div class="tech-title">ADAPTIVE RISK SYSTEM</div><p class="tech-body">实时监控 VAR、CVaR 及相关性矩阵，超阈值自动减仓或对冲。多层熔断机制确保单日最大亏损可控。</p></div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-dot"></div>
+      <div><div class="tech-title">ALTERNATIVE DATA PIPELINE</div><p class="tech-body">整合卫星图像、工商登记、社交情绪及船运数据，通过 NLP 实体识别模型提取结构化信号，形成差异化信息优势。</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-block reveal">
+  <div class="cta-big">START<br>TRADING</div>
+  <p class="cta-sub">目前接受合格机构投资者及高净值个人申请。最低认购规模 1,000 万人民币等值。</p>
+  <button class="apply-btn">APPLY FOR ACCESS →</button>
+</div>
+
+<footer>
+  <span>SIGNAL CAPITAL © 2026</span>
+  <span>RISK DISCLAIMER: PAST PERFORMANCE DOES NOT GUARANTEE FUTURE RESULTS</span>
+</footer>
+
+</div>
+
+<script src="lib/gsap.min.js"></script>
+<script src="lib/ScrollTrigger.min.js"></script>
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ── LIVE CLOCK ── */
+  function updateClock() {
+    const n = new Date();
+    const pad = v => String(v).padStart(2,'0');
+    document.getElementById('livetime').textContent = `${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;
+  }
+  setInterval(updateClock, 1000);
+
+  /* ── CANVAS CHART ── */
+  const cv = document.getElementById('c');
+  const ctx = cv.getContext('2d');
+  let W, H;
+  function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const CW = 9, GAP = 5;
+  let price = 280;
+  const candles = [];
+
+  function newCandle() {
+    const o = price;
+    const d = (Math.random() - 0.47) * 4;
+    const c = Math.max(40, o + d);
+    const h = Math.max(o, c) + Math.random() * 2.5;
+    const l = Math.min(o, c) - Math.random() * 2.5;
+    price = c;
+    return { o, c, h, l, v: Math.random() };
+  }
+
+  for (let i = 0; i < 200; i++) candles.push(newCandle());
+
+  let frameN = 0;
+
+  function drawBg() {
+    ctx.fillStyle = '#020806';
+    ctx.fillRect(0, 0, W, H);
+    // Grid
+    ctx.strokeStyle = 'rgba(0,180,60,.04)';
+    ctx.lineWidth = 1;
+    for (let y = 0; y < H; y += 60) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+    for (let x = 0; x < W; x += 80) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+  }
+
+  function drawChart() {
+    const count = Math.floor(W / (CW + GAP)) + 2;
+    const vis = candles.slice(-count);
+    if (vis.length < 2) return;
+
+    const chartH = H * 0.55;
+    const chartY = H * 0.14;
+    const volH   = H * 0.10;
+    const volY   = H * 0.76;
+
+    const prices = vis.flatMap(c => [c.h, c.l]);
+    const minP = Math.min(...prices);
+    const maxP = Math.max(...prices);
+    const range = maxP - minP || 1;
+    const toY = p => chartY + chartH - ((p - minP) / range) * chartH;
+
+    // Subtle price grid lines
+    for (let i = 0; i <= 4; i++) {
+      const y = chartY + (chartH / 4) * i;
+      const p = maxP - (range / 4) * i;
+      ctx.strokeStyle = 'rgba(0,180,60,.06)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      ctx.fillStyle = 'rgba(0,180,60,.28)';
+      ctx.font = '9px JetBrains Mono, monospace';
+      ctx.textAlign = 'right';
+      ctx.fillText(p.toFixed(2), W - 8, y - 3);
+    }
+
+    vis.forEach((c, i) => {
+      const x = W - (vis.length - i) * (CW + GAP);
+      const isUp = c.c >= c.o;
+      const col = isUp ? 'rgba(0,220,80,' : 'rgba(255,48,72,';
+      const topPrice = Math.max(c.o, c.c);
+      const btmPrice = Math.min(c.o, c.c);
+      const bodyT = toY(topPrice);
+      const bodyH = Math.max(1, Math.abs(toY(c.o) - toY(c.c)));
+
+      // Wick
+      ctx.strokeStyle = col + '0.6)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x + CW / 2, toY(c.h));
+      ctx.lineTo(x + CW / 2, toY(c.l));
+      ctx.stroke();
+
+      // Body
+      ctx.fillStyle = col + '0.65)';
+      ctx.fillRect(x, bodyT, CW, bodyH);
+
+      // Volume
+      ctx.fillStyle = col + '0.2)';
+      ctx.fillRect(x, volY + volH * (1 - c.v), CW, volH * c.v);
+    });
+  }
+
+  function loop() {
+    frameN++;
+    if (frameN % 55 === 0) candles.push(newCandle());
+    drawBg();
+    drawChart();
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  /* ── SCROLL REVEALS ── */
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.fromTo(el,
+      { opacity:0, y:28 },
+      { opacity:1, y:0, duration:1, ease:'power2.out',
+        scrollTrigger:{ trigger:el, start:'top 88%', once:true } }
+    );
+  });
+</script>
+</body>
+</html>

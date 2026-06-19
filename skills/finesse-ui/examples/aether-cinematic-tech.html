@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AETHER — 空间智能引擎</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --ink: #ECECF2; --muted: #9A9AAB; --dim: #6C6C7C; --cyan: #22e3ff; --mag:#ff2d8e; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #050507; color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  /* 固定 3D 背景：贯穿整页 */
+  #c { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; z-index: 0; }
+  .grain { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .content { position: relative; z-index: 5; }
+
+  /* ── HERO ── */
+  .hero { position: relative; width: 100vw; height: 100vh; }
+  .vig { position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(ellipse 85% 65% at 56% 44%, transparent 50%, rgba(5,5,7,.82) 100%); }
+  header { position: absolute; top: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: space-between; padding: 30px 52px; }
+  .brand { font-size: 15px; font-weight: 700; letter-spacing: .34em; }
+  nav { display: flex; gap: 42px; font-size: 12px; letter-spacing: .18em; color: var(--muted); }
+  .access { font-size: 12px; letter-spacing: .14em; color: var(--ink);
+    background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.22); border-radius: 999px;
+    padding: 10px 21px; cursor: pointer; transition: .25s; backdrop-filter: blur(6px); }
+  .access:hover { background: var(--ink); color: #050507; }
+  .title { position: absolute; left: 52px; bottom: 70px; max-width: 820px; }
+  .kicker { display: flex; align-items: center; gap: 14px; font-size: 11px;
+    letter-spacing: .3em; color: #8A8A9B; margin-bottom: 28px; }
+  .kicker i { width: 34px; height: 1px; background: var(--cyan); display: inline-block; }
+  h1 { font-size: clamp(56px, 8.8vw, 148px); font-weight: 600; line-height: .88;
+    letter-spacing: -.045em; text-shadow: 0 8px 60px rgba(5,5,7,.5); }
+  h1 em { font-style: italic; font-weight: 300; font-family: 'Cormorant Garamond', serif; }
+  .sub { margin-top: 30px; max-width: 440px; font-size: 15.5px; line-height: 1.7; color: #B4B4C2;
+    text-shadow: 0 2px 20px rgba(5,5,7,.8); }
+  .meta { position: absolute; right: 52px; bottom: 70px; text-align: right;
+    font-size: 10.5px; letter-spacing: .18em; color: var(--dim); line-height: 2; }
+  .scroll { margin-top: 18px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+  .scroll span { width: 1px; height: 30px; background: linear-gradient(var(--dim), transparent);
+    display: inline-block; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:.25} 50%{opacity:1} }
+
+  /* ── 跑马灯 ── */
+  .marquee { border-top: 1px solid rgba(255,255,255,.08); border-bottom: 1px solid rgba(255,255,255,.08);
+    background: rgba(5,5,7,.72); backdrop-filter: blur(10px); overflow: hidden; padding: 16px 0; }
+  .marquee .track { display: inline-flex; gap: 56px; white-space: nowrap; animation: scroll 26s linear infinite;
+    font-size: 12px; letter-spacing: .26em; color: var(--muted); }
+  .marquee .track span b { color: var(--cyan); font-weight: 500; margin-right: 56px; }
+  @keyframes scroll { to { transform: translateX(-50%); } }
+
+  /* ── MANIFESTO ── */
+  .manifesto { padding: 180px 52px; max-width: 1180px; margin: 0 auto;
+    background: linear-gradient(180deg, rgba(5,5,7,.40), rgba(5,5,7,.86) 40%, rgba(5,5,7,.86)); }
+  .sec-no { font-size: 11px; letter-spacing: .32em; color: #8A8A9B; margin-bottom: 46px;
+    display: flex; align-items: center; gap: 16px; }
+  .sec-no i { width: 60px; height: 1px; background: rgba(255,255,255,.2); }
+  .manifesto h2 { font-size: clamp(32px, 4.4vw, 66px); font-weight: 400; line-height: 1.16;
+    letter-spacing: -.025em; max-width: 1000px; }
+  .manifesto h2 b { color: var(--cyan); font-weight: 400; }
+  .manifesto h2 em { font-style: italic; font-family: 'Cormorant Garamond', serif; }
+
+  /* ── 规格表网格 ── */
+  .specs { background: rgba(5,5,7,.86); padding: 0 52px 60px; }
+  .grid { max-width: 1180px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid rgba(255,255,255,.1); border-left: 1px solid rgba(255,255,255,.1); }
+  .cell { border-right: 1px solid rgba(255,255,255,.1); border-bottom: 1px solid rgba(255,255,255,.1);
+    padding: 40px 36px 48px; position: relative; transition: background .3s; }
+  .cell:hover { background: rgba(34,227,255,.05); }
+  .cell .idx { font-size: 11px; letter-spacing: .2em; color: var(--dim); }
+  .cell h3 { margin: 28px 0 12px; font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
+  .cell p { font-size: 13.5px; line-height: 1.65; color: #8A8A9B; }
+  .cell .dot { position: absolute; top: 40px; right: 36px; width: 7px; height: 7px; border-radius: 50%; }
+
+  /* ── 数据带 ── */
+  .band { background: rgba(5,5,7,.9); border-top: 1px solid rgba(255,255,255,.1);
+    display: grid; grid-template-columns: repeat(3, 1fr); }
+  .band .b { padding: 64px 52px; border-right: 1px solid rgba(255,255,255,.08); }
+  .band .b:last-child { border-right: none; }
+  .band .n { font-size: clamp(44px, 5vw, 68px); font-weight: 600; letter-spacing: -.03em; }
+  .band .n s { text-decoration: none; color: var(--cyan); }
+  .band .l { margin-top: 14px; font-size: 13px; color: #8A8A9B; letter-spacing: .04em; }
+
+  /* ── CTA ── */
+  .cta { padding: 160px 52px 70px; text-align: center; background: rgba(5,5,7,.55); }
+  .cta .eye { font-size: 11px; letter-spacing: .32em; color: var(--cyan); margin-bottom: 30px; }
+  .cta h3 { font-size: clamp(40px, 6.5vw, 104px); font-weight: 600; letter-spacing: -.04em; line-height: .96; }
+  .cta button { margin-top: 50px; font-size: 13px; letter-spacing: .14em; color: #050507;
+    background: var(--ink); border: none; border-radius: 999px; padding: 17px 44px; cursor: pointer;
+    font-weight: 600; transition: .25s; }
+  .cta button:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(34,227,255,.25); }
+  .foot { padding: 60px 52px; display: flex; justify-content: space-between;
+    font-size: 11px; letter-spacing: .24em; color: #4C4C5A; border-top: 1px solid rgba(255,255,255,.06);
+    background: #050507; }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "./lib/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <div class="grain"></div>
+
+  <div class="content">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="vig"></div>
+      <header>
+        <div class="brand">AETHER</div>
+        <nav><span>ENGINE</span><span>RESEARCH</span><span>MANIFESTO</span></nav>
+        <button class="access">REQUEST ACCESS →</button>
+      </header>
+      <div class="title">
+        <div class="kicker"><i></i>001 — SPATIAL INTELLIGENCE ENGINE</div>
+        <h1>Compute<br>the <em>unseen.</em></h1>
+        <p class="sub">一个把物理空间实时解算为可计算场域的神经引擎。在毫秒之间，让机器看见人眼之外的维度。</p>
+      </div>
+      <div class="meta mono">
+        <div>LAT 37.3861 · LON −122.0839</div>
+        <div>RENDER · REALTIME · 120FPS</div>
+        <div class="scroll">SCROLL<span></span></div>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee">
+      <div class="track mono">
+        <span><b>NEURAL RECONSTRUCTION</b><b>VOXEL FIELD</b><b>OCCLUSION SOLVE</b><b>REALTIME DEPTH</b><b>SPATIAL MESH</b><b>NEURAL RECONSTRUCTION</b><b>VOXEL FIELD</b><b>OCCLUSION SOLVE</b><b>REALTIME DEPTH</b><b>SPATIAL MESH</b></span>
+      </div>
+    </div>
+
+    <!-- MANIFESTO -->
+    <section class="manifesto">
+      <div class="sec-no mono">002 — MANIFESTO <i></i></div>
+      <h2>世界不是像素的集合，而是一片连续的、可被解算的 <b>场</b>。<br>我们造的不是相机，是一种新的<em> 感知 </em>。</h2>
+    </section>
+
+    <!-- SPECS -->
+    <section class="specs">
+      <div class="grid">
+        <div class="cell">
+          <div class="idx mono">/ 01</div><span class="dot" style="background:var(--cyan)"></span>
+          <h3>体素场重建</h3>
+          <p>把连续空间实时解算为可计算的体素场，每一帧都是一份可被查询的世界快照。</p>
+        </div>
+        <div class="cell">
+          <div class="idx mono">/ 02</div><span class="dot" style="background:var(--mag)"></span>
+          <h3>动态遮挡补全</h3>
+          <p>被遮挡的几何由神经先验补全，物体转身、穿插也不丢失空间连续性。</p>
+        </div>
+        <div class="cell">
+          <div class="idx mono">/ 03</div><span class="dot" style="background:#4d6bff"></span>
+          <h3>毫秒级延迟</h3>
+          <p>端到端 0.8ms 解算，让感知与决策几乎同步，足以驱动实时交互系统。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATA BAND -->
+    <section class="band mono">
+      <div class="b"><div class="n"><s>0.8</s>ms</div><div class="l">单帧空间解算延迟</div></div>
+      <div class="b"><div class="n"><s>12</s>M</div><div class="l">每秒重建的体素点</div></div>
+      <div class="b"><div class="n"><s>98.6</s>%</div><div class="l">动态遮挡补全精度</div></div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="eye mono">EARLY ACCESS · 2026</div>
+      <h3>看见，<br>从这里开始。</h3>
+      <button>REQUEST EARLY ACCESS →</button>
+    </section>
+    <div class="foot mono">
+      <span>AETHER © 2026</span><span>SPATIAL INTELLIGENCE</span><span>SF · BERLIN · TOKYO</span>
+    </div>
+  </div>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#050507');
+const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+camera.position.set(0, 0, 6.4);
+
+const pmrem = new THREE.PMREMGenerator(renderer);
+// ── 彩色环境：金属表面反射成大片流动虹彩 ──
+function makeColorEnv() {
+  const es = new THREE.Scene();
+  es.background = new THREE.Color('#060608');
+  const room = new RoomEnvironment();        // 提供基础高光层次
+  es.add(room);
+  const panel = (hex, x, y, z, s, intensity) => {
+    const m = new THREE.Mesh(
+      new THREE.PlaneGeometry(s, s),
+      new THREE.MeshBasicMaterial({ color: new THREE.Color(hex).multiplyScalar(intensity) })
+    );
+    m.position.set(x, y, z); m.lookAt(0, 0, 0); es.add(m);
+  };
+  panel('#22e3ff', 6, 3, 3, 7, 2.4);   // 青
+  panel('#ff2d8e', -6, -2, 4, 7, 2.4); // 品红
+  panel('#4d6bff', 0, 5, -5, 7, 2.0);  // 电蓝
+  panel('#ffffff', -3, -5, 2, 4, 1.6); // 白高光
+  return es;
+}
+scene.environment = pmrem.fromScene(makeColorEnv(), 0.35).texture;
+
+// ── 金属球（清晰实体 + 大片虹彩反射） ──
+const geo = new THREE.IcosahedronGeometry(1, 48);
+const mat = new THREE.MeshStandardMaterial({
+  color: '#0c0c14', metalness: 1.0, roughness: 0.3, envMapIntensity: 1.6,
+});
+const NOISE = `
+vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
+vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
+vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}
+vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+float snoise(vec3 v){
+  const vec2 C=vec2(1.0/6.0,1.0/3.0); const vec4 D=vec4(0.0,0.5,1.0,2.0);
+  vec3 i=floor(v+dot(v,C.yyy)); vec3 x0=v-i+dot(i,C.xxx);
+  vec3 g=step(x0.yzx,x0.xyz); vec3 l=1.0-g; vec3 i1=min(g.xyz,l.zxy); vec3 i2=max(g.xyz,l.zxy);
+  vec3 x1=x0-i1+C.xxx; vec3 x2=x0-i2+C.yyy; vec3 x3=x0-D.yyy;
+  i=mod289(i);
+  vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
+  float n_=0.142857142857; vec3 ns=n_*D.wyz-D.xzx;
+  vec4 j=p-49.0*floor(p*ns.z*ns.z);
+  vec4 x_=floor(j*ns.z); vec4 y_=floor(j-7.0*x_);
+  vec4 x=x_*ns.x+ns.yyyy; vec4 y=y_*ns.x+ns.yyyy; vec4 h=1.0-abs(x)-abs(y);
+  vec4 b0=vec4(x.xy,y.xy); vec4 b1=vec4(x.zw,y.zw);
+  vec4 s0=floor(b0)*2.0+1.0; vec4 s1=floor(b1)*2.0+1.0; vec4 sh=-step(h,vec4(0.0));
+  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy; vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+  vec3 p0=vec3(a0.xy,h.x); vec3 p1=vec3(a0.zw,h.y); vec3 p2=vec3(a1.xy,h.z); vec3 p3=vec3(a1.zw,h.w);
+  vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+  p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
+  vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0); m=m*m;
+  return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+}`;
+mat.onBeforeCompile = (shader) => {
+  shader.uniforms.uTime = { value: 0 };
+  shader.vertexShader = `uniform float uTime;\n${NOISE}\n` + shader.vertexShader.replace(
+    '#include <begin_vertex>',
+    `#include <begin_vertex>
+     float n = snoise(normalize(position) * 1.5 + uTime * 0.26);
+     float n2 = snoise(normalize(position) * 3.2 - uTime * 0.16);
+     transformed += normal * (n * 0.26 + n2 * 0.08);`
+  );
+  mat.userData.shader = shader;
+};
+const blob = new THREE.Mesh(geo, mat);
+blob.scale.setScalar(2.0);
+blob.position.x = 0.6;
+scene.add(blob);
+
+// ── 旋转彩色点光（虹彩来源，强度收敛） ──
+const lightGroup = new THREE.Group();
+scene.add(lightGroup);
+const addLight = (color, x, y, z, intensity) => {
+  const l = new THREE.PointLight(color, intensity, 22, 2);
+  l.position.set(x, y, z); lightGroup.add(l);
+};
+addLight('#22e3ff', 5, 3, 2, 95);
+addLight('#ff2d8e', -5, -2, 3, 95);
+addLight('#4d6bff', 0, 4, -4, 70);
+addLight('#ffffff', -2, -4, 2, 32);
+scene.add(new THREE.AmbientLight('#1a1a22', 1.0));
+
+let composer;
+function buildComposer(w, h) {
+  composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  // 中等辉光：亮部虹彩发光，但保留金属实体轮廓
+  composer.addPass(new UnrealBloomPass(new THREE.Vector2(w, h), 0.55, 0.42, 0.80));
+  composer.addPass(new OutputPass());
+}
+
+const mouse = { x: 0, y: 0 };
+addEventListener('pointermove', (e) => {
+  mouse.x = (e.clientX / innerWidth) * 2 - 1;
+  mouse.y = -((e.clientY / innerHeight) * 2 - 1);
+});
+function resize() {
+  const w = innerWidth, h = innerHeight;
+  renderer.setSize(w, h);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+  buildComposer(w, h);
+}
+addEventListener('resize', resize);
+resize();
+
+// 滚动时球轻微下沉 + 缩小，让下半页背景更安静
+let scrollY = 0;
+addEventListener('scroll', () => { scrollY = window.scrollY / innerHeight; });
+
+const clock = new THREE.Clock();
+function tick() {
+  const t = clock.getElapsedTime();
+  if (mat.userData.shader) mat.userData.shader.uniforms.uTime.value = t;
+  blob.rotation.y = t * 0.12 + mouse.x * 0.45;
+  blob.rotation.x = mouse.y * 0.3;
+  const sink = Math.min(scrollY, 1.5);
+  blob.position.y = Math.sin(t * 0.8) * 0.1 - sink * 1.2;
+  blob.scale.setScalar(2.0 - sink * 0.25);
+  lightGroup.rotation.y = t * 0.3;
+  composer.render();
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body>
+</html>

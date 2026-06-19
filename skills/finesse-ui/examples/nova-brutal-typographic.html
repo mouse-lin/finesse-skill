@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NOVA — 数字时装周 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital@1&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --bone:#ECE7DC; --ink:#14110D; --red:#FF3B1D; --dim:#8A8479; }
+  body { background: var(--bone); color: var(--ink); font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  .anton { font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: .01em; }
+  .ital { font-family: 'Cormorant Garamond', serif; font-style: italic; }
+
+  /* nav */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between; padding: 22px 40px;
+    mix-blend-mode: difference; color: #fff; }
+  .nav .logo { font-size: 18px; font-weight: 700; letter-spacing: .22em; }
+  .nav .links { display: flex; gap: 34px; font-size: 12px; letter-spacing: .16em; }
+  .nav .season { font-size: 12px; letter-spacing: .16em; }
+
+  /* HERO */
+  .hero { position: relative; height: 100vh; padding: 0 40px; overflow: hidden; }
+  .hero .big { position: absolute; left: 36px; bottom: 56px; z-index: 4; }
+  .hero .big h1 { font-size: clamp(74px, 15vw, 232px); line-height: .82; letter-spacing: -.01em; }
+  .hero .big h1 .out { color: transparent; -webkit-text-stroke: 2px var(--ink); }
+  .hero .big h1 .red { color: var(--red); }
+  .hero .kick { position: absolute; left: 40px; top: 120px; max-width: 300px; font-size: 14px;
+    line-height: 1.6; color: #4a463d; z-index: 4; }
+  .hero .kick b { color: var(--ink); }
+  .hero-img { position: absolute; right: 40px; top: 90px; bottom: 150px; width: 34vw; max-width: 520px;
+    overflow: hidden; z-index: 3; }
+  .hero-img img { width: 100%; height: 120%; object-fit: cover; will-change: transform; }
+  .hero-img .cap { position: absolute; left: 14px; bottom: 14px; color: #fff; font-size: 11px;
+    letter-spacing: .16em; text-shadow: 0 1px 8px rgba(0,0,0,.6); }
+  .hero .date { position: absolute; right: 40px; bottom: 56px; z-index: 4; text-align: right; }
+  .hero .date .d { font-size: 52px; letter-spacing: -.02em; }
+  .hero .date .s { font-size: 12px; letter-spacing: .2em; color: var(--dim); }
+
+  /* marquee */
+  .mq { border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); overflow: hidden;
+    padding: 12px 0; background: var(--red); }
+  .mq .t { display: inline-flex; white-space: nowrap; animation: mq 22s linear infinite; color: #fff; }
+  .mq .t span { font-size: 22px; font-weight: 700; letter-spacing: .04em; padding: 0 28px; }
+  .mq .t span i { font-style: normal; opacity: .55; }
+  @keyframes mq { to { transform: translateX(-50%); } }
+
+  /* STATEMENT (scrub) */
+  .stmt { padding: 200px 40px; }
+  .stmt p { font-family: 'Anton', sans-serif; font-size: clamp(38px, 6.4vw, 104px); line-height: 1.02;
+    letter-spacing: -.01em; max-width: 1300px; }
+  .stmt p .w { color: #cfc8b8; transition: color .2s; }
+  .stmt p .w.on { color: var(--ink); }
+  .stmt p .w.acc.on { color: var(--red); }
+
+  /* RUNWAY (pinned horizontal) */
+  .runway { height: 100vh; overflow: hidden; position: relative; background: var(--ink); }
+  .runway .head { position: absolute; top: 28px; left: 40px; z-index: 5; color: var(--bone);
+    font-size: 12px; letter-spacing: .2em; }
+  .runway .count { position: absolute; top: 28px; right: 40px; z-index: 5; color: var(--bone);
+    font-size: 12px; letter-spacing: .2em; }
+  .track { display: flex; height: 100%; align-items: center; padding: 0 40px; gap: 30px; width: max-content; }
+  .look { position: relative; height: 74vh; width: 30vw; min-width: 360px; flex: 0 0 auto; overflow: hidden;
+    background: #222; }
+  .look img { width: 100%; height: 100%; object-fit: cover; }
+  .look .no { position: absolute; top: 16px; left: 16px; color: #fff; font-size: 13px; letter-spacing: .18em; }
+  .look .nm { position: absolute; left: 16px; bottom: 16px; color: #fff; }
+  .look .nm .a { font-family:'Anton',sans-serif; font-size: 30px; line-height: 1; }
+  .look .nm .b { font-size: 11px; letter-spacing: .18em; opacity: .8; margin-top: 6px; }
+  .look.tall { height: 84vh; }
+  .look .idx { position: absolute; top: 16px; right: 16px; color: var(--red); font-size: 13px; font-weight: 700; }
+
+  /* FEATURE */
+  .feature { position: relative; height: 130vh; background: var(--bone); }
+  .feature .stick { position: sticky; top: 0; height: 100vh; display: flex; align-items: center;
+    justify-content: center; overflow: hidden; }
+  .feature .fimg { width: 64vw; height: 72vh; overflow: hidden; }
+  .feature .fimg img { width: 100%; height: 100%; object-fit: cover; }
+  .feature .ftxt { position: absolute; z-index: 3; text-align: center; mix-blend-mode: difference; color:#fff; }
+  .feature .ftxt h2 { font-family:'Anton',sans-serif; font-size: clamp(48px, 9vw, 150px); line-height: .9; }
+  .feature .ftxt p { font-size: 14px; letter-spacing: .2em; margin-top: 18px; }
+
+  /* FINALE */
+  .finale { padding: 160px 40px 80px; text-align: center; background: var(--red); color: #fff; }
+  .finale .y { font-family:'Anton',sans-serif; font-size: clamp(120px, 26vw, 420px); line-height: .8; }
+  .finale .cta { margin-top: 30px; display: inline-flex; gap: 12px; align-items: center;
+    border: 2px solid #fff; border-radius: 999px; padding: 16px 38px; font-size: 14px; letter-spacing: .14em;
+    font-weight: 600; }
+  .finale .foot { margin-top: 100px; display: flex; justify-content: space-between; font-size: 11px;
+    letter-spacing: .2em; opacity: .85; }
+</style>
+</head>
+<body>
+  <div class="nav">
+    <div class="logo">NOVA</div>
+    <div class="links"><span>SHOWS</span><span>DESIGNERS</span><span>ARCHIVE</span><span>TICKETS</span></div>
+    <div class="season">SS · 2026</div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="kick">全球首个<b>纯数字</b>时装周。<br>48 间虚拟时装屋，<br>72 小时不落幕的秀场。</div>
+    <div class="hero-img"><img id="heroImg" src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1000&h=1400&fit=crop&q=80" alt="look" /><div class="cap">LOOK 01 — ATELIER NOVA</div></div>
+    <div class="big">
+      <h1 class="anton">DIGITAL<br><span class="out">FASHION</span><br>WEEK<span class="red">®</span></h1>
+    </div>
+    <div class="date"><div class="d anton">03 / 2026</div><div class="s">MILAN · DIGITAL ONLY</div></div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="mq"><div class="t">
+    <span>NEW SEASON <i>✦</i></span><span>48 HOUSES <i>✦</i></span><span>ZERO FABRIC <i>✦</i></span><span>PURE PIXELS <i>✦</i></span><span>72 HOURS <i>✦</i></span>
+    <span>NEW SEASON <i>✦</i></span><span>48 HOUSES <i>✦</i></span><span>ZERO FABRIC <i>✦</i></span><span>PURE PIXELS <i>✦</i></span><span>72 HOURS <i>✦</i></span>
+  </div></div>
+
+  <!-- STATEMENT -->
+  <section class="stmt">
+    <p class="anton" id="stmt">时装不再需要布料。它只需要光、代码，与一个敢于被看见的身体。</p>
+  </section>
+
+  <!-- RUNWAY -->
+  <section class="runway">
+    <div class="head">002 — THE RUNWAY</div>
+    <div class="count" id="rwCount">01 / 06</div>
+    <div class="track" id="track">
+      <div class="look tall"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&h=1300&fit=crop&q=80"><div class="no">LOOK 01</div><div class="idx">SS26</div><div class="nm"><div class="a">VELA</div><div class="b">PARIS · DIGITAL HOUSE</div></div></div>
+      <div class="look"><img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=900&h=1300&fit=crop&q=80"><div class="no">LOOK 02</div><div class="idx">SS26</div><div class="nm"><div class="a">OBSCURA</div><div class="b">BERLIN</div></div></div>
+      <div class="look tall"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&h=1300&fit=crop&q=80"><div class="no">LOOK 03</div><div class="idx">SS26</div><div class="nm"><div class="a">KAIROS</div><div class="b">TOKYO</div></div></div>
+      <div class="look"><img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=900&h=1300&fit=crop&q=80"><div class="no">LOOK 04</div><div class="idx">SS26</div><div class="nm"><div class="a">MIRAGE</div><div class="b">SEOUL</div></div></div>
+      <div class="look tall"><img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=900&h=1300&fit=crop&q=80"><div class="no">LOOK 05</div><div class="idx">SS26</div><div class="nm"><div class="a">SOLSTICE</div><div class="b">NEW YORK</div></div></div>
+      <div class="look"><img src="https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?w=900&h=1300&fit=crop&q=80"><div class="no">LOOK 06</div><div class="idx">SS26</div><div class="nm"><div class="a">AURUM</div><div class="b">MILAN</div></div></div>
+    </div>
+  </section>
+
+  <!-- FEATURE -->
+  <section class="feature">
+    <div class="stick">
+      <div class="fimg"><img id="featImg" src="https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?w=1400&h=1000&fit=crop&q=80"></div>
+      <div class="ftxt"><h2 class="anton">SEE THE<br>UNSEEN</h2><p>003 — CLOSING SHOW</p></div>
+    </div>
+  </section>
+
+  <!-- FINALE -->
+  <section class="finale">
+    <div class="y anton">2026</div>
+    <div class="cta">ENTER THE SHOW →</div>
+    <div class="foot"><span>NOVA DIGITAL FASHION WEEK</span><span>MILAN · 03.2026</span><span>© 2026</span></div>
+  </section>
+
+<script src="./lib/gsap.min.js"></script>
+<script src="./lib/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// hero 图视差
+gsap.to('#heroImg', { yPercent: -16, ease: 'none',
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+// statement 逐词点亮（scrub）
+(function(){
+  const p = document.getElementById('stmt');
+  const txt = p.textContent; p.textContent = '';
+  const accIdx = new Set(); // 高亮“光、代码”
+  [...txt].forEach((ch, i) => {
+    const s = document.createElement('span');
+    s.className = 'w'; s.textContent = ch; p.appendChild(s);
+  });
+  const spans = p.querySelectorAll('.w');
+  // 给“光”“代码”加红
+  const reds = ['光','代','码'];
+  spans.forEach(s => { if (reds.includes(s.textContent)) s.classList.add('acc'); });
+  ScrollTrigger.create({
+    trigger: '.stmt', start: 'top 80%', end: 'bottom 60%', scrub: true,
+    onUpdate: self => {
+      const n = Math.floor(self.progress * spans.length);
+      spans.forEach((s, i) => s.classList.toggle('on', i < n));
+    }
+  });
+})();
+
+// RUNWAY 横向 pin 滚动
+(function(){
+  const track = document.getElementById('track');
+  const count = document.getElementById('rwCount');
+  const dist = () => track.scrollWidth - window.innerWidth + 80;
+  const tl = gsap.to(track, {
+    x: () => -dist(), ease: 'none',
+    scrollTrigger: {
+      trigger: '.runway', pin: true, scrub: 1,
+      end: () => '+=' + dist(),
+      onUpdate: self => { count.textContent = String(Math.min(6, Math.ceil(self.progress*6)||1)).padStart(2,'0') + ' / 06'; }
+    }
+  });
+})();
+
+// FEATURE 图缩放 + 文字
+gsap.fromTo('#featImg', { scale: 1.25 }, { scale: 1, ease: 'none',
+  scrollTrigger: { trigger: '.feature', start: 'top bottom', end: 'bottom top', scrub: true } });
+gsap.fromTo('.feature .ftxt', { letterSpacing: '0.3em', opacity: 0 }, { letterSpacing: '0em', opacity: 1, duration: 1,
+  scrollTrigger: { trigger: '.feature', start: 'top 60%' } });
+
+// finale 年份
+gsap.from('.finale .y', { scale: 1.3, opacity: 0, duration: 1, ease: 'power3.out',
+  scrollTrigger: { trigger: '.finale', start: 'top 70%' } });
+</script>
+</body>
+</html>

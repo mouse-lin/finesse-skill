@@ -1,0 +1,153 @@
+---
+description: finesse-ui design skill — never-cheap, high-craft web interfaces. Routes by register: brand (landing pages, hero sites, portfolios) → soul + spectacle engine; product (dashboards, admin, analytics) → component system + data viz. Enforces premium substrate, anti-slop blacklist, and pre-flight check on every output.
+globs: ["**/*.html", "**/*.css", "**/*.scss", "**/*.sass", "**/*.tsx", "**/*.jsx", "**/*.ts", "**/*.js", "**/*.vue", "**/*.svelte"]
+alwaysApply: false
+---
+
+# finesse — Technically Spectacular · Soul-Distinct · Never Cheap
+
+> **finesse builds two kinds of interface and routes by register:**
+> - **brand** — design IS the product: landing pages, brand sites, launches, portfolios, hero pages. Optimize for **spectacle + soul + first impression**.
+> - **product** — design SERVES the product: dashboards, admin panels, analytics, data tables, app shells. Optimize for **clarity + density + usability** — and still never cheap.
+>
+> The through-line is identical: **high craft, zero AI-slop.** The premium substrate, the cheapness blacklist, and the pre-flight apply to **both**.
+
+---
+
+## STEP 0 — BRAND READ (Before Any Code)
+
+Most AI design output is bad because the model jumps to a default aesthetic. Don't.
+
+**Determine the register:**
+- **brand** — landing page, brand site, launch, portfolio, campaign, hero page. Bold, opinionated, spectacular.
+- **product** — dashboard, admin, analytics, data table, app shell, settings. Clarity, density, usability.
+
+**Output a one-line Design Read before generating:**
+`Design Read: {industry} · {soul in 2-3 words} · register={brand|product} · SPECTACLE={n} · hero-engine={type}`
+
+**Anti-Default Discipline:** Name the lazy default for this brief, then beat it. "Coffee brand → the default is warm-beige + brass serif. I'm rejecting that for {x}."
+
+---
+
+## STEP 1 — THE THREE DIALS
+
+Set these explicitly from the Design Read.
+
+| Dial | 1–3 | 4–6 | 7–10 |
+|------|-----|-----|------|
+| **SOUL** | neutral, system-default | a clear vibe | unmistakable identity |
+| **SPECTACLE** | static + CSS only | GSAP scroll, Canvas 2D accents | Three.js / GLSL / WebGL-FBO hero |
+| **DENSITY** | airy, one idea/screen | balanced | editorial, data-rich |
+
+- Astronomy / music / game / crypto → SPECTACLE 7–10
+- Law / finance / healthcare / B2B → SPECTACLE 3–5
+- Heritage / luxury / editorial → SOUL 8–10, SPECTACLE 4–6
+- **Any product register** → SPECTACLE 1–4, DENSITY 6–9. Skip soul/engine sections.
+
+**SPECTACLE ≥ 7 = must ship a working engine.** A gradient blob claiming SPECTACLE 8 is broken. Drop to 4 and ship a polished static page instead.
+
+---
+
+## STEP 2 — PICK A SOUL (brand register only)
+
+Soul diversity is the job — the same method must yield visually unrelated pages for different briefs.
+
+- **Cinematic tech** (cyan/magenta, Inter + JetBrains Mono, Three.js particles) — astronomy, AI, crypto
+- **Phosphor terminal** (single neon-green, mono-forward, Canvas data viz) — quant, fintech, security
+- **Editorial publication** (cream/ink, Playfair + Spectral, GSAP scroll-reveal) — magazines, film, journals
+- **Warm heritage** (amber/copper, Fraunces/EB Garamond, Canvas fire) — whisky, coffee, craft
+- **Brutal typographic** (bone/black + hot accent, Anton/Bebas, mix-blend-mode) — fashion, music, culture
+- **Quiet luxury minimal** (off-white/forest, Raleway 100–900, CSS-only parallax) — architecture, hotels
+
+Rules: **one soul per page**, never fluctuate. Saturated defaults (AI-purple-glow, beige+brass) are banned unless earned.
+
+---
+
+## STEP 3 — THE PREMIUM SUBSTRATE (both registers)
+
+The physical layer that makes a page read as expensive. Apply to every output.
+
+- **Grain** — SVG `feTurbulence` noise at `opacity .025–.05`. Kills the flat "vector slop" look.
+- **Vignette** — radial-gradient darken on dark heroes for optical focus.
+- **Type tension** — display headings at `clamp()` with negative tracking (`-.02 to -.045em`), `line-height .86–.95`, extreme weight contrast (900 vs 300).
+- **Layered z-index** — engine(0) · grain(1) · vignette · content(5). Depth, not flatness.
+- **Translucent borders** — `rgba(255,255,255,.07–.22)` dark / `rgba(0,0,0,.06–.08)` light. Never hard `#333`.
+- **No pure `#fff` / `#000`.** Tint every neutral toward the brand hue.
+- **Color lock** — one accent, whole page. Audit every component. No surprise colors.
+- **OKLCH internally** — reason in OKLCH for palettes even if you emit hex.
+
+---
+
+## STEP 4 — HERO ENGINE (brand register only)
+
+One technically-spectacular moment. Not five — one, at 100%.
+
+| Engine | Use when |
+|--------|----------|
+| **Three.js + GLSL** | 3D depth, particle systems, bloom — SPECTACLE ≥ 7 |
+| **Canvas 2D** | particles, fields, real-time data, waveforms |
+| **WebGL FBO shader** | fluid, reaction-diffusion, ray-marching |
+| **GSAP ScrollTrigger** | scroll-pinned story, horizontal pan, parallax |
+| **CSS-only** | dual-layer mask, variable-font morph, `animation-timeline` |
+
+Engine discipline:
+- Page must be readable with the engine removed (progressive enhancement).
+- 60fps or simplify — animate `transform`/`opacity` only.
+- `prefers-reduced-motion` is mandatory — freeze to still frame.
+- Motivated motion only. "It looked cool" is not a reason. Max one marquee per page.
+
+---
+
+## STEP 5 — PAGE SKELETON (brand register)
+
+```
+HERO (100vh) → MARQUEE (≤1) → STATEMENT/MANIFESTO → CORE CONTENT →
+INDUSTRY SECTION → CTA/FINALE (oversized type) → FOOTER (mono, hairline)
+```
+
+- Nav: ≤80px, `mix-blend-mode: difference` over imagery, backdrop-blur on scroll.
+- Layout diversification: each layout family (card grid, full-width quote, split) appears at most twice.
+- Eyebrow restraint: max 1 eyebrow per 3 sections. Headlines usually suffice alone.
+- Theme lock: one theme throughout. No warm-paper section in a dark page.
+
+---
+
+## STEP 6 — CHEAPNESS BLACKLIST (both registers)
+
+Scan before shipping. Headline offenders:
+
+- **Em-dashes** in copy as a flourish — banned outright. #1 most-violated AI tell.
+- **Gradient text**, default glassmorphism, side-stripe card borders, AI-purple glow.
+- **Eyebrow on every section**, numbered `01 · 02 · 03` markers as default architecture.
+- **Identical card grids** (icon + title + text × 6). Div-based fake screenshots.
+- **Fake-precise numbers** (`92%`, `4.1×`) with no real source.
+- **Default-category palette** — name it, reject it. Never reach for it blindly.
+- **`Inter`/`Fraunces`/`Instrument Serif` as unexamined defaults** — fine if chosen deliberately.
+- **Zero imagery** on image-implied briefs (food, hotel, fashion) — that's a bug.
+
+---
+
+## STEP 7 — PERFORMANCE & A11Y
+
+- Animate `transform`/`opacity` only. `will-change` sparingly.
+- `prefers-reduced-motion`: stop loops, freeze grain, static fallback.
+- WCAG AA: body ≥ 4.5:1, large text ≥ 3:1.
+- Visible focus states on every interactive element.
+- Lazy-load heavy engines. `min-h-dvh` over `100vh`. CLS < 0.1.
+- Touch targets ≥ 44px. Mobile layout declared per multi-column section.
+
+---
+
+## STEP 8 — PRE-FLIGHT (mandatory before "done")
+
+Check all of:
+- [ ] Design Read output with committed register + dials
+- [ ] Premium substrate applied (grain, vignette, type tension, translucent borders, color lock)
+- [ ] SPECTACLE claimed = SPECTACLE shipped (working engine if ≥7)
+- [ ] Cheapness blacklist cleared (em-dashes, gradient text, eyebrow spam, fake numbers)
+- [ ] `prefers-reduced-motion` handled
+- [ ] WCAG AA contrast verified
+- [ ] Layout families diversified — no repeated pattern dominance
+- [ ] Mobile layout declared
+
+If any hard rule fails, fix before delivery. Shipping broken work is not an option.

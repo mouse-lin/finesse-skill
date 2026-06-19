@@ -1,0 +1,235 @@
+---
+name: finesse-ui
+description: Build never-cheap, high-craft web interfaces — both brand surfaces (landing pages, brand sites, launches, portfolios, hero pages with real WebGL/Three.js/Canvas/GSAP engines) and product UI (dashboards, admin panels, analytics, data tables, app shells, settings). Routes by register: brand → soul + spectacle engine; product → component system + information density + data viz. Always reads the brief first and audits against an anti-slop cheapness blacklist. Triggers on "make this look premium", "landing page", "dashboard", "admin panel", "analytics UI", "data table", "app UI", "give it a soul / a vibe", "anti-slop", "hero animation", "/finesse".
+version: 0.1.0
+license: MIT
+---
+
+# finesse — Technically Spectacular · Soul-Distinct · Never Cheap
+
+> **finesse builds two kinds of interface and routes by register (§0):**
+> - **brand** — design IS the product: landing pages, brand sites, launches, portfolios, hero pages. Optimize for **spectacle + soul + first impression** — a real visual engine, an opinionated personality.
+> - **product** — design SERVES the product: dashboards, admin panels, analytics, data tables, app shells, settings. Optimize for **clarity + density + usability** — and still never cheap.
+>
+> The through-line is identical: **high craft, zero AI-slop.** The premium substrate (§3), the cheapness blacklist (§6), and the pre-flight (§8) apply to **both**. What forks is the middle: brand reaches for a hero engine (§4); product reaches for a component system + data viz (`references/product-ui.md`).
+>
+> Every rule below is **contextual**. Nothing fires automatically. Read the brief, set the register, then pull only what fits. A skill that produces the same page for every brief has failed.
+
+---
+
+## How to use this skill
+
+1. Run **§0 Brand Read** — infer **register** (brand vs product) + soul before touching code. Output a one-line Design Read.
+2. Set the **§1 Three Dials** (SOUL · SPECTACLE · DENSITY). Product register pins SPECTACLE low, DENSITY high.
+3. **Both paths:** lay the **§3 Premium Substrate** (`references/design-dna.md`) — the physical layer that reads as expensive (it keeps dashboards from looking cheap too).
+4. **Then the paths fork:**
+   - **brand** → pick a **§2 Soul** (`references/style-personas.md`) and build **one §4 Hero Engine** (`references/hero-engines.md`).
+   - **product** → build a **component system + data viz** per `references/product-ui.md` (density, tables, charts, forms, interaction states).
+5. Assemble the **§5 page skeleton**, motion-motivated only.
+6. Run the **§6 Cheapness Blacklist** (`references/anti-cheap.md`) and **§8 Pre-Flight** (`references/preflight.md`) before shipping.
+
+The `references/*.md` files are the deep material. Load the one you need for the current phase — do not inline all of them.
+
+---
+
+## 0. BRAND READ (Before Anything Else)
+
+Most AI design output is bad because the model jumps to a default aesthetic instead of reading the brief. Don't.
+
+### 0.A Determine the Register (this forks every later decision)
+
+- **brand** — design IS the product: landing page, brand site, launch, portfolio, campaign, hero page. Be bold, opinionated, spectacular. Goes the soul + hero-engine route (§2, §4).
+- **product** — design SERVES the product: dashboard, admin, analytics, data table, app shell, settings, tool. Optimize for clarity, density, usability. Goes the component-system route (`references/product-ui.md`). Still never cheap — it inherits the substrate (§3) and the cheapness blacklist (§6).
+
+If a `PRODUCT.md` exists in the project, read it first (Register, Users, Brand Personality, Anti-references, Design Principles). It overrides your guesses. If none exists and the brief is thin, see 0.C.
+
+### 0.B Output a one-line "Design Read" before generating
+
+Format: `Design Read: {industry} · {soul in 2-3 words} · register={brand|product} · SPECTACLE={n} · hero-engine={type}`
+
+Example: `Design Read: deep-space astronomy · cinematic + reverent · register=brand · SPECTACLE=8 · hero-engine=Three.js particle galaxy`
+
+**STOP after the Design Read. Do not generate any code yet.** Wait for the user to confirm the direction or redirect. Only proceed to §1 once the user says "go ahead", "looks good", "yes", or provides additional guidance.
+
+### 0.C If the brief is ambiguous, ask ONE question — do not guess blind
+
+One sharp question beats five rounds of wrong defaults. Ask the thing that most changes the output: *"Is this meant to feel restrained-editorial or maximal-spectacle?"* / *"What should a visitor remember 10 seconds after leaving?"* Then commit. **Wait for the answer before proceeding.**
+
+### 0.D Anti-Default Discipline
+
+Name the lazy default for this brief, then beat it. "Coffee brand → the default is warm-beige + brass serif. I'm rejecting that for {x}." The single most-tested AI tell is reaching for the obvious aesthetic of the category. (Reflex-reject lists live in `references/anti-cheap.md`.)
+
+### 0.E Quick-Start Dial Mapping
+
+If the brief contains these cues, use these presets as a starting point before refining in §1:
+
+| User says | SOUL | SPECTACLE | DENSITY |
+|-----------|------|-----------|---------|
+| "premium", "luxury", "high-end" | 8 | 5 | 3 |
+| "minimal", "clean", "understated" | 6 | 3 | 3 |
+| "bold", "striking", "impactful" | 7 | 7 | 4 |
+| "editorial", "magazine", "publication" | 8 | 4 | 6 |
+| "tech", "AI", "SaaS" marketing | 6 | 7 | 5 |
+| "corporate", "B2B", "enterprise" | 4 | 3 | 6 |
+| "playful", "vibrant", "creative" | 7 | 6 | 5 |
+| "data-heavy", "dashboard", "analytics" | 4 | 2 | 9 |
+| "landing page" (no other cues) | 7 | 6 | 4 |
+| "portfolio" | 8 | 6 | 3 |
+
+Override these immediately if the brief provides stronger or contradicting signals.
+
+---
+
+## 1. THE THREE DIALS
+
+Set these explicitly from the Design Read. They drive everything downstream.
+
+| Dial | 1–3 | 4–6 | 7–10 |
+|------|-----|-----|------|
+| **SOUL** — how opinionated / branded the personality is | neutral, safe, system-default | a clear vibe | unmistakable, one-of-a-kind identity |
+| **SPECTACLE** — how technically-ambitious the visual engine is *(finesse's signature dial)* | static + CSS only | GSAP scroll, Canvas 2D accents | Three.js / GLSL / WebGL-FBO hero, generative, scroll-pinned cinema |
+| **DENSITY** — information per viewport | airy, one idea per screen | balanced | editorial, data-rich |
+
+### 1.A Dial inference (Design Read → values)
+
+- Astronomy / music / game / crypto / fashion-tech → **SPECTACLE 7–10** (the genre rewards a real engine).
+- Law / finance / healthcare / B2B SaaS marketing → **SPECTACLE 3–5** (craft over fireworks; one restrained motion moment).
+- Heritage / luxury / editorial / publication → **SOUL 8–10, SPECTACLE 4–6** (the type and substrate carry it, not WebGL).
+- **Any product register** (dashboard / admin / analytics / app) → **SPECTACLE 1–4, DENSITY 6–9** — clarity beats fireworks. Skip §2/§4 and go to `references/product-ui.md`.
+
+### 1.B "Spectacle claimed, spectacle shown" (mandatory)
+
+If `SPECTACLE ≥ 7`, the page MUST actually contain a working visual engine (a real Three.js/Canvas/GLSL/scroll-pinned moment), degrade gracefully, and hold 60fps on a mid-range device. A page that claims SPECTACLE 8 but ships a gradient blob is **broken**. If you cannot ship working spectacle in scope, drop the dial to 4 and ship an impeccably-crafted static page instead. Never half-build an engine that janks or cuts off.
+
+---
+
+## 2. PICK A SOUL (Industry → Persona) · brand register
+
+> **Product register:** soul still matters (brand accent, one type system, the substrate), but skip the spectacle personas below — go to `references/product-ui.md`. The rest of §2 and §4 are for **brand**.
+
+finesse's job is **soul diversity**: the same method must yield visually unrelated pages for different briefs. Reach into `references/style-personas.md` for the industry→persona map (palette family, type pairing, hero-engine fit, signature effect). Examples of the *range* you must be able to hit:
+
+- **Cinematic tech** (cyan/magenta, Inter + JetBrains Mono, Three.js particles) — astronomy, AI, crypto.
+- **Phosphor terminal** (single neon-green, mono-forward, Canvas data viz) — quant/fintech, security.
+- **Editorial publication** (cream/ink, Playfair + Spectral, GSAP scroll-reveal, grayscale photography) — magazines, film, journals.
+- **Warm heritage** (amber/copper/ember, Fraunces/EB Garamond, Canvas fire/particles) — whisky, coffee, craft.
+- **Brutal typographic** (bone/black + one hot accent, Anton/Bebas, mix-blend-mode) — fashion week, music, culture.
+- **Quiet luxury minimal** (off-white/forest, Raleway 100–900, CSS-only mask/parallax) — architecture, hotels, fragrance.
+
+Rules:
+- **One soul per page.** Don't fluctuate warm and cool greys, or swap accent colors mid-scroll. Lock it (see §3, color lock).
+- **Rotate, don't repeat.** If the last brief used editorial-serif, this one must not. Saturated aesthetic lanes (editorial-typographic, beige-brass craft, AI-purple-glow) are banned as *defaults* — earn them or avoid them (`references/anti-cheap.md`).
+
+---
+
+## 3. THE PREMIUM SUBSTRATE (Why It Reads as Expensive)
+
+The difference between a cheap page and an expensive one is mostly a thin physical layer, applied consistently. Full recipes and exact values in `references/design-dna.md`. The non-negotiables:
+
+- **Grain** — a fixed SVG `feTurbulence` noise layer at `opacity .025–.05`. Static, but kills the flat "vector slop" look. (Light pages too, lower opacity.)
+- **Vignette** — a radial-gradient darken on dark heroes to create an optical focal point.
+- **Type tension** — display headings at `clamp()` with **negative tracking** (`-.02 to -.045em`) and `line-height .86–.95`; extreme weight contrast against a light body (e.g. 900 against 300). Tight, large, confident.
+- **Layered z-index** — engine(0) · grain(1) · vignette · content(5). Depth, not flatness.
+- **Translucent borders** — `rgba(255,255,255,.07–.22)` on dark, `rgba(0,0,0,.06–.08)` on light. Never a hard `#333` line.
+- **No pure `#fff` / `#000`.** Tint every neutral a few points toward the brand hue.
+- **Color lock (mandatory):** once an accent is chosen, it owns the whole page. No surprise teal badge on a rose page. Audit every component before shipping.
+
+> Internally reason in **OKLCH** for palettes (perceptual consistency, easy light/dark pairing), even if you emit hex. Design light and dark together; test contrast in each — never just invert.
+
+---
+
+## 4. THE HERO ENGINE (finesse's Differentiator) · brand register
+
+> **Product register:** no hero engine — reach for a data-viz + component system instead (`references/product-ui.md`). This section is for **brand**.
+
+A finesse page earns its name with **one** technically-spectacular moment — usually the hero. Not five. One, done at 100%. Pick the engine that fits the soul; full mount/render/scroll skeletons + reduced-motion fallbacks live in `references/hero-engines.md`.
+
+| Engine | Use when | Cost |
+|--------|----------|------|
+| **Three.js + GLSL** | 3D depth, particle systems (galaxies, networks, DNA), metaballs, bloom | heavy; lazy-load `three`, gate on SPECTACLE ≥ 7 |
+| **Canvas 2D** | particles, fields, real-time data (K-lines, waveforms, fire), flow | light; DPR-adapt for retina |
+| **WebGL FBO shader** | fluid (Navier-Stokes), reaction-diffusion, ray-marching, iridescence | heavy; one fullscreen quad, multi-pass |
+| **GSAP ScrollTrigger** | scroll-pinned story, horizontal pan, parallax, reveal stagger | medium; the single most reusable engine |
+| **CSS-only** | dual-layer mask, 3D transforms, variable-font morph, scroll-driven `animation-timeline` | free; no JS, best perf |
+
+**Engine discipline (mandatory):**
+- **Progressive enhancement.** The page must be readable and complete with the engine removed. The engine is a fixed background or a hero accent, never load-bearing for content.
+- **60fps or simplify.** Animate only `transform` / `opacity`. Test on a mid-range device, not your machine. Below ~50fps, cut particle count or resolution.
+- **`prefers-reduced-motion` is mandatory** — freeze the engine to a still frame (or hide it and show a composed static hero). Never ship motion with no fallback.
+- **Motivated motion only.** Every ScrollTrigger / marquee / pinned section needs a one-sentence reason (hierarchy, storytelling, feedback, state). "It looked cool" is not a reason. Max **one** marquee per page.
+
+---
+
+## 5. PAGE SKELETON
+
+Canonical section sequence (adapt to the soul, never ship all of it by rote):
+
+```
+HERO (100vh, the engine moment)  →  MARQUEE/TICKER (≤1 per page)  →
+STATEMENT / MANIFESTO (word-reveal)  →  CORE CONTENT (specs grid · horizontal-pan · collection)  →
+INDUSTRY SECTION (process · parallax imagery · pull-quote)  →  CTA / FINALE (oversized type)  →  FOOTER (mono, hairline top border)
+```
+
+- **Nav:** single line, ≤80px tall, `mix-blend-mode: difference` works beautifully over imagery. Backdrop-blur on scroll.
+- **Layout diversification:** once a layout family is used (3-col cards, full-width quote, split image+text), it appears **at most once more**. Max 2 consecutive image+text zigzags. A page with 8 sections uses ≥4 layout families.
+- **Eyebrow restraint:** the tiny-uppercase-tracked label above every headline is the #1 AI tell. Max **1 eyebrow per 3 sections**. Usually the headline alone is enough.
+- **Theme lock:** one theme for the whole page. No warm-paper section dropped into a dark page (unless a deliberate one-time scroll theme-switch).
+
+---
+
+## 6. THE CHEAPNESS BLACKLIST
+
+Before declaring done, scan against `references/anti-cheap.md` — the merged anti-slop list (AI tells + absolute bans + reflex-reject fonts/palettes/aesthetics). The headline offenders:
+
+- **em-dashes** in copy as a flourish — banned outright (the single most-violated tell).
+- **gradient text**, default **glassmorphism**, side-stripe card borders, **AI-purple glow**.
+- **eyebrow on every section**, numbered `01 · 02 · 03` markers as default architecture.
+- **identical card grids** (icon + title + text × 6), div-based fake screenshots / fake dashboards.
+- **fake-precise numbers** (`92%`, `4.1×`) with no real source.
+- **default-category palette** (beige+brass for craft, purple-glow for AI/SaaS) — name it, reject it.
+- **`Inter`/`Fraunces`/`Instrument Serif` as unexamined defaults** — fine if chosen with a reason, a tell if reached for blindly.
+- **zero imagery** on an image-implied brief (food, hotel, fashion, travel) — that's a bug, not minimalism.
+
+---
+
+## 7. PERFORMANCE & ACCESSIBILITY GUARDRAILS
+
+- Animate `transform`/`opacity` only; never `top/left/width/height`. `will-change` sparingly.
+- `prefers-reduced-motion`: stop canvas loops, freeze grain, swap to static. Mandatory on every animated page.
+- Color contrast WCAG AA: body ≥ 4.5:1, large text ≥ 3:1. Includes buttons over photos (add scrim/stroke), placeholders, focus rings.
+- Visible focus states on every interactive element. Nav and CTAs reachable by keyboard.
+- Core Web Vitals: lazy-load heavy engines, `min-h-dvh` over `100vh` on mobile, responsive images (WebP/AVIF), CLS < 0.1.
+- Mobile collapse declared explicitly per multi-column section. Touch targets ≥ 44px.
+
+---
+
+## 8. PRE-FLIGHT CHECK
+
+Run the full checklist in `references/preflight.md` before saying "done." It merges the substrate check, the cheapness scan, the spectacle-claimed verification, and the a11y gates. If any hard rule fails, it is shipping broken work — fix before delivery.
+
+---
+
+## 8.A POST-DELIVERY ITERATION GUIDE
+
+After the user receives the initial output, map their feedback to the correct targeted fix. **Never rebuild from scratch for a single complaint** — identify the dial or module responsible and adjust only that.
+
+| User says | Action |
+|-----------|--------|
+| "too plain / boring" | Raise SPECTACLE +2; consider upgrading the engine type (e.g. Canvas → Three.js) |
+| "too flashy / overwhelming" | Lower SPECTACLE −2; simplify or swap to Engine D (GSAP) or E (CSS-only) |
+| "wrong vibe / feels off" | Re-run §2 with a different persona from `references/style-personas.md` |
+| "too much whitespace" | Raise DENSITY +2; add one content section |
+| "too cluttered" | Lower DENSITY −2; cut a section, increase section padding |
+| "more personality / bolder" | Raise SOUL +2; push color commitment level up one step in `references/design-dna.md` |
+| "feels generic / like every other AI site" | Trigger §0.D anti-default: name and reject the current soul, pick a non-obvious persona |
+| "change the colors" | Re-run color strategy in `references/design-dna.md`; maintain the accent lock rule |
+| "different animation" | Swap engine type in §4; re-run `references/hero-engines.md` for that engine's skeleton |
+| "remove a section" | Remove it, then re-audit §5 layout families (ensure ≥4 families remain) |
+| "feels slow / heavy" | Lower SPECTACLE; switch to Engine E (CSS-only) or reduce particle count/FBO resolution |
+| "needs to work on mobile" | Declare mobile layout per multi-column section; `min-h-dvh`, touch targets ≥44px |
+
+---
+
+## 9. OUT OF SCOPE
+
+finesse covers **both** brand and product UI, so its scope is wide. Hand off only when the work is a **pure backend / API / data task with no interface**, or a brief that explicitly wants a **generic, conventional, zero-craft page** (finesse always brings craft — if the user truly wants bland, that's a different tool). Everything from a spectacle landing page to a dense admin dashboard is in scope: set the register in §0 and route accordingly.
