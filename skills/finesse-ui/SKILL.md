@@ -69,8 +69,15 @@ finesse runs as a full build by default, but supports **verb commands** for targ
 
 1. **First word matches a command** → load that command's reference and follow it. Everything after the command name is the target. Lay the **§3 substrate** and run the relevant **§6/§8 checks**, but skip the parts of §0–§5 that don't apply to that single action (e.g. `quieter` doesn't re-pick a soul).
 2. **First word doesn't match, but intent clearly maps to one command** ("too plain / boring" → `bolder`; "too flashy" → `quieter`; "feels generic" → `soul`; "make it pop" → `animate`; "too sparse / too dense" → `densify`; "improve / fix this page" → `redesign`) → route to that command and proceed as if invoked. If two fit, ask once which.
-3. **No command, building something new** → run the full `craft` flow (§0 → §8). This is the default for "build me a landing page / dashboard".
-4. **`audit` is read-only.** It only reports findings; it never edits code. Every other command is allowed to modify the target.
+3. **No argument at all** (bare `/finesse`) → the user is asking *"what should I do here?"* Don't dump the static menu. Read a few cheap signals and **lead with the 2-3 highest-value commands**, each with a one-line reason, then offer the full table as fallback. Never auto-run — recommend, the user confirms. Signal → pick:
+   - **no `PRODUCT.md`** and there's real code/pages → lead with `document` (capture what's built) and/or `init` (write the brief). Brand-new empty project → `init` then `craft`.
+   - **`PRODUCT.md` exists, has built pages, never audited** → lead with `audit <surface>` (read-only health check).
+   - **git working tree points at one page/file** → scope `audit` or `redesign` to those files, naming them.
+   - **a recent `audit` found P0/P1** → lead with `redesign` (fix the backlog) or the specific refine verb the findings point to (gradient-text/eyebrows → `quieter`/`soul`; flat motion → `animate`).
+   - **nothing built yet, clear brief** → `craft`.
+   Keep it to 2-3 pointed picks with the exact command to type. The menu is the fallback, not the lede.
+4. **A target but no command, building something new** → run the full `craft` flow (§0 → §8). The default for "build me a landing page / dashboard".
+5. **`audit` is read-only.** It only reports findings; it never edits code. Every other command is allowed to modify the target.
 
 > Auto-trigger is unchanged: finesse still activates from natural language via its `description`. Commands are an **added** precision entry-point (`/finesse quieter page.html`), not a replacement — both routes lead to the same references.
 
