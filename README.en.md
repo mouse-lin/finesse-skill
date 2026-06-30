@@ -28,6 +28,7 @@ Both paths share the same foundation: **premium physical substrate + anti-slop a
 
 - **Premium physical substrate** — SVG grain / vignette / type weight tension / color family (distilled from 37 pages of industry showcase analysis)
 - **Five hero engine types** — Three.js / Canvas / WebGL-FBO / GSAP / CSS-only, each with a `prefers-reduced-motion` fallback skeleton
+- **3D effects spectrum** — CSS pseudo-3D (pointer-tilt cards / flip cards / coverflow / depth-parallax) + Three.js real 3D (model viewer / image-displacement plane); the `depth` command drops in one 3D moment
 - **Industry soul decision matrix** — industry → style / palette / typeface / engine selection table; cures "every page looks the same"
 - **Product UI route** — dashboard information architecture · 25 chart types · data tables · forms · interaction state inventory · component system · cognitive load
 - **Register-driven routing** — brand vs product split into two completely different rule sets
@@ -109,6 +110,7 @@ finesse-skill/
 │       ├── references/
 │       │   ├── design-dna.md             # Premium substrate (palette/type/grain/vignette)
 │       │   ├── hero-engines.md           # Five engine skeletons + reduced-motion fallbacks + inline-image technique
+│       │   ├── 3d-effects.md             # 3D spectrum: CSS pseudo-3D (tilt/flip/coverflow/parallax) + Three.js real 3D
 │       │   ├── style-personas.md         # Industry → soul decision matrix
 │       │   ├── anti-cheap.md             # Anti-slop blacklist (AI tells + bans + reflex-reject)
 │       │   ├── product-ui.md             # Product route: dashboards/tables/charts/forms/states

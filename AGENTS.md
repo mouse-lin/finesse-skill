@@ -30,6 +30,7 @@ A full build runs the whole workflow below. For iterating on an existing page, r
 | `quieter` | "too flashy / janky" → SPECTACLE −2, engine down a tier | `references/hero-engines.md` |
 | `soul` | "feels generic / wrong vibe" → re-pick persona, re-lock color | `references/style-personas.md` |
 | `animate` | "make it move / different animation" → add/swap engine only | `references/hero-engines.md` |
+| `depth` | "add depth / make it 3D / tilt / parallax" → add one 3D moment (CSS pseudo-3D, or Three.js for a real object) | `references/3d-effects.md` |
 | `densify` | "too sparse / too dense" → DENSITY ± | `references/product-ui.md` |
 | `redesign` | "improve / fix this page" → audit-first, never full-rebuild | `references/redesign-mode.md` |
 
@@ -116,6 +117,7 @@ If any gate fails: fix it. Do not ship and note it as a known issue.
 |------|-----------|
 | `skills/finesse-ui/references/design-dna.md` | Implementing the substrate layer |
 | `skills/finesse-ui/references/hero-engines.md` | Building a brand hero engine |
+| `skills/finesse-ui/references/3d-effects.md` | Adding a 3D moment: CSS tilt/flip/coverflow/parallax or Three.js model/displacement |
 | `skills/finesse-ui/references/style-personas.md` | Choosing a brand soul/persona |
 | `skills/finesse-ui/references/anti-cheap.md` | Running the cheapness audit |
 | `skills/finesse-ui/references/audit.md` | Read-only diagnostic (cheapness + spectacle + pre-flight) |

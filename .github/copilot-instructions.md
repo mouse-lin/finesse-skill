@@ -38,7 +38,7 @@ Both are **never cheap**. The premium substrate and anti-slop rules apply to bot
 
 ## Iterating on an existing page
 
-Don't rebuild for a single complaint — route to one verb and adjust only that: `audit` (read-only review), `bolder` / `quieter` (SPECTACLE ±), `soul` (re-pick persona), `animate` (engine only), `densify` (DENSITY ±), `redesign` (audit-first fix). See `skills/finesse-ui/SKILL.md` → Commands.
+Don't rebuild for a single complaint — route to one verb and adjust only that: `audit` (read-only review), `bolder` / `quieter` (SPECTACLE ±), `soul` (re-pick persona), `animate` (engine only), `depth` (add one 3D moment — CSS tilt/flip/coverflow/parallax, Three.js for a real object), `densify` (DENSITY ±), `redesign` (audit-first fix). See `skills/finesse-ui/SKILL.md` → Commands.
 
 ## Reference Material
 

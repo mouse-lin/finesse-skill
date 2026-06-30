@@ -1,9 +1,9 @@
 ---
 name: finesse-ui
 description: Build never-cheap, high-craft web interfaces — both brand surfaces (landing pages, brand sites, launches, portfolios, hero pages with real WebGL/Three.js/Canvas/GSAP engines) and product UI (dashboards, admin panels, analytics, data tables, app shells, settings). Routes by register: brand → soul + spectacle engine; product → component system + information density + data viz. Always reads the brief first and audits against an anti-slop cheapness blacklist. Supports verb commands (audit · bolder · quieter · soul · animate · densify · redesign) for targeted iteration on existing pages. Triggers on "make this look premium", "landing page", "dashboard", "admin panel", "analytics UI", "data table", "app UI", "give it a soul / a vibe", "anti-slop", "hero animation", "/finesse".
-version: 0.2.0
+version: 0.3.0
 user-invocable: true
-argument-hint: "[craft · audit · bolder|quieter|soul · animate|densify · redesign · init|document] [target]"
+argument-hint: "[craft · audit · bolder|quieter|soul · animate|depth|densify · redesign · init|document] [target]"
 license: MIT
 ---
 
@@ -36,6 +36,7 @@ The `references/*.md` files are the deep material. Load the one you need for the
 |-----------|-------------|
 | `design-dna.md` | Laying the premium substrate (grain, vignette, type, color tokens) |
 | `hero-engines.md` | Building the hero engine (brand register) |
+| `3d-effects.md` | Adding a 3D moment — CSS tilt/flip/coverflow/depth-parallax or Three.js model/displacement |
 | `style-personas.md` | Picking a soul (brand register) |
 | `anti-cheap.md` | Before any delivery — cheapness scan |
 | `product-ui.md` | Dashboard / admin / data app (product register) |
@@ -62,13 +63,14 @@ finesse runs as a full build by default, but supports **verb commands** for targ
 | `quieter [target]` | Refine | Lower SPECTACLE −2, step down to GSAP / CSS-only; calm an overloaded page | `hero-engines.md` |
 | `soul [target]` | Refine | Re-pick the persona / soul when a page "feels generic" or wrong-vibe | `style-personas.md` |
 | `animate [target]` | Enhance | Add or swap the hero engine in isolation; motion only | `hero-engines.md` |
+| `depth [target]` | Enhance | Add **one** 3D moment — CSS pseudo-3D (tilt · flip · coverflow · depth-parallax) or Three.js (model viewer · image displacement) | `3d-effects.md` |
 | `densify [target]` | Enhance | Adjust DENSITY ± — add/remove content, tune information-per-viewport | `product-ui.md` |
 | `redesign [target]` | Iterate | Upgrade an existing page, audit-first; never full-rebuild for one complaint | `redesign-mode.md` |
 
 ### Routing rules
 
 1. **First word matches a command** → load that command's reference and follow it. Everything after the command name is the target. Lay the **§3 substrate** and run the relevant **§6/§8 checks**, but skip the parts of §0–§5 that don't apply to that single action (e.g. `quieter` doesn't re-pick a soul).
-2. **First word doesn't match, but intent clearly maps to one command** ("too plain / boring" → `bolder`; "too flashy" → `quieter`; "feels generic" → `soul`; "make it pop" → `animate`; "too sparse / too dense" → `densify`; "improve / fix this page" → `redesign`) → route to that command and proceed as if invoked. If two fit, ask once which.
+2. **First word doesn't match, but intent clearly maps to one command** ("too plain / boring" → `bolder`; "too flashy" → `quieter`; "feels generic" → `soul`; "make it pop" → `animate`; "add depth / make it 3D / tilt / parallax" → `depth`; "too sparse / too dense" → `densify`; "improve / fix this page" → `redesign`) → route to that command and proceed as if invoked. If two fit, ask once which.
 3. **No argument at all** (bare `/finesse`) → the user is asking *"what should I do here?"* Don't dump the static menu. Read a few cheap signals and **lead with the 2-3 highest-value commands**, each with a one-line reason, then offer the full table as fallback. Never auto-run — recommend, the user confirms. Signal → pick:
    - **no `PRODUCT.md`** and there's real code/pages → lead with `document` (capture what's built) and/or `init` (write the brief). Brand-new empty project → `init` then `craft`.
    - **`PRODUCT.md` exists, has built pages, never audited** → lead with `audit <surface>` (read-only health check).
@@ -209,6 +211,8 @@ A finesse page earns its name with **one** technically-spectacular moment — us
 | **GSAP ScrollTrigger** | scroll-pinned story, horizontal pan, parallax, reveal stagger | medium; the single most reusable engine |
 | **CSS-only** | dual-layer mask, 3D transforms, variable-font morph, scroll-driven `animation-timeline` | free; no JS, best perf |
 
+> **Component-level 3D ≠ hero engine.** The table above is for the one full-bleed hero moment. For *reusable, in-page* 3D — pointer-tilt cards, flip cards, coverflow, depth-parallax layers, or a Three.js product/model viewer — reach for `references/3d-effects.md` (the `depth` command). Default to its CSS tier; it ships in any page at zero cost and rarely janks. One 3D moment per page still applies: don't stack a hero engine *and* a tilt grid *and* a coverflow.
+
 **Engine discipline (mandatory):**
 - **Progressive enhancement.** The page must be readable and complete with the engine removed. The engine is a fixed background or a hero accent, never load-bearing for content.
 - **60fps or simplify.** Animate only `transform` / `opacity`. Test on a mid-range device, not your machine. Below ~50fps, cut particle count or resolution.
@@ -281,6 +285,7 @@ After the user receives the initial output, map their feedback to the correct ta
 | "feels generic / like every other AI site" | `soul` | Trigger §0.D anti-default: name and reject the current soul, pick a non-obvious persona |
 | "change the colors" | `soul` | Re-run color strategy in `references/design-dna.md`; maintain the accent lock rule |
 | "different animation" | `animate` | Swap engine type in §4; re-run `references/hero-engines.md` for that engine's skeleton |
+| "add depth / make it 3D / tilt / parallax" | `depth` | Add **one** 3D moment from `references/3d-effects.md` — default to the CSS tier (tilt/flip/coverflow/depth-parallax); Three.js only for a real rendered object |
 | "remove a section" | `redesign` | Remove it, then re-audit §5 layout families (ensure ≥4 families remain) |
 | "feels slow / heavy" | `quieter` | Lower SPECTACLE; switch to Engine E (CSS-only) or reduce particle count/FBO resolution |
 | "needs to work on mobile" | `redesign` | Declare mobile layout per multi-column section; `min-h-dvh`, touch targets ≥44px |

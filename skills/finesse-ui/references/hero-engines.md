@@ -14,6 +14,7 @@ A finesse page earns its name with **one** technically-ambitious visual engine, 
 - Animate only `transform`/`opacity` for DOM; for canvas, cap work to hold 60fps.
 - `prefers-reduced-motion`: stop the loop on a still frame (or hide + show static hero).
 - DPR-adapt every canvas: `canvas.width = innerWidth * devicePixelRatio` (else retina = blurry).
+- **Loading libs:** small single-file libs (GSAP core + ScrollTrigger, ~113KB) → **self-host** in `./lib/` and commit; heavy libs with an import tree (Three.js) → **versioned CDN import map**, lazy-loaded. Never reference a `./lib/x.js` with no file behind it. Full recipe in `3d-effects.md` §2.0.
 
 ---
 
@@ -59,6 +60,8 @@ requestAnimationFrame(loop);
 addEventListener('resize', () => { camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
 ```
 Scroll-couple it (optional): drive `camera.position.z` or `scene.rotation.y` from a GSAP ScrollTrigger `scrub`.
+
+> For a **rendered 3D object** (GLTF product viewer, image-displacement plane) rather than a particle field, see `3d-effects.md` §2 — same Three.js setup, depth-specific recipes.
 
 ---
 
@@ -149,6 +152,8 @@ Critical failures to avoid: `start: 'top center'` instead of `'top top'` (fires 
 ## Engine E — CSS-only (mask, 3D transform, variable font, scroll-timeline)
 
 Use for: dual-layer mouse mask (reveal a second image), CSS 3D cube, variable-font weight/width morph, native scroll-driven animation. Free, best perf, no JS libs. Often the *most* memorable because it's rare.
+
+> Reusable, **component-level** CSS 3D — pointer-tilt cards, flip cards, coverflow, depth-parallax layers — lives in `3d-effects.md` §1 (the `depth` command). This section is the full-bleed hero variant; that one is the in-page, drop-into-a-grid variant.
 
 **Dual-layer mouse mask** (the showcase STUDIO move):
 ```css

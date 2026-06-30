@@ -28,6 +28,7 @@
 
 - **高级感物理层** — grain 噪点 / vignette 暗角 / 字重张力 / 配色家族（提炼自 37 页行业展示页语料）
 - **五类 hero 视觉引擎** — Three.js / Canvas / WebGL-FBO / GSAP / CSS-only，各含 reduced-motion 降级骨架
+- **3D 效果谱系** — CSS 伪 3D（指针倾斜卡 / 翻转卡 / coverflow / 景深视差）+ Three.js 真 3D（模型查看器 / 图片扭曲平面），`depth` 命令一键加一个 3D 时刻
 - **行业灵魂决策矩阵** — 行业 → 风格 / 配色 / 字体 / 引擎 的选型表，专治"千页一面"
 - **product UI 路线** — 仪表盘信息架构 · 25 种图表选型 · 数据表 · 表单 · 交互状态全集 · 组件系统 · 认知负载
 - **register 驱动** — brand vs product 分流，两套完全不同的设计规则
@@ -107,6 +108,7 @@ finesse-skill/
 │       ├── references/
 │       │   ├── design-dna.md             # 高级感物理层（配色/字体/grain/vignette）
 │       │   ├── hero-engines.md           # 五类视觉引擎骨架 + reduced-motion + inline-image 技法
+│       │   ├── 3d-effects.md             # 3D 效果谱系：CSS 伪 3D（倾斜/翻转/coverflow/景深）+ Three.js 真 3D
 │       │   ├── style-personas.md         # 行业→灵魂 决策矩阵
 │       │   ├── anti-cheap.md             # 反廉价黑名单（AI tells + 禁区 + reflex-reject）
 │       │   ├── product-ui.md             # product 路线：仪表盘/表格/图表/表单/状态/组件

@@ -108,9 +108,10 @@
     font-size: 11px; letter-spacing: .24em; color: #4C4C5A; border-top: 1px solid rgba(255,255,255,.06);
     background: #050507; }
 </style>
+<!-- Three.js (~1.2MB + addon dependency tree) stays on versioned CDN so this page runs standalone and the repo stays light. Pin the version; keep core + addons identical. -->
 <script type="importmap">
 { "imports": {
-  "three": "./lib/three.module.js",
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
   "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
 }}
 </script>
