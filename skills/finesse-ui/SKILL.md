@@ -1,7 +1,7 @@
 ---
 name: finesse-ui
 description: Build never-cheap, high-craft web interfaces — both brand surfaces (landing pages, brand sites, launches, portfolios, hero pages with real WebGL/Three.js/Canvas/GSAP engines) and product UI (dashboards, admin panels, analytics, data tables, app shells, settings). Routes by register: brand → soul + spectacle engine; product → component system + information density + data viz. Always reads the brief first and audits against an anti-slop cheapness blacklist. Supports verb commands (audit · bolder · quieter · soul · animate · densify · redesign) for targeted iteration on existing pages. Triggers on "make this look premium", "landing page", "dashboard", "admin panel", "analytics UI", "data table", "app UI", "give it a soul / a vibe", "anti-slop", "hero animation", "/finesse".
-version: 0.3.0
+version: 0.4.0
 user-invocable: true
 argument-hint: "[craft · audit · bolder|quieter|soul · animate|depth|densify · redesign · init|document] [target]"
 license: MIT
@@ -38,6 +38,7 @@ The `references/*.md` files are the deep material. Load the one you need for the
 | `hero-engines.md` | Building the hero engine (brand register) |
 | `3d-effects.md` | Adding a 3D moment — CSS tilt/flip/coverflow/depth-parallax or Three.js model/displacement |
 | `style-personas.md` | Picking a soul (brand register) |
+| `inspiration-catalog.md` | Persona picked but you want a wider menu of proven techniques for that soul, or the brief doesn't fit any of the 10 personas cleanly |
 | `anti-cheap.md` | Before any delivery — cheapness scan |
 | `product-ui.md` | Dashboard / admin / data app (product register) |
 | `preflight.md` | Final checklist before saying "done" |
@@ -178,6 +179,8 @@ finesse's job is **soul diversity**: the same method must yield visually unrelat
 Rules:
 - **One soul per page.** Don't fluctuate warm and cool greys, or swap accent colors mid-scroll. Lock it (see §3, color lock).
 - **Rotate, don't repeat.** If the last brief used editorial-serif, this one must not. Saturated aesthetic lanes (editorial-typographic, beige-brass craft, AI-purple-glow) are banned as *defaults* — earn them or avoid them (`references/anti-cheap.md`).
+
+> Once a persona is picked, `references/inspiration-catalog.md` has a wider bench of real pages per persona (48 beyond the 5 in `examples/`) — technique notes, not files, for when you want a second reference point beyond the persona table's single description.
 
 ---
 

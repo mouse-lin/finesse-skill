@@ -26,7 +26,7 @@ Both paths share the same foundation: **premium physical substrate + anti-slop a
 
 ## What's inside
 
-- **Premium physical substrate** — SVG grain / vignette / type weight tension / color family (distilled from 37 pages of industry showcase analysis)
+- **Premium physical substrate** — SVG grain / vignette / type weight tension / color family (distilled from 53 pages of industry showcase analysis)
 - **Five hero engine types** — Three.js / Canvas / WebGL-FBO / GSAP / CSS-only, each with a `prefers-reduced-motion` fallback skeleton
 - **3D effects spectrum** — CSS pseudo-3D (pointer-tilt cards / flip cards / coverflow / depth-parallax) + Three.js real 3D (model viewer / image-displacement plane); the `depth` command drops in one 3D moment
 - **Industry soul decision matrix** — industry → style / palette / typeface / engine selection table; cures "every page looks the same"
@@ -116,7 +116,8 @@ finesse-skill/
 │       │   ├── product-ui.md             # Product route: dashboards/tables/charts/forms/states
 │       │   ├── preflight.md              # Pre-flight checklist (includes strategic omissions)
 │       │   ├── redesign-mode.md          # Redesign protocol: audit-first, six-step upgrade
-│       │   └── design-model.md           # Multi-page token consistency template
+│       │   ├── design-model.md           # Multi-page token consistency template
+│       │   └── inspiration-catalog.md    # Technique index for 48 more pages from the 53-page corpus (grouped by persona, no source files)
 │       └── examples/
 │           ├── EXAMPLES.md               # 5 showcase pages with persona/engine annotations
 │           └── *.html                    # Real showcase pages (read-only reference)

@@ -119,6 +119,7 @@ If any gate fails: fix it. Do not ship and note it as a known issue.
 | `skills/finesse-ui/references/hero-engines.md` | Building a brand hero engine |
 | `skills/finesse-ui/references/3d-effects.md` | Adding a 3D moment: CSS tilt/flip/coverflow/parallax or Three.js model/displacement |
 | `skills/finesse-ui/references/style-personas.md` | Choosing a brand soul/persona |
+| `skills/finesse-ui/references/inspiration-catalog.md` | Wider bench of real pages per persona, or a brief that doesn't fit any of the 10 personas |
 | `skills/finesse-ui/references/anti-cheap.md` | Running the cheapness audit |
 | `skills/finesse-ui/references/audit.md` | Read-only diagnostic (cheapness + spectacle + pre-flight) |
 | `skills/finesse-ui/references/product-ui.md` | Product register: dashboards, tables, charts |

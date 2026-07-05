@@ -26,7 +26,7 @@
 
 ## 核心能力
 
-- **高级感物理层** — grain 噪点 / vignette 暗角 / 字重张力 / 配色家族（提炼自 37 页行业展示页语料）
+- **高级感物理层** — grain 噪点 / vignette 暗角 / 字重张力 / 配色家族（提炼自 53 页行业展示页语料）
 - **五类 hero 视觉引擎** — Three.js / Canvas / WebGL-FBO / GSAP / CSS-only，各含 reduced-motion 降级骨架
 - **3D 效果谱系** — CSS 伪 3D（指针倾斜卡 / 翻转卡 / coverflow / 景深视差）+ Three.js 真 3D（模型查看器 / 图片扭曲平面），`depth` 命令一键加一个 3D 时刻
 - **行业灵魂决策矩阵** — 行业 → 风格 / 配色 / 字体 / 引擎 的选型表，专治"千页一面"
@@ -114,7 +114,8 @@ finesse-skill/
 │       │   ├── product-ui.md             # product 路线：仪表盘/表格/图表/表单/状态/组件
 │       │   ├── preflight.md              # 起飞前自检清单（含战略遗漏清单）
 │       │   ├── redesign-mode.md          # 改造模式：审计优先 + 六步改造协议
-│       │   └── design-model.md           # 多页一致性的 token 锁定模板
+│       │   ├── design-model.md           # 多页一致性的 token 锁定模板
+│       │   └── inspiration-catalog.md    # 53 页语料中另外 48 页的技法索引（按 persona 分组，不含源文件）
 │       └── examples/
 │           ├── EXAMPLES.md               # 5 个正例对应的 persona/engine
 │           └── *.html                    # 真实 showcase 页（只读参考）

@@ -1,6 +1,8 @@
 # Examples — Positive Reference Corpus
 
-Five real pages from a 37-page showcase, each a clean instance of one persona + one hero engine. Read them to see the substrate, soul, and engine rules applied together — not as templates to copy verbatim, but as proof of what "technically spectacular · soul-distinct · never cheap" looks like in shipped code.
+Five real pages from a showcase corpus (now 53 pages and growing), each a clean instance of one persona + one hero engine. Read them to see the substrate, soul, and engine rules applied together — not as templates to copy verbatim, but as proof of what "technically spectacular · soul-distinct · never cheap" looks like in shipped code.
+
+The other 48 pages aren't bundled as files (repo-size reasons — several carry Three.js/WebGL payloads), but every one is catalogued as a technique note in `../references/inspiration-catalog.md`, grouped by persona. Check there for a second reference point when these 5 don't cover the brief's industry or mood.
 
 | File | Persona | Hero engine | What to study |
 |------|---------|-------------|---------------|
