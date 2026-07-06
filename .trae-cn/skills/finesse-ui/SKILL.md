@@ -1,7 +1,7 @@
 ---
 name: finesse-ui
 description: 'Build never-cheap, high-craft web interfaces — brand surfaces (landing pages, brand sites, launches, portfolios, hero pages with real WebGL/Three.js/Canvas/GSAP engines), product UI (dashboards, admin panels, analytics, data tables, app shells, settings), and commerce pages (product detail pages, listing/category pages, cart, checkout). Routes by register: brand → soul + spectacle engine; product → component system + information density + data viz; commerce → PDP/PLP skeletons + anti-dark-pattern rules. Always reads the brief first and audits against an anti-slop cheapness blacklist. Supports verb commands (audit · bolder · quieter · soul · animate · densify · redesign) for targeted iteration on existing pages. Triggers on "make this look premium", "landing page", "dashboard", "admin panel", "analytics UI", "data table", "app UI", "product page", "PDP", "listing page", "checkout", "give it a soul / a vibe", "anti-slop", "hero animation", "/finesse".'
-version: 0.7.0
+version: 0.8.0
 user-invocable: true
 argument-hint: "[craft · audit · bolder|quieter|soul · animate|depth|densify · redesign · init|document] [target]"
 license: MIT
