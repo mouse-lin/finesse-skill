@@ -44,6 +44,8 @@ Pick by the question the data answers, not by what looks nice:
 
 **Rules:** ≤5–6 colors from an accessible palette (no pure red/green pairing — add texture/pattern too); grid lines low-contrast; data ≥3:1 contrast, labels ≥4.5:1; legend visible + interactive; tooltip on hover/tap; **no 3D, no rotated axis labels**; empty chart → "no data" message, never blank.
 
+> This is the starter table for the common cases. For a dashboard with 5+ chart types, an unfamiliar data shape (funnel, gauge, network graph, forecast band, candlestick…), or an a11y-sensitive product — load `references/dataviz.md` for the full 25-type matrix, per-type accessibility grade + mandatory fallback, and library recommendations by rendering approach.
+
 ## 4. Forms
 
 - **Label above input** (default, mobile-friendly); left-aligned only for dense settings screens. Never placeholder-as-label.
@@ -105,13 +107,13 @@ Details that separate a polished product from a rough one:
 - **Modal-first** for everything. → inline / drawer first.
 - **Inconsistent component vocabulary** (same action, different look). → lock variants.
 - **Spinner-only loading** with layout shift. → skeletons.
-- **Color as the only signal** in charts/status. → icon/text/pattern too.
+- **Color as the only signal** in charts/status. → icon/text/pattern too (full anti-pattern list in `references/dataviz.md` §5).
 
 ## 10. Product Pre-Flight (in addition to the shared §8)
 
 - [ ] IA ≤3 levels, sidebar ≤8 grouped items, key info visible on first screen.
 - [ ] Tables: alignment rules, locked row density, sort/filter/pagination, empty + skeleton states.
-- [ ] Charts: type fits the question, legend + tooltip, no 3D, accessible palette.
+- [ ] Charts: type fits the question, legend + tooltip, no 3D, accessible palette; a11y grade checked + mandatory fallback shipped if Fragile/Never-primary (`references/dataviz.md` §2, §6).
 - [ ] Forms: label-above, required marks, blur validation, errors-below with fix.
 - [ ] All five interaction states shipped (loading/empty/error/success/disabled).
 - [ ] Component vocabulary consistent; modal used sparingly; tokens not hardcoded.

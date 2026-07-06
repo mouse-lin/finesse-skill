@@ -1,7 +1,7 @@
 ---
 name: finesse-ui
 description: Build never-cheap, high-craft web interfaces — both brand surfaces (landing pages, brand sites, launches, portfolios, hero pages with real WebGL/Three.js/Canvas/GSAP engines) and product UI (dashboards, admin panels, analytics, data tables, app shells, settings). Routes by register: brand → soul + spectacle engine; product → component system + information density + data viz. Always reads the brief first and audits against an anti-slop cheapness blacklist. Supports verb commands (audit · bolder · quieter · soul · animate · densify · redesign) for targeted iteration on existing pages. Triggers on "make this look premium", "landing page", "dashboard", "admin panel", "analytics UI", "data table", "app UI", "give it a soul / a vibe", "anti-slop", "hero animation", "/finesse".
-version: 0.4.0
+version: 0.5.0
 user-invocable: true
 argument-hint: "[craft · audit · bolder|quieter|soul · animate|depth|densify · redesign · init|document] [target]"
 license: MIT
@@ -41,6 +41,7 @@ The `references/*.md` files are the deep material. Load the one you need for the
 | `inspiration-catalog.md` | Persona picked but you want a wider menu of proven techniques for that soul, or the brief doesn't fit any of the 10 personas cleanly |
 | `anti-cheap.md` | Before any delivery — cheapness scan |
 | `product-ui.md` | Dashboard / admin / data app (product register) |
+| `dataviz.md` | Chart-heavy product UI beyond the starter table — full 25-type selection matrix, a11y grade + mandatory fallback, library picks |
 | `preflight.md` | Final checklist before saying "done" |
 | `design-model.md` | Multi-page projects — token consistency |
 | `redesign-mode.md` | Upgrading an existing page — audit-first protocol |

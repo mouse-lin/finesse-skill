@@ -123,6 +123,7 @@ If any gate fails: fix it. Do not ship and note it as a known issue.
 | `skills/finesse-ui/references/anti-cheap.md` | Running the cheapness audit |
 | `skills/finesse-ui/references/audit.md` | Read-only diagnostic (cheapness + spectacle + pre-flight) |
 | `skills/finesse-ui/references/product-ui.md` | Product register: dashboards, tables, charts |
+| `skills/finesse-ui/references/dataviz.md` | Chart-heavy UI beyond the starter table: full 25-type matrix, a11y grade + fallback, library picks |
 | `skills/finesse-ui/references/preflight.md` | Pre-flight checklist |
 | `skills/finesse-ui/references/redesign-mode.md` | Upgrading an existing page, audit-first |
 | `skills/finesse-ui/references/design-model.md` | Multi-page token consistency |

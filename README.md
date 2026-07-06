@@ -112,6 +112,7 @@ finesse-skill/
 │       │   ├── style-personas.md         # 行业→灵魂 决策矩阵
 │       │   ├── anti-cheap.md             # 反廉价黑名单（AI tells + 禁区 + reflex-reject）
 │       │   ├── product-ui.md             # product 路线：仪表盘/表格/图表/表单/状态/组件
+│       │   ├── dataviz.md                # 图表决策矩阵：25 种类型 × a11y 分级 × 库推荐
 │       │   ├── preflight.md              # 起飞前自检清单（含战略遗漏清单）
 │       │   ├── redesign-mode.md          # 改造模式：审计优先 + 六步改造协议
 │       │   ├── design-model.md           # 多页一致性的 token 锁定模板

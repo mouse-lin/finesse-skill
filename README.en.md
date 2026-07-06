@@ -114,6 +114,7 @@ finesse-skill/
 │       │   ├── style-personas.md         # Industry → soul decision matrix
 │       │   ├── anti-cheap.md             # Anti-slop blacklist (AI tells + bans + reflex-reject)
 │       │   ├── product-ui.md             # Product route: dashboards/tables/charts/forms/states
+│       │   ├── dataviz.md                # Chart decision matrix: 25 types × a11y grade × library picks
 │       │   ├── preflight.md              # Pre-flight checklist (includes strategic omissions)
 │       │   ├── redesign-mode.md          # Redesign protocol: audit-first, six-step upgrade
 │       │   ├── design-model.md           # Multi-page token consistency template
