@@ -1,7 +1,7 @@
 ---
 name: finesse-ui
-description: 'Build never-cheap, high-craft web interfaces — brand surfaces (landing pages, brand sites, launches, portfolios, hero pages with real WebGL/Three.js/Canvas/GSAP engines), product UI (dashboards, admin panels, analytics, data tables, app shells, settings), and commerce pages (product detail pages, listing/category pages, cart, checkout). Routes by register: brand → soul + spectacle engine; product → component system + information density + data viz; commerce → PDP/PLP skeletons + anti-dark-pattern rules. Always reads the brief first and audits against an anti-slop cheapness blacklist. Supports verb commands (audit · bolder · quieter · soul · animate · densify · redesign) for targeted iteration on existing pages. Triggers on "make this look premium", "landing page", "dashboard", "admin panel", "analytics UI", "data table", "app UI", "product page", "PDP", "listing page", "checkout", "give it a soul / a vibe", "anti-slop", "hero animation", "/finesse".'
-version: 0.11.0
+description: 'Build never-cheap, high-craft web interfaces — brand surfaces (landing pages, brand sites, launches, portfolios, hero pages with real WebGL/Three.js/Canvas/GSAP engines), product UI (dashboards, admin panels, analytics, data tables, app shells), workflow UI (merchant/admin consoles, publish & create wizards, config and settings pages, review queues), and commerce pages (product detail pages, listing/category pages, cart, checkout). Routes by register: brand → soul + spectacle engine; product → palette + component system + density (split further into pages you READ = dashboards, and pages you OPERATE = consoles/wizards); commerce → PDP/PLP skeletons + anti-dark-pattern rules. Ships a product color library (tinted neutral ramps + 16 accents + 12 paste-ready sets) so dashboards stop defaulting to blue. Always reads the brief first and audits against an anti-slop cheapness blacklist. Supports verb commands (audit · bolder · quieter · soul · animate · densify · redesign) for targeted iteration. Triggers on "make this look premium", "landing page", "dashboard", "admin panel", "商家后台", "工作台", "back-office", "console", "publish flow", "发布流程", "wizard", "settings page", "analytics UI", "data table", "app UI", "product page", "PDP", "listing page", "checkout", "dashboard colors", "give it a soul / a vibe", "anti-slop", "hero animation", "/finesse".'
+version: 0.12.0
 user-invocable: true
 argument-hint: "[craft · audit · bolder|quieter|soul · animate|depth|densify · redesign · init|document] [target]"
 license: MIT
@@ -28,7 +28,9 @@ license: MIT
    - **product** → the **product substrate** (`references/product-ui.md` §0): premium surfaces/cards, KPI tiles, floating panels, fixed type scale, feedback-only motion. **Never** pour grain / vignette / giant hero type / dark-default / a hero engine into a dashboard — that's brand grammar, not product grammar.
 4. **Then the paths fork further:**
    - **brand** → pick a **§2 Soul** (`references/style-personas.md`) and build **one §4 Hero Engine** (`references/hero-engines.md`).
-   - **product** → build a **component system + data viz** per `references/product-ui.md` (density, tables, charts, forms, interaction states). **Before writing, open the closest dashboard in `examples/`** (index: `examples/EXAMPLES.md`) to see `product-ui.md` §0 applied in shipped code — lift patterns, not whole files.
+   - **product** → **pick a palette from `references/product-palettes.md` first** (the neutral ramp is 80% of the pixels; skipping this step is how every dashboard comes out blue). Then split by the page's job:
+     - **pages you read** — dashboards, analytics, monitoring → `references/product-ui.md` (density, tables, charts, interaction states). **Before writing, open the closest dashboard in `examples/`** (index: `examples/EXAMPLES.md`) to see `product-ui.md` §0 applied in shipped code — lift patterns, not whole files.
+     - **pages you operate** — publish/create wizards, merchant & admin consoles, config, settings, review queues → `references/workflow-ui.md` **on top of** `product-ui.md` (workflow shell, numbered sections, radio-card choices, live preview, pre-submit check, derived totals, draft/commit). There is **no form-workflow page in `examples/`** — build from the reference, and do **not** force-fit a dashboard example onto a form.
 5. Assemble the **§5 page skeleton**, motion-motivated only.
 6. Run the **§6 Cheapness Blacklist** (`references/anti-cheap.md`) and **§8 Pre-Flight** (`references/preflight.md`) before shipping.
 
@@ -43,7 +45,9 @@ The `references/*.md` files are the deep material. Load the one you need for the
 | `style-personas.md` | Picking a soul (brand register) |
 | `inspiration-catalog.md` | Persona picked but you want a wider menu of proven techniques for that soul, or the brief doesn't fit any of the 10 personas cleanly |
 | `anti-cheap.md` | Before any delivery — cheapness scan |
-| `product-ui.md` | Dashboard / admin / data app (product register) |
+| `product-ui.md` | Dashboard / admin / data app — pages you **read** (product register) |
+| `workflow-ui.md` | Pages you **operate** (product register): publish/create wizards, merchant & admin consoles, config, settings, review queues — the workflow shell, numbered section cards, radio-card choices, live-preview aside, pre-submit check, derived budget panels, draft/commit |
+| `product-palettes.md` | **Any product-register page** — the color layer `design-dna.md` §6 doesn't cover: 5 tinted neutral ramps, 16 accents with light/dark + text-on-accent contrast, 12 paste-ready sets, the known-SaaS palettes (Linear/Stripe/Supabase/Grafana…). Load it **before** picking a color, or you will reach for blue |
 | `examples/EXAMPLES.md` | The positive-reference corpus — real shipped pages (5 brand + 4 dashboards) with a per-file "what to study" table. **Open the closest one before building**, especially for dashboards (lift patterns, not whole files) |
 | `dataviz.md` | Chart-heavy product UI beyond the starter table — full 25-type selection matrix, a11y grade + mandatory fallback, library picks (the **decision** layer) |
 | `chart-crafting.md` | **Any** hand-built dashboard chart in a single self-contained file (mandatory for bars — the barcode-chart trap) — the no-library **implementation** layer: the value→height rule, `div height:value/max%` bar recipe, SVG coordinate normalization, line/area draw-in, donut/gauge grow, stacked bars, sparklines, the three animations × reduced-motion pairing, slider-driven live update |
@@ -104,6 +108,8 @@ Most AI design output is bad because the model jumps to a default aesthetic inst
 
 - **brand** — design IS the product: landing page, brand site, launch, portfolio, campaign, hero page. Be bold, opinionated, spectacular. Goes the soul + hero-engine route (§2, §4).
 - **product** — design SERVES the product: dashboard, admin, analytics, data table, app shell, settings, tool. Optimize for clarity, density, usability. Goes the component-system route (`references/product-ui.md`). Still never cheap — it inherits the **universal craft floor** (§3's last three bullets) + the cheapness blacklist (§6), and builds on the **product substrate** (`product-ui.md` §0), **not** the brand substrate's grain/vignette/hero-type/dark-default.
+  - **Split it once more by the page's job — read vs. operate.** A dashboard you *read* fails by being unreadable; a console you *operate* fails by being **unfinishable** (abandoned at step 3, or submitted wrong). If the primary action is a **consequential commit** (发布 / 上线 / 提交 / 保存配置) — a merchant publishing a campaign, an admin configuring a rule, a long form that produces a real thing — it's a **workflow page**: load `references/workflow-ui.md` on top of `product-ui.md`. Login forms and search filters don't count; `product-ui.md` §4 covers those.
+  - **Color is not optional here.** Pick from `references/product-palettes.md` before writing CSS. "Dashboard" predicts blue; the *product* predicts a color.
 - **commerce** — a third, hybrid case: product detail pages (PDP), category/listing pages (PLP), cart, checkout. It doesn't cleanly fit either bucket above, so don't force it — route by which job the specific page is doing:
   - A **PDP selling one hero item** (a single SKU, a launch, a flagship product) leans **brand**: pick a soul (§2), but keep DENSITY up for specs/reviews/trust signals — see `references/commerce-ui.md` for the PDP skeleton.
   - A **PLP / marketplace with many SKUs** (filters, sort, grid of many products) leans **product**: DENSITY high, SPECTACLE low, same as a dashboard — see `references/product-ui.md` for grid/filter patterns plus `references/commerce-ui.md` for commerce-specific rules (price/CTA placement, cart, checkout, dark-pattern bans).
@@ -145,6 +151,8 @@ If the brief contains these cues, use these presets as a starting point before r
 | "corporate", "B2B", "enterprise" | 4 | 3 | 6 |
 | "playful", "vibrant", "creative" | 7 | 6 | 5 |
 | "data-heavy", "dashboard", "analytics" | 4 | 2 | 9 |
+| "商家后台", "工作台", "admin console", "back-office" | 5 | 2 | 7 |
+| "发布/创建流程", "wizard", "publish flow", "配置", "settings" | 4 | 1 | 7 |
 | "landing page" (no other cues) | 7 | 6 | 4 |
 | "portfolio" | 8 | 6 | 3 |
 | "product page", "PDP", "product detail" | 6 | 4 | 6 |

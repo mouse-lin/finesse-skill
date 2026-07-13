@@ -1,5 +1,5 @@
 ---
-description: 'finesse-ui design skill — never-cheap, high-craft web interfaces. Routes by register: brand (landing pages, hero sites, portfolios) → soul + spectacle engine; product (dashboards, admin, analytics) → component system + data viz. Enforces premium substrate, anti-slop blacklist, and pre-flight check on every output.'
+description: 'finesse-ui design skill — never-cheap, high-craft web interfaces. Routes by register: brand (landing pages, hero sites, portfolios) → soul + spectacle engine; product (dashboards, admin, analytics, 商家后台/consoles, publish wizards, settings) → tinted palette + component system + data viz, split into pages you READ (dashboards) vs pages you OPERATE (consoles/wizards). Enforces premium substrate, anti-slop blacklist, and pre-flight check on every output.'
 globs: ["**/*.html", "**/*.css", "**/*.scss", "**/*.sass", "**/*.tsx", "**/*.jsx", "**/*.ts", "**/*.js", "**/*.vue", "**/*.svelte"]
 alwaysApply: false
 ---
@@ -86,18 +86,56 @@ Rules: **one soul per page**, never fluctuate. Saturated defaults (AI-purple-glo
 
 ---
 
-## STEP 3 — THE PREMIUM SUBSTRATE (both registers)
+## STEP 3 — THE PREMIUM SUBSTRATE
 
-The physical layer that makes a page read as expensive. Apply to every output.
+The physical layer that makes a page read as expensive. **The floor applies to both registers; the layer above it forks.**
+
+### The universal craft floor (brand AND product — never skip)
+
+- **Translucent borders** — `rgba(255,255,255,.07–.22)` dark / `rgba(0,0,0,.06–.08)` light. Never a hard `#333` or `#ccc` line.
+- **No pure `#fff` / `#000`.** Tint every neutral toward the brand hue.
+- **Whisper shadows, tinted toward the ink** — never pure black. Big shadows are for floating shells and modals only.
+- **Color lock** — one accent, whole page. Audit every component. No surprise colors.
+- **OKLCH internally** — reason in OKLCH for palettes even if you emit hex. Design light and dark together; test contrast in each, never just invert.
+
+### Brand substrate only — do NOT pour these into a dashboard
 
 - **Grain** — SVG `feTurbulence` noise at `opacity .025–.05`. Kills the flat "vector slop" look.
 - **Vignette** — radial-gradient darken on dark heroes for optical focus.
 - **Type tension** — display headings at `clamp()` with negative tracking (`-.02 to -.045em`), `line-height .86–.95`, extreme weight contrast (900 vs 300).
 - **Layered z-index** — engine(0) · grain(1) · vignette · content(5). Depth, not flatness.
-- **Translucent borders** — `rgba(255,255,255,.07–.22)` dark / `rgba(0,0,0,.06–.08)` light. Never hard `#333`.
-- **No pure `#fff` / `#000`.** Tint every neutral toward the brand hue.
-- **Color lock** — one accent, whole page. Audit every component. No surprise colors.
-- **OKLCH internally** — reason in OKLCH for palettes even if you emit hex.
+
+### Product substrate (dashboards, consoles, admin)
+
+**A dashboard is a different design language, not a brand page with charts.** No grain, no vignette, no `clamp()` hero type, no dark-by-default, no hero engine. The premium comes from here instead:
+
+- **Cards:** `--r: 16–22px`, `18–22px` padding, and **either** a hairline border at 3–8% alpha **or** no border at all (let a shadow separate them). A hard `1px solid #ddd` box is the single cheapest tell.
+- **Whisper ambient shadow** on every card (`0 1px 3px rgba(ink,.03–.06)`); an accent glow (`0 8px 24px rgba(accent,.4)`) on the **primary CTA only**, once per screen.
+- **Fixed type scale** — 12 / 14 / 16 / 18 / 20 / 24px. **Never `clamp()`**: product users are on fixed screens; respond by changing columns, not font size, or tables lose alignment.
+- **KPI tile anatomy:** icon chip + delta chip · label · big number (`tabular-nums`, `-.02em`, counts up from 0) · optional sparkline.
+- **Motion is feedback, not spectacle** (SPECTACLE 1–4): reveal stagger, number roll-up, chart draw-on. No bounce, no elastic, no decorative motion. Every one paired with a `prefers-reduced-motion` terminal state.
+
+### Product-register color (dashboards, consoles, admin)
+
+The word "dashboard" predicts blue. The **product** predicts a color — pick from the product, not the category.
+
+- **Tint the neutral ramp, it's ~80% of the pixels.** Cool-slate (blue/violet accents) · true-neutral (any) · warm-stone (orange/rose/brick) · sage (green/teal) · lilac (violet/purple). A pure-grey `#f5f5f5 / #e5e5e5 / #737373` ramp is the flat cheap default.
+- **Banned as an identity:** the reflex `#3B82F6` blue + `#22C55E` green + `#F97316` orange triad. Blue isn't banned — *unexamined* blue is; if the platform mandates it, you still owe the substrate tint and a tinted shadow.
+- **Starting points:** forest-on-sage (finance/B2B) · burnt-orange-on-warm-paper (merchant back-office) · rose+gold (beauty/fashion) · teal+clay (CRM/SaaS) · violet-on-lilac (AI/data) · mint+lavender (health/edtech) · brick-on-oat (retail/POS) · indigo+coral (content/ad consoles) · lime-on-graphite (dev tools, dark) · amber-on-midnight (treasury, dark) · cyan-on-steel (monitoring, dark).
+- **Two-tone shell** — most admin back-offices are **light content + a dark sidebar rail**, rail tinted to the *same* hue as the page. The accent appears in the rail only on the active item.
+- **Semantics are load-bearing.** A green accent fights `--up`; a red/brick/coral accent fights `--down`. When they collide, **move the accent, not the semantic.**
+- **Text-on-accent:** white on most; **near-black on lime and amber** (white fails AA there). `--ink-3` (labels, axis text) must clear 4.5:1 on the card, not on the page.
+
+### Workflow pages (a console, not a dashboard)
+
+If the page's primary action is a **consequential commit** (发布 / 上线 / 提交 / 保存配置) — publish wizards, merchant consoles, config, settings — it fails differently: a dashboard fails by being unreadable, a console fails by being **unfinishable**. Ship these or it isn't done:
+
+- **Shell:** rail + topbar step indicator (≤5 steps, in the topbar, not the sidebar) + a **form column capped at 720–820px** + a sticky aside (live preview / summary) + a sticky commit bar. Prefer numbered sections on **one page** over a wizard — steps hide the total cost and raise abandonment.
+- **Radio cards, not radio lists**, whenever the options differ in *outcome*: each card carries one line of **consequence**. This is the highest-value control on a workflow page.
+- **Live pre-submit check card** — every requirement with its **value** ("✓ 单人佣金 ¥100，总名额 50", not "✓ OK"), blockers distinct from advisories, and a **jump-to-fix link** on every failure. **A disabled submit button with no stated reason is a hard fail.**
+- **Derived totals show their breakdown** — every component, every fee's rate. A total with no arithmetic is a number the user must trust instead of check.
+- **Draft + autosave** on any form over ~10 fields, with a visible "saved at". **Confirm the consequence, not "are you sure"**: *"将向 50 位达人公开此任务，预算 ¥5,000 将被冻结。"*
+- Uploads state their spec (format · ratio · size) **before** the file picker opens, and offer a non-local alternative.
 
 ---
 

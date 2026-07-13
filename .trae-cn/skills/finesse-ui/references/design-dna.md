@@ -139,6 +139,8 @@ body { font-weight: 300; }        /* extreme contrast against the heading */
 
 ## 6. Palette Families (soul → color)
 
+> **Building a dashboard / console / admin page? Use `product-palettes.md`, not this table.** The rows below are *brand* entries — a background and an accent, which is all a brand page needs — and the handful marked "product register" are two-value stubs, four of the six blue. The product register needs a **tinted neutral ramp** (most of the pixels), separate light/dark accent values, `--accent-soft`, text-on-accent contrast, and semantic up/down kept clear of the brand. `product-palettes.md` fills all of it: 5 ramps · 16 accents · 12 paste-ready sets · the known-SaaS palettes.
+
 | Family | Bg | Accent(s) | Souls |
 |--------|----|-----------|-------|
 | Cinematic cool | `#04060D` | cyan `#22e3ff` / magenta `#ff2d8e` | astronomy, AI, crypto, music |

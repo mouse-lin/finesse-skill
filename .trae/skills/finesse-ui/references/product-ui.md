@@ -16,6 +16,8 @@ Distilled from 10 shipped showcase dashboards. This is the layer that separates 
 > - `pawcare-adaptive-health.html` — **floating rounded panel**; hotspot pins on a real photo, accent-picker + dark-mode toggle, hand-built ECG / ring marks.
 >
 > Full index + a per-file "what to study" table: `../examples/EXAMPLES.md`. **Match the example to the morphology you're building** (sidebar / floating-panel / bento / triptych — §1) and to light-vs-dark.
+>
+> **The corpus is all dashboards — there is no form-workflow page in it.** If you're building a console / wizard / settings page (the §1 workflow shell), this "read the closest example" step **does not apply**: no dashboard is close, and force-fitting one onto a form is worse than reading nothing. Build from `workflow-ui.md` instead. The rule is "study shipped code *of the thing you're building*", not "always open a file."
 
 ### 0.1 Surfaces & cards (the #1 premium signal in product UI)
 
@@ -28,11 +30,13 @@ Distilled from 10 shipped showcase dashboards. This is the layer that separates 
 
 ### 0.2 Color — a distinct branded palette, never the generic dashboard triad
 
+> **→ `product-palettes.md` is the color layer for this whole register. Open it before writing any CSS.** It has what this section only *asserts*: 5 **tinted neutral ramps** (the ramp is ~80% of a dashboard's pixels — the single highest-leverage decision here), 16 accents with separate light/dark values and text-on-accent contrast worked out, 12 paste-ready complete sets, the two-tone light-content/dark-rail shell most admin back-offices actually use, and the known SaaS palettes (Linear · Stripe · Supabase · Grafana · Notion…) for when someone asks for "something like Linear". Banning a default without shipping alternatives just means you reach for the default anyway.
+
 - **Pick ONE branded accent** (or a duotone pair) and lock it, exactly like the brand register — just restrained (SPECTACLE low). The reflex **`#3B82F6` blue + `#22C55E` green + `#F97316` orange** corporate triad is the dashboard equivalent of AI-purple: predictable from the word "dashboard" alone → banned as an identity (`anti-cheap.md` §Charts, §0 Two-Altitude Check). Every one of the 10 showcase dashboards uses a *distinct* pair, none the generic triad: **warm-orange · violet · lime-green · ink+amber · indigo+coral · teal+amber · sky-aqua · royal-purple+amber · mint+lavender · teal+coral.**
-- **Tint the substrate to the brand** — sage paper for a green finance app, lilac for an indigo one, aqua for a blue one, warm-grey for a teal one. The *page itself* carries the brand, not just one button.
-- **Reinforce the accent beyond a button:** soft-tint chips (`--accent-soft`, `-l` variants at 8–20% alpha) on icons/badges, and the corner glow on a floating panel.
-- **Semantic up/down green-red are functional, kept separate** from the brand accent — don't let status colors become the page's identity.
-- **Domain palette starting points** live in `design-dna.md` §6 (Trust SaaS, Analytics, Financial dark, Developer-tool, Clinical calm, Authority navy) — pick by product domain, then tint the substrate to it. Not every dashboard is Trust-SaaS blue.
+- **Tint the neutral ramp to the accent's hue** — sage greys under a green accent, warm stone under an orange one, lilac under a violet one. The *page itself* carries the brand, not just one button. A pure-grey `#f5f5f5 / #e5e5e5 / #737373` ramp is the flat, cheap default (§9).
+- **Reinforce the accent beyond a button:** soft-tint chips (`--accent-soft` at 8–16% alpha) on icons/badges, and the corner glow on a floating panel.
+- **Semantic up/down green-red are functional, kept separate** from the brand accent — don't let status colors become the page's identity. Watch the collision: a **green** accent fights `--up`, a **red/brick/coral** accent fights `--down`. Semantics are load-bearing — **move the accent, not the semantic** (`product-palettes.md` §7).
+- `design-dna.md` §6 lists a few product rows (Trust SaaS, Analytics, Financial dark, Developer-tool, Clinical calm, Authority navy) — those are *brand-style* two-value entries (bg + accent) and four of the six are blue. Use `product-palettes.md` instead; it fills the full token contract.
 
 ### 0.3 KPI / stat tile — the anatomy (so a tile reads as designed, not a number in a box)
 
@@ -69,6 +73,9 @@ No bounce/elastic, no decorative motion that conveys no state. These use **GSAP*
 - **Bento console:** asymmetric `fr` columns in one grid (e.g. `2.15fr 1.7fr 1fr 1fr 1fr`) mixing a hero card (API key, primary metric) with square stat tiles — suits a console with many small heterogeneous stats where a uniform KPI row would waste space on the short ones.
 - **Top pill-nav (no sidebar):** a rounded navbar with segmented pill links replaces the sidebar when IA is shallow (≤5 top sections) and mobile parity matters more than deep nesting — collapses to icon-only or hides below the tablet breakpoint rather than drawer-izing.
 - **Centered bento / triptych (top-nav, no sidebar):** `max-width:1440px; margin:0 auto; padding:22–26px 30px 44px`; content is an fr-weighted bento or a fixed-flex-fixed triptych `grid-template-columns:296px 1fr 320px; gap:16–20px; align-items:start` (the `start` gives independent, masonry-like column heights).
+- **Workflow shell (rail + form column + aside):** for pages you **operate** rather than read — publish/create wizards, merchant & admin consoles, config, settings. Sidebar + topbar (with the step rail) + a **width-capped form column** (`720–820px`) + a sticky aside (live preview / summary / help) + a sticky commit bar. Full recipe — numbered section cards, radio-card choices, the pre-submit check, derived budget panels, draft/commit — in **`workflow-ui.md`**. Don't build one of these out of dashboard parts; the failure modes are different (a dashboard fails by being unreadable, a console fails by being *unfinishable*).
+
+> **None of these fit?** Then build the shell the product needs. These six are the proven starting points, not a closed set — the same escape `style-personas.md` gets on the brand side (`inspiration-catalog.md`, "the brief doesn't fit any of the 10 personas cleanly"). What you may **not** skip: the §0 substrate, this section's IA rules (≤8 grouped nav items, depth ≤3, first screen earns its place), and the pre-flight in §10. Invent the container, keep the floor. Say out loud which shell you rejected and why (SKILL.md §0.D), so a new shape is a decision and not a drift.
 
 **Bento recipe — how tile-size variation is actually coded** (the fix for "a grid of 6 identical cards"):
 1. **Uneven fractional tracks** (primary technique): `grid-template-columns: 2.15fr 1.7fr 1fr 1fr 1fr` — width encodes importance; no spans needed at desktop.
@@ -112,6 +119,8 @@ Pick by the question the data answers, not by what looks nice:
 
 ## 4. Forms
 
+> These are the **field-level** rules — enough for a login, a filter bar, a profile edit. The moment the form's primary action is a **consequential commit** (发布 / 上线 / 提交 / 保存配置) — a publish wizard, a merchant console, a config page — you need the **page-level** layer too: **`workflow-ui.md`** (workflow shell, numbered section cards, upload/chip/stepper/**radio-card** kit, live-preview aside, the pre-submit check card, derived budget panels, draft + commit). A long consequential form built from this section alone will be technically valid and still unfinishable.
+
 - **Label above input** (default, mobile-friendly); left-aligned only for dense settings screens. Never placeholder-as-label.
 - **Required mark** (`*` or "(required)"); label 12–14px, weight 500; `htmlFor` matches `id`.
 - **Validate on blur** (timely, non-nagging); on-submit lists all errors; on-change only for live checks (username availability).
@@ -147,7 +156,7 @@ Reach for standard components; never reinvent affordances. Typical inventory: **
 
 Three-layer tokens: **primitive** (`--blue-600:#2563EB`, `--space-4:1rem`) → **semantic** (`--color-primary`, `--spacing-section`) → **component** (`--button-padding`, `--card-padding`).
 
-**Palette starting points** (see `design-dna.md` §6 for full table + hex): Trust SaaS (blue+orange), Financial dark (near-black+green/red), Analytics dashboard (blue+amber), Developer tool/IDE (slate+run-green), Clinical calm (cyan+health-green), Authority navy (navy+gold). Pick by product domain, not by default — not every dashboard is Trust SaaS blue+orange. **Then apply §0.2:** lock one branded accent, tint the substrate to it, and avoid the generic blue+green+orange triad as an identity.
+**Palette → `product-palettes.md`.** Pick the **neutral ramp** first (5 tinted families — it's ~80% of the page), then one **accent** from 16, or take one of the **12 paste-ready sets**. That file's §1 token contract is the full role list — `--page` `--bg` `--panel-2` `--border` · `--ink-1/2/3` · `--accent` `--accent-2` `--accent-soft` `--on-accent` `--glow` · `--up` `--down` `--warn` · `--shadow` `--shadow-lg` — and it's what the **semantic** layer above resolves to. Run its §7 collision check before shipping.
 
 - **Spacing:** 4px base (4/8/12/16/24/32/48). Denser than marketing. Always tokens, never hardcoded.
 - **Type scale (fixed, NOT `clamp()`):** 12 / 14 / 16 / 18 / 20 / 24px. Product users are on fixed-size screens; respond by changing columns, not font size (tables must stay aligned).
@@ -180,6 +189,8 @@ Details that separate a polished product from a rough one:
 ## 10. Product Pre-Flight (in addition to the shared §8)
 
 - [ ] **Product substrate (§0):** off-tint page (no pure `#fff`/`#000`); cards use a hairline-or-none border + a whisper **tinted** shadow (not a hard grey box); one **branded** accent (not the generic blue+green+orange triad), substrate tinted to it; KPI tiles follow the anatomy; **no brand grain / vignette / `clamp()` hero type / hero engine** on the dashboard.
+- [ ] **Palette (`product-palettes.md` §7):** tinted neutral ramp (not pure grey); accent doesn't collide with `--up`/`--down`; `--ink-3` clears 4.5:1 on `--bg`; text-on-accent clears 4.5:1 (lime/amber fills need near-black); `--glow` used at most once per screen; **no raw hex outside `:root`** — grep for `#3B82F6` and friends.
+- [ ] **If it's a workflow page** (console / wizard / config — the §1 workflow shell): run `workflow-ui.md` §9 as well. Chiefly — a live **pre-submit check card** with jump-to-fix links, derived totals showing their **breakdown**, draft/autosave, and a commit confirm that states the **consequence**. A disabled submit button with no stated reason is a hard fail.
 - [ ] IA ≤3 levels, sidebar ≤8 grouped items, key info visible on first screen.
 - [ ] Tables: alignment rules, locked row density, sort/filter/pagination, empty + skeleton states.
 - [ ] Charts: type fits the question, legend + tooltip, no 3D, accessible palette; a11y grade checked + mandatory fallback shipped if Fragile/Never-primary (`references/dataviz.md` §2, §6).
