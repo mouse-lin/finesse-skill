@@ -1,7 +1,7 @@
 ---
 name: finesse-ui
 description: 'Build never-cheap, high-craft web interfaces — brand surfaces (landing pages, brand sites, launches, portfolios, hero pages with real WebGL/Three.js/Canvas/GSAP engines), product UI (dashboards, admin panels, analytics, data tables, app shells, settings), and commerce pages (product detail pages, listing/category pages, cart, checkout). Routes by register: brand → soul + spectacle engine; product → component system + information density + data viz; commerce → PDP/PLP skeletons + anti-dark-pattern rules. Always reads the brief first and audits against an anti-slop cheapness blacklist. Supports verb commands (audit · bolder · quieter · soul · animate · densify · redesign) for targeted iteration on existing pages. Triggers on "make this look premium", "landing page", "dashboard", "admin panel", "analytics UI", "data table", "app UI", "product page", "PDP", "listing page", "checkout", "give it a soul / a vibe", "anti-slop", "hero animation", "/finesse".'
-version: 0.10.0
+version: 0.11.0
 user-invocable: true
 argument-hint: "[craft · audit · bolder|quieter|soul · animate|depth|densify · redesign · init|document] [target]"
 license: MIT
@@ -13,7 +13,7 @@ license: MIT
 > - **brand** — design IS the product: landing pages, brand sites, launches, portfolios, hero pages. Optimize for **spectacle + soul + first impression** — a real visual engine, an opinionated personality.
 > - **product** — design SERVES the product: dashboards, admin panels, analytics, data tables, app shells, settings. Optimize for **clarity + density + usability** — and still never cheap.
 >
-> The through-line is identical: **high craft, zero AI-slop.** The premium substrate (§3), the cheapness blacklist (§6), and the pre-flight (§8) apply to **both**. What forks is the middle: brand reaches for a hero engine (§4); product reaches for a component system + data viz (`references/product-ui.md`).
+> The through-line is identical: **high craft, zero AI-slop.** What applies to **both** is the **universal craft floor** (tinted neutrals, no `#fff`/`#000`, translucent/hairline borders, tinted shadows, contrast floors), the cheapness blacklist (§6), and the pre-flight (§8). What **forks** is the *substrate above that floor* and the middle: **brand** lays the §3 brand substrate (`design-dna.md` — grain, vignette, display type) and reaches for a hero engine (§4); **product** lays its **own** substrate (`product-ui.md` §0 — surfaces, cards, KPI tiles, density) and reaches for a component system + data viz. A dashboard is a **different design language**, not a brand page with charts — it does **not** inherit grain / vignette / giant hero type / dark-default / a hero engine.
 >
 > Every rule below is **contextual**. Nothing fires automatically. Read the brief, set the register, then pull only what fits. A skill that produces the same page for every brief has failed.
 
@@ -23,10 +23,12 @@ license: MIT
 
 1. Run **§0 Brand Read** — infer **register** (brand vs product) + soul before touching code. Output a one-line Design Read.
 2. Set the **§1 Three Dials** (SOUL · SPECTACLE · DENSITY). Product register pins SPECTACLE low, DENSITY high.
-3. **Both paths:** lay the **§3 Premium Substrate** (`references/design-dna.md`) — the physical layer that reads as expensive (it keeps dashboards from looking cheap too).
-4. **Then the paths fork:**
+3. **Lay the substrate — the right one for the register.** Both share the **universal craft floor** (tinted neutrals, no `#fff`/`#000`, translucent/hairline borders, tinted shadows, contrast floors — `references/design-dna.md` §1). Above that floor the substrate forks:
+   - **brand** → the **§3 brand substrate** (`references/design-dna.md`): grain, vignette, `clamp()` display type, dark-default, layered hero depth.
+   - **product** → the **product substrate** (`references/product-ui.md` §0): premium surfaces/cards, KPI tiles, floating panels, fixed type scale, feedback-only motion. **Never** pour grain / vignette / giant hero type / dark-default / a hero engine into a dashboard — that's brand grammar, not product grammar.
+4. **Then the paths fork further:**
    - **brand** → pick a **§2 Soul** (`references/style-personas.md`) and build **one §4 Hero Engine** (`references/hero-engines.md`).
-   - **product** → build a **component system + data viz** per `references/product-ui.md` (density, tables, charts, forms, interaction states).
+   - **product** → build a **component system + data viz** per `references/product-ui.md` (density, tables, charts, forms, interaction states). **Before writing, open the closest dashboard in `examples/`** (index: `examples/EXAMPLES.md`) to see `product-ui.md` §0 applied in shipped code — lift patterns, not whole files.
 5. Assemble the **§5 page skeleton**, motion-motivated only.
 6. Run the **§6 Cheapness Blacklist** (`references/anti-cheap.md`) and **§8 Pre-Flight** (`references/preflight.md`) before shipping.
 
@@ -34,7 +36,7 @@ The `references/*.md` files are the deep material. Load the one you need for the
 
 | Reference | When to load |
 |-----------|-------------|
-| `design-dna.md` | Laying the premium substrate (grain, vignette, type, color tokens) |
+| `design-dna.md` | Laying the **brand** substrate (grain, vignette, display type, color tokens, palette families). Product/dashboard inherits only its **universal craft floor** (§1: tinted neutrals, translucent borders, contrast floors) — the surfaces/cards/type/motion of a dashboard come from `product-ui.md` §0, not here |
 | `theming.md` | Brief asks for a light/dark toggle or multiple swappable named themes — the token-role and hardcoded-color pitfalls of a runtime palette switch (not the single-locked-palette default) |
 | `hero-engines.md` | Building the hero engine (brand register); also covers a secondary motion vocabulary (split-char reveal, magnetic buttons, curtain wipe, scan-line, per-card fly-in) for non-hero moments elsewhere on the page |
 | `3d-effects.md` | Adding a 3D moment — CSS tilt/flip/coverflow/depth-parallax or Three.js model/displacement |
@@ -42,8 +44,9 @@ The `references/*.md` files are the deep material. Load the one you need for the
 | `inspiration-catalog.md` | Persona picked but you want a wider menu of proven techniques for that soul, or the brief doesn't fit any of the 10 personas cleanly |
 | `anti-cheap.md` | Before any delivery — cheapness scan |
 | `product-ui.md` | Dashboard / admin / data app (product register) |
+| `examples/EXAMPLES.md` | The positive-reference corpus — real shipped pages (5 brand + 4 dashboards) with a per-file "what to study" table. **Open the closest one before building**, especially for dashboards (lift patterns, not whole files) |
 | `dataviz.md` | Chart-heavy product UI beyond the starter table — full 25-type selection matrix, a11y grade + mandatory fallback, library picks (the **decision** layer) |
-| `chart-crafting.md` | Building charts by hand in a single self-contained file — the no-library **implementation** layer: SVG coordinate normalization, line/area draw-in, donut/gauge grow, stacked bars, sparklines, the three animations × reduced-motion pairing, slider-driven live update |
+| `chart-crafting.md` | **Any** hand-built dashboard chart in a single self-contained file (mandatory for bars — the barcode-chart trap) — the no-library **implementation** layer: the value→height rule, `div height:value/max%` bar recipe, SVG coordinate normalization, line/area draw-in, donut/gauge grow, stacked bars, sparklines, the three animations × reduced-motion pairing, slider-driven live update |
 | `commerce-ui.md` | Product detail page (PDP), listing/category page (PLP), cart, checkout — commerce register |
 | `asset-sourcing.md` | Brief implies real imagery but no assets provided — generate vs. real stock vs. placeholder fallback, with the authorization step for each |
 | `preflight.md` | Final checklist before saying "done" |
@@ -100,7 +103,7 @@ Most AI design output is bad because the model jumps to a default aesthetic inst
 ### 0.A Determine the Register (this forks every later decision)
 
 - **brand** — design IS the product: landing page, brand site, launch, portfolio, campaign, hero page. Be bold, opinionated, spectacular. Goes the soul + hero-engine route (§2, §4).
-- **product** — design SERVES the product: dashboard, admin, analytics, data table, app shell, settings, tool. Optimize for clarity, density, usability. Goes the component-system route (`references/product-ui.md`). Still never cheap — it inherits the substrate (§3) and the cheapness blacklist (§6).
+- **product** — design SERVES the product: dashboard, admin, analytics, data table, app shell, settings, tool. Optimize for clarity, density, usability. Goes the component-system route (`references/product-ui.md`). Still never cheap — it inherits the **universal craft floor** (§3's last three bullets) + the cheapness blacklist (§6), and builds on the **product substrate** (`product-ui.md` §0), **not** the brand substrate's grain/vignette/hero-type/dark-default.
 - **commerce** — a third, hybrid case: product detail pages (PDP), category/listing pages (PLP), cart, checkout. It doesn't cleanly fit either bucket above, so don't force it — route by which job the specific page is doing:
   - A **PDP selling one hero item** (a single SKU, a launch, a flagship product) leans **brand**: pick a soul (§2), but keep DENSITY up for specs/reviews/trust signals — see `references/commerce-ui.md` for the PDP skeleton.
   - A **PLP / marketplace with many SKUs** (filters, sort, grid of many products) leans **product**: DENSITY high, SPECTACLE low, same as a dashboard — see `references/product-ui.md` for grid/filter patterns plus `references/commerce-ui.md` for commerce-specific rules (price/CTA placement, cart, checkout, dark-pattern bans).
@@ -197,7 +200,9 @@ Rules:
 
 ## 3. THE PREMIUM SUBSTRATE (Why It Reads as Expensive)
 
-The difference between a cheap page and an expensive one is mostly a thin physical layer, applied consistently. Full recipes and exact values in `references/design-dna.md`. The non-negotiables:
+The difference between a cheap page and an expensive one is mostly a thin physical layer, applied consistently. Full recipes and exact values in `references/design-dna.md`. The non-negotiables below are the **brand** substrate.
+
+> **Register note.** The last three bullets — **translucent borders**, **no pure `#fff`/`#000`**, **color lock** — are the *universal craft floor*: they hold for **product/dashboard** too. The first four — **grain, vignette, `clamp()` type tension, layered hero z-index** — are **brand-only**; a dashboard replaces them with the product substrate in `references/product-ui.md` §0 (premium surfaces/cards, KPI tiles, fixed type scale, feedback motion). Don't apply brand grain/vignette/giant-type to a dashboard.
 
 - **Grain** — a fixed SVG `feTurbulence` noise layer at `opacity .025–.05`. Static, but kills the flat "vector slop" look. (Light pages too, lower opacity.)
 - **Vignette** — a radial-gradient darken on dark heroes to create an optical focal point.

@@ -78,20 +78,46 @@ gsap.to(seg, { strokeDashoffset: C * (1 - pct), duration: 1.2, ease: 'power2.inO
 
 ---
 
-## 4. Bar / Stacked Bar + Tooltip
+## 4. Bar / Column — the value drives the height, or it's a barcode
 
-**Stacked bar** — accumulate each segment's y from a running total:
+> **The single most-botched hand-built chart.** The *barcode* failure — every bar the same height, all maxed to the container's top edge, thin, no axis labels — has one root cause: **the bar's height was never computed from the value.** A `gsap.from(scaleY: 0→1)` off a full-height base, or a `<rect>`/`<div>` sized to fill its slot, animates beautifully into a wall of identical bars. Height *is* the number. Compute it first, animate second.
+
+**The reliable recipe (what the showcase dashboards actually ship).** A flex/grid row of `<div>` columns, each height set from `value/max`, bottom-aligned. No SVG, no coordinate math — the hardest thing to get wrong:
+
+```html
+<div class="bars">   <!-- height:230px; display:flex; align-items:end; gap:14px -->
+  <div class="col"><div class="bar" style="height:64%"></div><span class="lab">Mon</span></div>
+  …
+</div>
+```
+```js
+const max = 1500;    // the domain max — a round number ≥ the biggest value, NOT data-min
+data.forEach((v,i) => col.innerHTML =
+  `<div class="bar" style="height:${v/max*100}%"></div><span class="lab">${labels[i]}</span>`);
+```
+
+- **Anchor at zero.** `height = value/max`, never `(value − min)/(max − min)` — a bar's *area* encodes the value, so its baseline is 0. The §1 `ys` (which subtracts `min`) is for lines/scatter, **not bars**. One bar reaches ~100%, the rest sit proportionally below. If every bar is ~the same height, either the data is genuinely flat (use a line + one big delta number instead) or the mapping is broken.
+- **Wide bars, few of them.** `max-width: 48–64px` per bar (or grid slots of `1fr`), **≤ ~12 columns.** More than that, or bars thinner than the gaps between them, → switch to a line/area (`dataviz.md` §1). Barcode-thin columns are the tell.
+- **X-axis label on every column** (`Mon`, `Jul`, category name). A bar chart without them is unreadable — which period? which category? Dense axis → label every Nth; never rotate vertical.
+- **Animate the fill, not the size.** The outer `.bar` keeps its computed `height` as a static inline style; only the inner segment (stacked) or a `scaleY` grow animates — and even a `scaleY: 0→1` targets that already-sized box, so it can never overshoot to full height.
+
+**Stacked bar** — the *column* height is `total/max`; inner segments split *that* height by share, and only the segments animate:
+
+```js
+const total = d.reduce((a,b) => a+b, 0);
+col.style.height = total/max*100 + '%';               // column sized by the total, first
+d.forEach(v => seg.style.height = v/total*100 + '%'); // segments split the column, not the plane
+// grow: from a scaleY:0 CSS start → gsap.to(segs, { scaleY:1, transformOrigin:'bottom', stagger:.04 })
+```
+
+**SVG path** (only when you need precise ticks or a shared coordinate space with a line overlay) — accumulate each segment's y from a running total, height still `v/total*barH`, anchored at `baseY`:
 
 ```js
 let acc = 0;
-segs.forEach(v => {
-  const h = v / total * barH;
-  rect(x, baseY - acc - h, w, h);   // draw from bottom up
-  acc += h;
-});
+segs.forEach(v => { const h = v/total*barH; rect(x, baseY - acc - h, w, h); acc += h; }); // bottom up
 ```
 
-**Grow animation:** `gsap.from(rect, { scaleY: 0, transformOrigin: 'bottom', stagger: 0.05 })` — bars rise from the baseline, staggered left-to-right.
+> **Broken-bar tripwire — any one is a ship-blocker:** every bar the same height · bars maxed to the container's top edge · bars thinner than the gaps (barcode) · no x-axis labels · a grouped / 2-series chart with no legend · **bars used for a trend over time** (that's a line/area — `dataviz.md` §1, `product-ui.md` §3). The first five trace to one root — the value never reached the geometry. Re-check that each height is `value/max` (or `total/max`), computed *before* any animation.
 
 **Tooltip:** `mouseenter` reads `data-*` on the bar → position a floating `<div>` above it. Compute the offset relative to the chart's own container, not the viewport: `const r = bar.getBoundingClientRect(), cr = chart.getBoundingClientRect(); tooltip.style.left = (r.left - cr.left) + 'px'` — using viewport coordinates directly misplaces the tooltip the moment the chart isn't at the page origin. Keep **value labels visible by default** where space allows (`dataviz.md` §2: bars are Robust *only if* values aren't hover-only).
 
@@ -110,6 +136,25 @@ segs.forEach(v => {
 ---
 
 ## 6. The Three Animations × Reduced-Motion (always pair them)
+
+> **First: make GSAP available.** Every `gsap.*` call below assumes GSAP is loaded — a `gsap.*` call with no GSAP on the page just silently does nothing (and your chart never reveals). Pick one, before your script runs:
+> - **Self-host (preferred — offline-safe, zero remote dependency, version frozen):** put `gsap.min.js` (+ `ScrollTrigger.min.js` only if you use scroll) in `./lib/`, then `<script src="lib/gsap.min.js"></script>`. This is what the bundled `examples/*.html` do.
+> - **CDN (only if the project allows remote deps):** `<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>`.
+> - **React / bundler:** `npm i gsap`, then `import { gsap } from 'gsap'`.
+> - **No GSAP wanted? Degrade to CSS:** a single grow / fade / draw-in works as a CSS `transition` or `@keyframes` toggled by a class on load — keep the *same* reduced-motion terminal state. Reach for GSAP when you need **staggers, timelines, number counters, or MotionPath** (the things CSS can't do cleanly).
+>
+> ⚠️ The examples' `src="lib/gsap.min.js"` is **relative to the `examples/` folder** — copying that path into a new project resolves to nothing unless you actually place GSAP there. Load GSAP for real; don't ship a dead `<script src>` or an undefined `gsap`.
+
+> **GSAP in one screen (the whole API a dashboard needs — don't rely on remembering it).**
+> - `gsap.to(el, {opacity:1, y:0, duration:.7, ease:'power3.out', delay:.1})` — animate **to** these values (the default).
+> - `gsap.from(el, {scaleY:0, transformOrigin:'bottom'})` — animate **from** these into the element's current state (bars/rings grow in).
+> - `gsap.fromTo(el, {a}, {b})` — explicit start + end. `gsap.set(el, {attr:{d}})` — set **instantly**, no tween (per-frame slider updates, §7).
+> - **stagger:** `gsap.to('.card', {y:0, opacity:1, stagger:.06})` — one call drives many, each `.06s` after the last; `stagger:{each:.05, from:'start'|'random'}` for control.
+> - **SVG marks:** animate `strokeDashoffset` (line/gauge draw-in) · `scaleY`/`scaleX` + `transformOrigin` (bar/segment grow) · `attr:{...}` for raw attributes.
+> - **counters:** tween a throwaway object and format in `onUpdate` (recipe below).
+> - **easing:** `power2.out` / `power3.out` for reveals · `back.out(1.6)` for a pop · **never** `power1`/`linear` (reads cheap).
+> - **scroll-triggered** (needs `ScrollTrigger` loaded): `gsap.to(el, {opacity:1, y:0, scrollTrigger:{trigger:el, start:'top 85%'}})` — but a dashboard's first screen is already visible, so fire on load instead (the above-the-fold variant below), not behind a ScrollTrigger.
+> Every one of these pairs with its reduced-motion terminal state — the table is next.
 
 Three motions cover ~90% of dashboard charts. **Every one ships with its reduced-motion terminal state in the same block** — this is the non-negotiable pattern, not an afterthought.
 

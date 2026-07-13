@@ -1,6 +1,8 @@
-# Design DNA — The Premium Substrate
+# Design DNA — The Premium Substrate (BRAND register)
 
-The physical layer that separates an expensive-looking page from a cheap one. Distilled from a 37-page showcase corpus across every industry. Apply consistently; these are recipes with real values, not inspiration.
+The physical layer that separates an expensive-looking page from a cheap one. Distilled from a 37-page **brand/landing** showcase corpus across every industry. Apply consistently; these are recipes with real values, not inspiration.
+
+> **Register scope — read first.** This is the **brand** substrate: landing pages, brand sites, launches, portfolios, hero pages. Its signature moves — dark-by-default, `.grain` + vignette, `clamp(56–160px)` display type, layered hero engines — are *brand-page grammar*, **not** dashboard grammar. A **product/dashboard** page is a **different design language** and must **not** inherit those five moves; it builds on `product-ui.md` §0 (the product substrate) instead. What both registers share is only the **universal craft floor**, and *that* is what a dashboard inherits from here: tinted neutrals (no pure `#fff`/`#000`), translucent/hairline borders (never hard `#ccc`), tinted-not-black shadows, the contrast floors in §1, and OKLCH reasoning. Everything else in this file is brand-only. See `SKILL.md` §0 for the fork.
 
 > Reason in **OKLCH** internally for palettes; emit hex if the stack needs it. Design light + dark together, test contrast in each, never just invert.
 

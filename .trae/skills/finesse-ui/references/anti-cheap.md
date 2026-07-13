@@ -85,6 +85,12 @@ Failing any item below is a **shipping blocker**. Fix before delivery.
 - **Hand-rolled decorative SVG illustrations** as default. → icon libraries for icons; for brand marks, a simple monogram only.
 - **Plain text wordmarks** for a "trusted by" logo wall. → real SVG logos (Simple Icons `cdn.simpleicons.org/{slug}`), or a generated monogram for invented brands. Logos only — no category labels under them.
 
+**Charts & data viz** (the register where dashboards silently go cheap)
+- `[HARD BAN]` **Broken bar/column chart** — every bar the same height, bars maxed to the chart's top edge, barcode-thin columns, or **no x-axis labels**. The tell of a mark whose height was never computed from the data. → `height = value/max` from a zero baseline, ≤~12 wide columns (`max-width:48–64px`), a label under each, only the fill animates (`chart-crafting.md` §4 tripwire).
+- **Bars for a trend over time** — a wall of columns where a line/area belongs. → line/area for time series; bars only compare categories (`product-ui.md` §3 table).
+- **Generic dashboard status palette** — the reflex blue + green + orange (or red/green) series, no brand hue, on a white card grid. Predictable from the category alone (§0). → series colors derived from the page's own accent + one harmonised secondary; ≤5, never hue-only (`dataviz.md` §5).
+- **Fake charts** — a `<div>` at a hardcoded `width:73%`, numbers that don't flow through the geometry. → real geometry from data (`chart-crafting.md`).
+
 ---
 
 ## 3. Motion Tells
@@ -110,5 +116,6 @@ Before shipping, answer honestly:
 6. **Spectacle shown** (if claimed)? Holds 60fps? Reduced-motion fallback?
 7. **Copy clean?** No em-dashes, no fake numbers, no AI-cute strings?
 8. **Contrast AA?** Buttons, placeholders, focus rings included?
+9. **Charts real?** Every bar/line/arc computed from data (no maxed / uniform / barcode / faked marks), axes labeled, right chart type for the question?
 
 Any "no" is unshipped work.

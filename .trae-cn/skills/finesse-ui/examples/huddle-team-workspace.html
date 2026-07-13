@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skillhub — Course Learning Console</title>
+<style>
+:root{
+  --bg:#eef1fb; --card:#ffffff; --ink:#1c1d2b; --ink-2:#63647a; --ink-3:#9797ac;
+  --line:#e7e9f6; --line-2:#f0f1fa;
+  --accent:#6c5ce7; --accent-2:#ff8b6b; --accent-soft:#efeaff;
+  --blue:#5b8def; --blue-soft:#e4edff;
+  --coral-soft:#ffe6da; --violet-soft:#eae4fb;
+  --up:#2fb680; --down:#f0616a;
+  --r:22px; --r-sm:15px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);overflow-x:hidden;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(900px 500px at 90% -10%,rgba(108,92,231,.10),transparent 60%),
+   radial-gradient(700px 500px at -8% 106%,rgba(255,139,107,.08),transparent 60%)}
+.wrap{position:relative;z-index:1;max-width:1440px;margin:0 auto;padding:26px 30px 44px}
+
+/* top nav */
+.navbar{display:flex;align-items:center;gap:18px;background:var(--card);border-radius:20px;padding:12px 16px;box-shadow:0 1px 3px rgba(30,20,70,.05),0 10px 30px rgba(30,20,70,.04);margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:9px;padding-right:8px}
+.brand .logo{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#8f7cf5);display:grid;place-items:center;box-shadow:0 6px 16px rgba(108,92,231,.35)}
+.brand .logo svg{width:17px;height:17px}
+.brand b{font-size:18px;letter-spacing:-.02em;font-weight:800}
+.pills{display:flex;align-items:center;gap:4px;background:var(--bg);border-radius:14px;padding:4px;margin:0 auto}
+.pills a{display:flex;align-items:center;gap:7px;padding:9px 16px;border-radius:11px;color:var(--ink-2);font-size:13.5px;font-weight:600;text-decoration:none;white-space:nowrap;transition:.16s}
+.pills a:hover:not(.on){color:var(--ink)}
+.pills a.on{background:var(--ink);color:#fff;box-shadow:0 6px 16px rgba(28,29,43,.25)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.icon-btn{position:relative;width:40px;height:40px;border-radius:12px;background:var(--bg);display:grid;place-items:center;cursor:pointer;flex-shrink:0}
+.icon-btn svg{width:17px;height:17px;stroke:var(--ink-2);fill:none;stroke-width:1.8}
+.icon-btn .dot{position:absolute;top:-3px;right:-3px;width:15px;height:15px;border-radius:50%;background:var(--accent-2);color:#fff;font-size:8.5px;font-weight:700;display:grid;place-items:center;border:2px solid var(--card)}
+.acct{display:flex;align-items:center;gap:10px;padding:5px 12px 5px 5px;border-radius:14px;background:var(--bg)}
+.acct img{width:34px;height:34px;border-radius:10px;object-fit:cover}
+.acct .nm{font-size:12.5px;font-weight:700}
+.acct .em{font-size:10.5px;color:var(--ink-3)}
+
+/* header */
+.hdr{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px;padding:0 4px}
+.hdr h1{font-size:25px;font-weight:800;letter-spacing:-.03em}
+.hdr .sub{display:flex;align-items:center;gap:8px;color:var(--ink-3);font-size:13px;margin-top:5px}
+.hdr .sub .sep{width:3px;height:3px;border-radius:50%;background:var(--ink-3)}
+.hdr .right{display:flex;align-items:center;gap:14px}
+.stack{display:flex;align-items:center}
+.stack img{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2.5px solid var(--bg);margin-left:-10px}
+.stack img:first-child{margin-left:0}
+.stack .more{width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;margin-left:-10px;border:2.5px solid var(--bg)}
+.btn{display:inline-flex;align-items:center;gap:7px;border-radius:12px;padding:11px 17px;font-size:13.5px;font-weight:700;cursor:pointer;border:0;white-space:nowrap}
+.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+.btn.pri{background:var(--ink);color:#fff;box-shadow:0 8px 20px rgba(28,29,43,.22)}
+
+/* grid */
+.grid-2{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-bottom:16px}
+.card{background:var(--card);border-radius:var(--r);padding:20px;box-shadow:0 1px 3px rgba(30,20,70,.04)}
+.card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-h h3{font-size:16px;font-weight:750;letter-spacing:-.01em}
+.see-all{font-size:12.5px;font-weight:700;color:var(--ink-2);background:var(--bg);padding:8px 14px;border-radius:20px;cursor:pointer;white-space:nowrap}
+.see-all:hover{color:var(--ink)}
+
+/* task cards */
+.tasks{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.task{border-radius:18px;padding:18px;display:flex;flex-direction:column;min-height:190px}
+.task.t1{background:var(--blue-soft)}
+.task.t2{background:var(--violet-soft)}
+.task.t3{background:var(--coral-soft)}
+.tag{display:inline-flex;align-self:flex-start;font-size:11px;font-weight:700;padding:5px 11px;border-radius:20px;background:rgba(255,255,255,.72);color:var(--ink-2);margin-bottom:14px}
+.tag.hi{color:var(--accent-2)}
+.tag.md{color:var(--accent)}
+.task h4{font-size:18px;font-weight:750;line-height:1.25;letter-spacing:-.02em;margin-bottom:auto}
+.task .stack{margin-top:16px;margin-bottom:14px}
+.task .stack img{width:26px;height:26px;border:2px solid rgba(255,255,255,.9)}
+.task .prow{display:flex;align-items:center;gap:10px}
+.pbar{flex:1;height:7px;border-radius:6px;background:rgba(255,255,255,.65);overflow:hidden}
+.pbar .f{height:100%;border-radius:6px;background:var(--ink);width:0}
+.pfrac{font-size:11.5px;font-weight:700;color:var(--ink-2);white-space:nowrap}
+
+/* donut */
+.donut-wrap{display:flex;flex-direction:column;align-items:center;gap:18px}
+.donut-top{width:100%;display:flex;justify-content:flex-end;margin-top:-42px;margin-bottom:8px}
+.donut-top span{font-size:11.5px;color:var(--ink-3);font-weight:600}
+.donut{position:relative;width:172px;height:172px;flex-shrink:0}
+.donut svg{transform:rotate(0deg)}
+.donut .mid{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.donut .mid b{font-size:26px;font-weight:800}
+.donut .mid span{font-size:10.5px;color:var(--ink-3);letter-spacing:.03em}
+.dleg{display:flex;flex-direction:column;gap:12px;width:100%;font-size:13px}
+.dleg .row{display:flex;align-items:center;gap:9px;color:var(--ink-2)}
+.dleg .row i{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+.dleg .row b{color:var(--ink);margin-left:auto}
+
+/* bottom row */
+.bottom3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+
+/* ranked list */
+.rank{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line-2)}
+.rank:last-child{border-bottom:0;padding-bottom:0}
+.rank img{width:38px;height:38px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.rank .rn{font-size:13.5px;font-weight:700}
+.rank .rr{font-size:11.5px;color:var(--ink-3)}
+.rank .pt{margin-left:auto;text-align:right}
+.rank .pt b{font-size:13.5px;font-weight:800}
+.rank .pt span{display:block;font-size:10px;color:var(--ink-3)}
+
+/* bar chart */
+.legend{display:flex;gap:16px;font-size:11.5px;color:var(--ink-2)}
+.legend i{width:9px;height:9px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle}
+.barchart{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;height:150px;align-items:end;margin:18px 0 12px}
+.bpair{display:flex;gap:5px;align-items:end;height:100%;justify-content:center}
+.bpair .bar{width:11px;border-radius:6px;transform-origin:bottom;transform:scaleY(0)}
+.bpair .bar.focus{background:var(--accent)}
+.bpair .bar.brk{background:var(--line)}
+.blab{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;text-align:center}
+.blab span{font-size:11px;color:var(--ink-3)}
+
+/* chat */
+.chat-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.chat-head img{width:34px;height:34px;border-radius:50%;object-fit:cover}
+.chat-head b{font-size:13.5px;font-weight:700;display:block}
+.chat-head span{font-size:11px;color:var(--up);font-weight:600}
+.bubbles{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.bub{max-width:82%;font-size:12.5px;line-height:1.4;padding:10px 13px;border-radius:14px}
+.bub.in{background:var(--bg);color:var(--ink);border-bottom-left-radius:4px;align-self:flex-start}
+.bub.out{background:var(--accent);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.bub-time{font-size:10px;color:var(--ink-3);align-self:flex-end;margin-top:-4px}
+.voice{display:flex;align-items:center;gap:10px;background:var(--coral-soft);border-radius:16px;padding:10px 12px;align-self:flex-start;max-width:88%}
+.voice .play{width:28px;height:28px;border-radius:50%;background:var(--accent-2);display:grid;place-items:center;flex-shrink:0;cursor:pointer}
+.voice .play svg{width:11px;height:11px}
+.wave{display:flex;align-items:center;gap:2.5px;height:22px;flex:1}
+.wave span{width:2.5px;border-radius:2px;background:rgba(28,29,43,.32);display:inline-block}
+.voice .dur{font-size:10.5px;color:var(--ink-2);font-weight:600;white-space:nowrap}
+
+.footnote{margin-top:26px;font-size:11px;color:var(--ink-3);text-align:center}
+.reveal{opacity:0;transform:translateY(16px)}
+
+@media (max-width:1200px){
+  .grid-2{grid-template-columns:1fr}
+  .tasks{grid-template-columns:1fr 1fr 1fr}
+  .bottom3{grid-template-columns:1fr}
+  .pills{display:none}
+}
+@media (max-width:820px){
+  .wrap{padding:18px 14px 34px}
+  .navbar{flex-wrap:wrap}
+  .hdr{flex-direction:column;align-items:flex-start;gap:14px}
+  .hdr .right{width:100%;justify-content:space-between}
+  .tasks{grid-template-columns:1fr}
+  .barchart,.blab{grid-template-columns:repeat(6,1fr)}
+}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1!important;transform:none!important}*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="navbar reveal">
+    <div class="brand"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="8" cy="9" r="3"/><circle cx="17" cy="8" r="2.4"/><path d="M3 20v-1a5 5 0 015-5h0a5 5 0 015 5v1"/><path d="M14.5 14.2A4.2 4.2 0 0121 18v1"/></svg></span><b>Skillhub</b></div>
+    <nav class="pills">
+      <a class="on" href="#">Dashboard</a>
+      <a href="#">Courses</a>
+      <a href="#">Schedule</a>
+      <a href="#">Learners</a>
+      <a href="#">Reports</a>
+    </nav>
+    <div class="nav-right">
+      <div class="icon-btn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+      <div class="icon-btn"><span class="dot">4</span><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg></div>
+      <div class="acct"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%236c5ce7'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3END%3C/text%3E%3C/svg%3E" alt="Nora Diaz"><div><div class="nm">Nora Diaz</div><div class="em">nora@skillhub.io</div></div></div>
+    </div>
+  </div>
+
+  <div class="hdr reveal">
+    <div>
+      <h1>Fullstack Web Bootcamp</h1>
+      <div class="sub"><span>Course cohort</span><span class="sep"></span><span>ID CB-2291-A</span></div>
+    </div>
+    <div class="right">
+      <div class="stack">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%235b8def'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3EMC%3C/text%3E%3C/svg%3E" alt="">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%232fb680'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3EOB%3C/text%3E%3C/svg%3E" alt="">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23ff8b6b'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3EPN%3C/text%3E%3C/svg%3E" alt="">
+        <span class="more">+7</span>
+      </div>
+      <button class="btn pri"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New Lesson</button>
+    </div>
+  </div>
+
+  <section class="grid-2">
+    <div class="card reveal">
+      <div class="card-h"><h3>Today's Lessons</h3><span class="see-all">See All</span></div>
+      <div class="tasks">
+        <div class="task t1">
+          <span class="tag hi">Due Today</span>
+          <h4>Intro to React Hooks</h4>
+          <div class="stack"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%235b8def'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3EMC%3C/text%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%232fb680'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3EOB%3C/text%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23ff8b6b'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3EPN%3C/text%3E%3C/svg%3E" alt=""></div>
+          <div class="prow"><div class="pbar"><div class="f" data-w="66"></div></div><span class="pfrac num">6/9</span></div>
+        </div>
+        <div class="task t2">
+          <span class="tag md">This Week</span>
+          <h4>CSS Grid Workshop</h4>
+          <div class="stack"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%232fb680'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3EOB%3C/text%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23e0a33a'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3ECR%3C/text%3E%3C/svg%3E" alt=""></div>
+          <div class="prow"><div class="pbar"><div class="f" data-w="33"></div></div><span class="pfrac num">4/12</span></div>
+        </div>
+        <div class="task t3">
+          <span class="tag hi">Due Today</span>
+          <h4>Final Project Review</h4>
+          <div class="stack"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23ff8b6b'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3EPN%3C/text%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%238f7cf5'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3ENA%3C/text%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%236c5ce7'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3END%3C/text%3E%3C/svg%3E" alt=""></div>
+          <div class="prow"><div class="pbar"><div class="f" data-w="80"></div></div><span class="pfrac num">8/10</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card reveal">
+      <div class="card-h"><h3>Course Progress</h3></div>
+      <div class="donut-wrap">
+        <div class="donut-top"><span>Total lessons: <b class="num" data-to="84">0</b></span></div>
+        <div class="donut">
+          <svg viewBox="0 0 120 120" width="172" height="172">
+            <circle cx="60" cy="60" r="48" fill="none" stroke="var(--line-2)" stroke-width="14"/>
+            <circle class="arc" cx="60" cy="60" r="48" fill="none" stroke="var(--accent)" stroke-width="14" stroke-linecap="round" data-frac=".52" data-offset="0"/>
+            <circle class="arc" cx="60" cy="60" r="48" fill="none" stroke="var(--accent-2)" stroke-width="14" stroke-linecap="round" data-frac=".21" data-offset=".52"/>
+            <circle class="arc" cx="60" cy="60" r="48" fill="none" stroke="var(--blue)" stroke-width="14" stroke-linecap="round" data-frac=".27" data-offset=".73"/>
+          </svg>
+          <div class="mid"><b class="num" data-to="52" data-suffix="%">0%</b><span>DONE</span></div>
+        </div>
+        <div class="dleg">
+          <div class="row"><i style="background:var(--accent)"></i>Completed<b>52%</b></div>
+          <div class="row"><i style="background:var(--accent-2)"></i>In Progress<b>21%</b></div>
+          <div class="row"><i style="background:var(--blue)"></i>Not Started<b>27%</b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bottom3">
+    <div class="card reveal">
+      <div class="card-h"><h3>Weekly Leaderboard</h3><span class="see-all">See All</span></div>
+      <div class="rank"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%235b8def'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3EMC%3C/text%3E%3C/svg%3E" alt=""><div><div class="rn">Mira Chen</div><div class="rr">Frontend Track</div></div><div class="pt"><b class="num" data-to="128">0</b><span>XP Points</span></div></div>
+      <div class="rank"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%232fb680'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3EOB%3C/text%3E%3C/svg%3E" alt=""><div><div class="rn">Owen Blake</div><div class="rr">Backend Track</div></div><div class="pt"><b class="num" data-to="121">0</b><span>XP Points</span></div></div>
+      <div class="rank"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23ff8b6b'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3EPN%3C/text%3E%3C/svg%3E" alt=""><div><div class="rn">Priya Nair</div><div class="rr">Design Track</div></div><div class="pt"><b class="num" data-to="114">0</b><span>XP Points</span></div></div>
+      <div class="rank"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23e0a33a'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3ECR%3C/text%3E%3C/svg%3E" alt=""><div><div class="rn">Carlos Ruiz</div><div class="rr">Data Track</div></div><div class="pt"><b class="num" data-to="98">0</b><span>XP Points</span></div></div>
+    </div>
+    <div class="card reveal">
+      <div class="card-h"><h3>Focus vs Break</h3><div class="legend"><span><i style="background:var(--accent)"></i>Focus</span><span><i style="background:var(--line)"></i>Break</span></div></div>
+      <div class="barchart" id="barchart"></div>
+      <div class="blab"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+    </div>
+    <div class="card reveal">
+      <div class="card-h"><h3>Cohort Chat</h3><span class="see-all">See All</span></div>
+      <div class="chat-head"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%235b8def'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='30' font-weight='700' fill='white' text-anchor='middle'%3EMC%3C/text%3E%3C/svg%3E" alt=""><div><b>Mira Chen</b><span>● Online</span></div></div>
+      <div class="bubbles">
+        <div class="bub in">Hey, did you finish the React Hooks assignment?</div>
+        <div class="bub out">Almost — just the useEffect section left 👍</div>
+        <div class="bub-time">12:24</div>
+        <div class="voice">
+          <span class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M6 4l14 8-14 8z"/></svg></span>
+          <span class="wave" id="wave"></span>
+          <span class="dur">0:38</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footnote">Demo dashboard · illustrative data · built with the finesse craft system</div>
+</div>
+<script src="lib/gsap.min.js"></script>
+<script>
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* progress bars */
+function fillBars(){
+  document.querySelectorAll('.pbar .f').forEach(el=>{
+    const w=el.dataset.w+'%';
+    if(reduce){el.style.width=w;return;}
+    gsap.to(el,{width:w,duration:1.1,delay:.4,ease:'power2.out'});
+  });
+}
+
+/* donut arcs */
+(function(){
+  const C=2*Math.PI*48;
+  document.querySelectorAll('.arc').forEach(a=>{
+    const frac=parseFloat(a.dataset.frac), off=parseFloat(a.dataset.offset||0);
+    a.setAttribute('transform','rotate('+(-90+off*360)+' 60 60)');
+    const len=frac*C-3;
+    if(reduce){a.style.strokeDasharray=len+' '+C;return;}
+    a.style.strokeDasharray='0 '+C;
+    gsap.to(a,{strokeDasharray:len+' '+C,duration:1.1,delay:.3,ease:'power2.out'});
+  });
+})();
+
+/* bar chart: focus vs break, 6 days */
+(function(){
+  const chart=document.getElementById('barchart');
+  const data=[[62,38],[70,30],[48,52],[80,20],[66,34],[54,46]]; // [focus%, break%] of max height
+  data.forEach(d=>{
+    const w=document.createElement('div');w.className='bpair';
+    w.innerHTML='<div class="bar focus" style="height:'+d[0]+'%"></div><div class="bar brk" style="height:'+d[1]+'%"></div>';
+    chart.appendChild(w);
+  });
+  const bars=chart.querySelectorAll('.bar');
+  if(reduce){bars.forEach(b=>b.style.transform='scaleY(1)');}
+  else{gsap.to(bars,{scaleY:1,duration:.8,ease:'power3.out',stagger:{each:.05,from:'start'},delay:.3});}
+})();
+
+/* voice waveform */
+(function(){
+  const wave=document.getElementById('wave');
+  const heights=[6,10,16,9,20,13,22,15,8,18,11,20,7,16,10,14];
+  heights.forEach(h=>{
+    const s=document.createElement('span');
+    s.style.height=h+'px';
+    wave.appendChild(s);
+  });
+})();
+
+/* animated number roll-up */
+function rollNums(){
+  document.querySelectorAll('.num[data-to]').forEach(el=>{
+    const to=parseFloat(el.dataset.to),dec=+(el.dataset.dec||0),pre=el.dataset.prefix||'',suf=el.dataset.suffix||'';
+    const fmt=v=>pre+(dec?v.toFixed(dec):Math.round(v).toLocaleString())+suf;
+    if(reduce){el.textContent=fmt(to);return;}
+    const o={v:0};gsap.to(o,{v:to,duration:1.3,ease:'power2.out',onUpdate:()=>el.textContent=fmt(o.v)});
+  });
+}
+
+if(reduce){
+  document.querySelectorAll('.reveal').forEach(e=>{e.style.opacity=1;e.style.transform='none';});
+  fillBars();rollNums();
+}else{
+  gsap.to('.reveal',{opacity:1,y:0,duration:.7,ease:'power3.out',stagger:.08,onStart:()=>{fillBars();rollNums();}});
+}
+</script>
+</body>
+</html>

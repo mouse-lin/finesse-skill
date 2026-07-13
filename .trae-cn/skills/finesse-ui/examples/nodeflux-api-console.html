@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Postline — Email Delivery Console</title>
+<style>
+:root{
+  --page:#e9e6dd; --bg:#f6f4ef; --card:#ffffff; --ink:#191a19; --ink-2:#5f6660; --ink-3:#94998f;
+  --line:#eae7de; --line-2:#f1efe7;
+  --accent:#0d9488; --accent-d:#0b7a70; --accent-l:#ccfbf1;
+  --accent-2:#f59e0b; --accent-2-l:#fef3c7;
+  --black:#161816;
+  --r-lg:32px; --r:20px; --r-sm:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--page);color:var(--ink);overflow-x:hidden;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.panel{max-width:1480px;margin:26px auto;background:var(--bg);border-radius:var(--r-lg);padding:26px 30px 38px;
+  box-shadow:0 40px 90px -50px rgba(20,24,20,.35)}
+
+/* ---- topbar ---- */
+.topbar{display:flex;align-items:center;gap:14px;margin-bottom:34px}
+.icon-circle{width:42px;height:42px;border-radius:50%;background:var(--card);display:grid;place-items:center;
+  box-shadow:0 1px 3px rgba(0,0,0,.05);cursor:pointer;flex-shrink:0}
+.icon-circle svg{width:17px;height:17px;stroke:var(--ink-2);fill:none;stroke-width:1.8}
+.logo-mark{width:42px;height:42px;border-radius:50%;background:var(--black);display:grid;place-items:center;flex-shrink:0}
+.logo-mark svg{width:19px;height:19px}
+.brandline{line-height:1.15;margin-right:auto}
+.brandline .lab{font-size:11.5px;color:var(--ink-3);font-weight:600;letter-spacing:.02em}
+.brandline .word{font-size:18px;font-weight:800;letter-spacing:-.02em}
+.acct{display:flex;align-items:center;gap:10px}
+.acct img{width:42px;height:42px;border-radius:50%;object-fit:cover;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.acct .nm{font-size:13.5px;font-weight:700}
+.acct .role{font-size:11.5px;color:var(--ink-3)}
+.search{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:14px;padding:12px 18px;
+  color:var(--ink-3);font-size:13px;min-width:280px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.search svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0}
+
+/* ---- hero / greeting ---- */
+.hero{display:flex;align-items:center;gap:18px;margin-bottom:34px;flex-wrap:wrap}
+.datebadge{width:64px;height:64px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.05);flex-shrink:0}
+.datebadge b{font-size:19px;font-weight:800;line-height:1}
+.datebadge span{font-size:9px;color:var(--ink-3);font-weight:600;margin-top:2px}
+.hairline{width:1px;height:36px;background:var(--line);flex-shrink:0}
+.pill-cta{display:inline-flex;align-items:center;gap:9px;background:var(--accent);color:#fff;border:0;
+  border-radius:30px;padding:13px 20px;font-size:13.5px;font-weight:700;cursor:pointer;white-space:nowrap;
+  box-shadow:0 10px 24px -8px rgba(13,148,136,.55)}
+.pill-cta svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.2}
+.grow{flex:1}
+.headline{text-align:right}
+.headline h1{font-size:27px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.headline .sub{font-size:22px;font-weight:400;color:var(--ink-3);letter-spacing:-.01em}
+.mic{width:52px;height:52px;border-radius:50%;background:var(--card);display:grid;place-items:center;
+  box-shadow:0 1px 3px rgba(0,0,0,.05);flex-shrink:0;cursor:pointer}
+.mic svg{width:19px;height:19px;stroke:var(--ink);fill:none;stroke-width:1.8}
+
+/* ---- generic card ---- */
+.card{background:var(--card);border-radius:var(--r);padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.reveal{opacity:0;transform:translateY(16px)}
+.lab-sm{font-size:11.5px;color:var(--ink-3);font-weight:600}
+.dd{display:inline-flex;align-items:center;gap:5px;background:var(--bg);border-radius:9px;padding:6px 10px;
+  font-size:11.5px;font-weight:600;color:var(--ink-2);cursor:pointer}
+.dd svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.4}
+
+/* ---- bento row 1 ---- */
+.bento-1{display:grid;grid-template-columns:2.15fr 1.7fr 1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+
+.keycard{background:linear-gradient(150deg,#12312e,#0a1f1d 65%);color:#fff;position:relative;overflow:hidden}
+.keycard::before{content:'';position:absolute;inset:0;background:
+  radial-gradient(280px 200px at 90% -10%,rgba(13,148,136,.45),transparent 60%);pointer-events:none}
+.keycard .kh{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1}
+.keycard .proj{font-size:13px;font-weight:700}
+.keycard .env{font-size:10.5px;color:rgba(255,255,255,.55);margin-top:2px}
+.keycard .kdd{background:rgba(255,255,255,.1);color:#fff}
+.keycard .token{font-size:16px;letter-spacing:1.5px;margin:26px 0 22px;position:relative;z-index:1;color:#dff5f2}
+.keycard .krow{display:flex;gap:10px;position:relative;z-index:1}
+.kbtn{border:0;border-radius:11px;padding:10px 16px;font-size:12.5px;font-weight:700;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px}
+.kbtn.on{background:#fff;color:#0b1f1c}
+.kbtn.ghost{background:rgba(255,255,255,.12);color:#fff}
+.kbtn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+
+.statstack{display:flex;flex-direction:column;justify-content:space-between;gap:0}
+.stat-row{padding:6px 0 14px}
+.stat-row + .stat-row{border-top:1px solid var(--line-2);padding-top:14px}
+.stat-row .sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.stat-row .val{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.stat-row .val.err{color:var(--accent-2)}
+
+.sq-card{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px}
+.lockcard{background:var(--black);color:#fff}
+.lockcard .licon{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.1);display:grid;place-items:center}
+.lockcard .licon svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.8}
+.lockcard b{font-size:13px;font-weight:700}
+.lockcard span{font-size:10.5px;color:rgba(255,255,255,.55)}
+
+.streakcard b.big{font-size:26px;font-weight:800;line-height:1}
+.streakcard .lab-sm{margin-top:2px}
+.dots{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:10px;max-width:110px}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--line);display:inline-block;transform:scale(0)}
+.dots i.on{background:var(--accent-2)}
+
+.sparkcard{align-items:flex-start;text-align:left}
+.sparkcard svg{width:100%;height:34px;margin:8px 0 6px}
+.tagrow{display:flex;gap:6px}
+.tag{font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:20px;background:var(--bg);color:var(--ink-2)}
+.tag.now{background:var(--accent-l);color:var(--accent-d)}
+
+/* ---- bento row 2 ---- */
+.bento-2{display:grid;grid-template-columns:1.15fr 2.05fr 1fr;gap:16px}
+.stack-col{display:flex;flex-direction:column;gap:16px}
+
+.costcard{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.circles{position:relative;width:190px;height:190px;margin:6px auto 4px}
+.circles .ring{position:absolute;border-radius:50%;top:50%;left:50%;display:grid;place-items:center;
+  transform:translate(-50%,-50%) scale(0)}
+.circles .ring b{font-size:11px;font-weight:800}
+.circles .ring span{display:block;font-size:8.5px;color:var(--ink-3);font-weight:600}
+.ring.r1{width:190px;height:190px;background:rgba(13,148,136,.08)}
+.ring.r2{width:148px;height:148px;background:rgba(13,148,136,.16)}
+.ring.r3{width:106px;height:106px;background:rgba(13,148,136,.28)}
+.ring.r4{width:64px;height:64px;background:var(--accent);color:#fff}
+.ring.r4 span{color:rgba(255,255,255,.75)}
+.costcard .ch-top{width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+
+.activity .ah{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.activity .h3{font-size:15px;font-weight:700;margin-right:auto}
+.asearch{flex:1;min-width:140px;display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:10px;
+  padding:9px 12px;font-size:12px;color:var(--ink-3)}
+.asearch svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.fpill{font-size:11px;font-weight:700;padding:7px 12px;border-radius:20px;background:var(--bg);color:var(--ink-2);
+  display:inline-flex;align-items:center;gap:5px;cursor:pointer}
+.fpill.on{background:var(--black);color:#fff}
+.subgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.subwidget{background:var(--bg);border-radius:14px;padding:14px}
+.waveform{display:flex;align-items:flex-end;gap:3px;height:52px;margin-top:8px}
+.waveform i{flex:1;background:var(--accent);border-radius:3px;transform:scaleY(0);transform-origin:bottom}
+.waveform i:nth-child(3n){background:var(--accent-2)}
+.rps{font-size:18px;font-weight:800}
+.linklist{display:flex;flex-direction:column}
+.linklist a{display:flex;align-items:center;justify-content:space-between;padding:9px 0;
+  border-bottom:1px solid var(--line-2);font-size:12.5px;font-weight:600;color:var(--ink);text-decoration:none}
+.linklist a:last-child{border-bottom:0}
+.linklist a svg{width:13px;height:13px;stroke:var(--ink-3);fill:none;stroke-width:2}
+.promo{display:flex;flex-direction:column;height:100%}
+.promo .pico{width:30px;height:30px;border-radius:9px;background:var(--accent-2-l);display:grid;place-items:center;margin-bottom:10px}
+.promo .pico svg{width:15px;height:15px;stroke:#b45309;fill:none;stroke-width:1.8}
+.promo b{font-size:12.5px;font-weight:700}
+.promo p{font-size:11px;color:var(--ink-2);margin:4px 0 10px;line-height:1.35}
+.promo button{margin-top:auto;border:0;background:var(--black);color:#fff;border-radius:9px;padding:8px;
+  font-size:11.5px;font-weight:700;cursor:pointer}
+
+.latcard{display:flex;flex-direction:column}
+.lat-top{display:flex;align-items:center;justify-content:space-between}
+.lat-ico{width:36px;height:36px;border-radius:10px;background:var(--bg);display:grid;place-items:center}
+.lat-ico svg{width:16px;height:16px;stroke:var(--accent-d);fill:none;stroke-width:1.8}
+.badge-pct{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:var(--accent-l);color:var(--accent-d)}
+.latcard .val{font-size:30px;font-weight:800;margin:14px 0 2px;letter-spacing:-.02em}
+.latcard svg.spark{width:100%;height:44px;margin-top:8px}
+
+.satcard b.q{font-size:13.5px;font-weight:700;line-height:1.35;display:block;margin-bottom:16px}
+.ratingrow{display:flex;justify-content:space-between;gap:6px}
+.ratingrow button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);
+  display:grid;place-items:center;cursor:pointer}
+.ratingrow button svg{width:17px;height:17px;stroke:var(--ink-2);fill:none;stroke-width:1.8}
+.ratingrow button.pick{background:var(--accent);border-color:var(--accent)}
+.ratingrow button.pick svg{stroke:#fff}
+
+.footnote{margin-top:26px;font-size:11px;color:var(--ink-3);text-align:center}
+
+@media (max-width:1180px){
+  .bento-1{grid-template-columns:1fr 1fr 1fr}
+  .bento-1 .keycard{grid-column:1/-1}
+  .bento-2{grid-template-columns:1fr 1fr}
+  .bento-2 .costcard{grid-column:1/-1}
+}
+@media (max-width:1000px){
+  .subgrid{grid-template-columns:1fr}
+  .bento-2{grid-template-columns:1fr}
+  .headline{text-align:left}
+  .hero{justify-content:flex-start}
+}
+@media (max-width:700px){
+  .bento-1{grid-template-columns:1fr 1fr}
+  .topbar{flex-wrap:wrap}
+  .search{min-width:100%;order:5}
+  .headline h1{font-size:21px}
+  .headline .sub{font-size:17px}
+  .panel{padding:18px 16px 26px;border-radius:24px}
+}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1!important;transform:none!important}
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="panel">
+
+  <div class="topbar">
+    <div class="icon-circle"><svg viewBox="0 0 24 24" stroke="currentColor"><path d="M4 6h16M4 12h16M4 18h16"/></svg></div>
+    <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="12" cy="18" r="2.4"/><path d="M8 7.2L11 16M16 7.2L13 16M8.4 6H15.6"/></svg></div>
+    <div class="brandline"><div class="lab">Postline</div><div class="word">Email Delivery</div></div>
+    <div class="icon-circle"><svg viewBox="0 0 24 24" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></div>
+    <div class="acct"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' rx='40' fill='%230d9488'/%3E%3Ctext x='40' y='53' font-family='sans-serif' font-size='32' font-weight='700' fill='white' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E" alt="user"><div><div class="nm">Alex Rivera</div><div class="role">Delivery Lead</div></div></div>
+    <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Search messages, domains, logs…</div>
+  </div>
+
+  <div class="hero">
+    <div class="datebadge"><b>09</b><span>THU, JUL</span></div>
+    <div class="hairline"></div>
+    <button class="pill-cta">Review bounced mail<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    <div class="icon-circle"><svg viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+    <div class="grow"></div>
+    <div class="headline"><h1>Hey, need a hand? 👋</h1><div class="sub">Ask the assistant</div></div>
+    <div class="mic"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4"/></svg></div>
+  </div>
+
+  <section class="bento-1">
+    <div class="card keycard reveal">
+      <div class="kh">
+        <div><div class="proj">Sending domain · mail.acme.co</div><div class="env">Production environment</div></div>
+        <span class="dd kdd">Live keys<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span>
+      </div>
+      <div class="token num">pl_live_•••• •••• 8a2f</div>
+      <div class="krow">
+        <button class="kbtn on"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>Copy</button>
+        <button class="kbtn ghost"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-3-6.7M21 3v6h-6"/></svg>Regenerate</button>
+      </div>
+    </div>
+
+    <div class="card statstack reveal">
+      <div class="stat-row">
+        <div class="sh"><span class="lab-sm">Messages sent (24h)</span><span class="dd">Live<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></div>
+        <div class="val num" data-to="1842600">0</div>
+      </div>
+      <div class="stat-row">
+        <div class="sh"><span class="lab-sm">Bounce rate</span><span class="dd">24h<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></div>
+        <div class="val err num" data-to="0.34" data-dec="2" data-suffix="%">0%</div>
+      </div>
+    </div>
+
+    <div class="card sq-card lockcard reveal">
+      <div class="licon"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M7 10V7a5 5 0 0110 0v3"/></svg></div>
+      <b>Send Rate</b><span>428 msg/min cap</span>
+    </div>
+
+    <div class="card sq-card streakcard reveal">
+      <b class="big num" data-to="13">0</b><span class="lab-sm">day delivery streak</span>
+      <div class="dots" id="streakDots"></div>
+    </div>
+
+    <div class="card sparkcard reveal">
+      <span class="lab-sm">Delivery time</span>
+      <svg id="sparkMini" viewBox="0 0 120 34" preserveAspectRatio="none"></svg>
+      <div class="tagrow"><span class="tag now">1.8s wk</span><span class="tag">2.1s last</span></div>
+    </div>
+  </section>
+
+  <section class="bento-2">
+    <div class="card costcard reveal">
+      <div class="ch-top"><span class="lab-sm">Monthly Volume</span><span class="dd">Jul<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></div>
+      <div class="circles">
+        <div class="ring r1" data-to="1680"><b class="num">1.68K</b><span>Notifications</span></div>
+        <div class="ring r2" data-to="2840"><b class="num">2.84K</b><span>Marketing</span></div>
+        <div class="ring r3" data-to="5120"><b class="num">5.12K</b><span>Transactional</span></div>
+        <div class="ring r4" data-to="9640"><b class="num">9.64K</b><span>Total sent</span></div>
+      </div>
+    </div>
+
+    <div class="card activity reveal">
+      <div class="ah">
+        <span class="h3">Activity Log</span>
+        <div class="asearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Search activity…</div>
+        <span class="fpill">Errors</span><span class="fpill">Latency</span><span class="fpill on">Today</span>
+      </div>
+      <div class="subgrid">
+        <div class="subwidget">
+          <div class="rps num">642<span style="font-size:11px;color:var(--ink-3);font-weight:600"> msg/s</span></div>
+          <div class="waveform" id="waveform"></div>
+        </div>
+        <div class="subwidget">
+          <div class="linklist">
+            <a href="#">Transactional<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></a>
+            <a href="#">Marketing<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></a>
+            <a href="#">Notifications<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></a>
+          </div>
+        </div>
+        <div class="subwidget promo">
+          <div class="pico"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.6 1.6 0 00.3 1.8 2 2 0 11-2.8 2.8 1.6 1.6 0 00-2.7 1.1 2 2 0 01-4 0 1.6 1.6 0 00-2.6-1.1 2 2 0 11-2.8-2.8A1.6 1.6 0 004 15a2 2 0 010-4 1.6 1.6 0 001.1-2.7 2 2 0 112.8-2.8A1.6 1.6 0 009 4.6 2 2 0 0113 4.6a1.6 1.6 0 002.6 1.1 2 2 0 112.8 2.8A1.6 1.6 0 0020 11a2 2 0 010 4z"/></svg></div>
+          <b>Enable DKIM signing</b><p>Sign outbound mail with a DKIM key.</p>
+          <button>Enable</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack-col">
+      <div class="card latcard reveal">
+        <div class="lat-top"><div class="lat-ico"><svg viewBox="0 0 24 24"><path d="M3 12h4l2-8 4 16 2-8h6"/></svg></div><span class="badge-pct">−12%</span></div>
+        <span class="lab-sm">P95 delivery</span>
+        <div class="val num" data-to="1.8" data-dec="1" data-suffix=" s">0 s</div>
+        <svg class="spark" id="sparkLat" viewBox="0 0 200 44" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="card satcard reveal">
+        <b class="q">How's delivery looking today?</b>
+        <div class="ratingrow">
+          <button><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 16s1.5-2 4-2 4 2 4 2M9 9h.01M15 9h.01"/></svg></button>
+          <button><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 15s1.5-1 4-1 4 1 4 1M9 9h.01M15 9h.01"/></svg></button>
+          <button><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 14h8M9 9h.01M15 9h.01"/></svg></button>
+          <button class="pick"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 13s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></button>
+          <button><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M7 13s2 3 5 3 5-3 5-3M9 9h.01M15 9h.01"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footnote">Demo dashboard · illustrative data · built with the finesse craft system</div>
+</div>
+<script src="lib/gsap.min.js"></script>
+<script>
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* streak dots */
+(function(){
+  const wrap=document.getElementById('streakDots');
+  let h='';
+  for(let i=0;i<20;i++){h+='<i class="'+(i<13?'on':'')+'"></i>';}
+  wrap.innerHTML=h;
+  const dots=wrap.querySelectorAll('i');
+  if(reduce){dots.forEach(d=>d.style.transform='scale(1)');}
+  else{gsap.to(dots,{scale:1,duration:.4,ease:'back.out(2)',stagger:.03,delay:.5});}
+})();
+
+/* sparkline helper */
+function drawSpark(id,vals,color,fillId){
+  const svg=document.getElementById(id);
+  const vb=svg.viewBox.baseVal; const W=vb.width,H=vb.height,pad=2;
+  const max=Math.max(...vals),min=Math.min(...vals);
+  const X=i=>pad+i*((W-pad*2)/(vals.length-1));
+  const Y=v=>H-pad-((v-min)/((max-min)||1))*(H-pad*2);
+  const d=vals.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(' ');
+  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d',d);path.setAttribute('fill','none');path.setAttribute('stroke',color);
+  path.setAttribute('stroke-width','2.2');path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');
+  svg.appendChild(path);
+  const L=path.getTotalLength();
+  path.style.strokeDasharray=L;
+  path.style.strokeDashoffset=reduce?0:L;
+  if(!reduce){gsap.to(path,{strokeDashoffset:0,duration:1.3,ease:'power2.out',delay:.4});}
+}
+drawSpark('sparkMini',[210,205,195,198,188,184,190,178,184],'#0d9488');
+drawSpark('sparkLat',[220,235,210,225,195,205,180,190,170,184],'#0d9488');
+
+/* RPS waveform bars */
+(function(){
+  const wrap=document.getElementById('waveform');
+  const heights=[30,55,42,70,48,90,60,75,40,58,35,64];
+  let h='';heights.forEach(v=>h+='<i style="height:'+v+'%"></i>');
+  wrap.innerHTML=h;
+  const bars=wrap.querySelectorAll('i');
+  if(reduce){bars.forEach(b=>b.style.transform='scaleY(1)');}
+  else{gsap.to(bars,{scaleY:1,duration:.7,ease:'power3.out',stagger:.03,delay:.4});}
+})();
+
+/* concentric cost rings */
+(function(){
+  const rings=document.querySelectorAll('.ring');
+  rings.forEach((r,i)=>{
+    if(reduce){r.style.transform='translate(-50%,-50%) scale(1)';return;}
+    const o={s:0};
+    gsap.to(o,{s:1,duration:.8,ease:'back.out(1.6)',delay:.3+i*.12,
+      onUpdate:()=>{r.style.transform='translate(-50%,-50%) scale('+o.s+')';}});
+  });
+})();
+
+/* rating button pick */
+document.querySelectorAll('.ratingrow button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('pick'));
+    btn.classList.add('pick');
+  });
+});
+
+/* number roll-ups (excludes the .ring divs, which animate via scale above) */
+function rollNums(){
+  document.querySelectorAll('.num[data-to]').forEach(el=>{
+    if(el.closest('.ring')) return;
+    const to=parseFloat(el.dataset.to),dec=+(el.dataset.dec||0),pre=el.dataset.prefix||'',suf=el.dataset.suffix||'';
+    const fmt=v=>pre+(dec?v.toFixed(dec):Math.round(v).toLocaleString())+suf;
+    if(reduce){el.textContent=fmt(to);return;}
+    const o={v:0};gsap.to(o,{v:to,duration:1.3,ease:'power2.out',onUpdate:()=>el.textContent=fmt(o.v)});
+  });
+}
+rollNums();
+
+if(reduce){document.querySelectorAll('.reveal').forEach(e=>{e.style.opacity=1;e.style.transform='none';});}
+else{gsap.to('.reveal',{opacity:1,y:0,duration:.7,ease:'power3.out',stagger:.07});}
+</script>
+</body>
+</html>

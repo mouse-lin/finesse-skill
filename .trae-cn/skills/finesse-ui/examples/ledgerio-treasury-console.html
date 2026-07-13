@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subhub — Subscription Analytics Console</title>
+<style>
+:root{
+  --page:#dee2d4; --bg:#eef1e6; --card:#ffffff; --ink:#161710; --ink-2:#63665a; --ink-3:#9a9c8e;
+  --line:#e7e9dd; --line-2:#f0f2e7;
+  --mint:#b6f6c4; --mint-d:#0f8a3e; --mint-ink:#0c3d1f;
+  --lav:#cdc0f7; --lav-d:#5b3fd6; --lav-ink:#2b1c66;
+  --black:#15140f;
+  --r-lg:32px; --r:22px; --r-sm:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--page);color:var(--ink);overflow-x:hidden;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.panel{max-width:1440px;margin:26px auto;background:var(--bg);border-radius:var(--r-lg);padding:26px 30px 38px;
+  box-shadow:0 40px 90px -50px rgba(20,24,20,.35)}
+
+/* topbar */
+.topbar{display:flex;align-items:center;gap:14px;margin-bottom:30px;flex-wrap:wrap}
+.logo-mark{width:42px;height:42px;border-radius:12px;background:var(--black);display:grid;place-items:center;flex-shrink:0}
+.logo-mark svg{width:19px;height:19px}
+.brandline{line-height:1.15;margin-right:8px}
+.brandline .word{font-size:18px;font-weight:800;letter-spacing:-.02em}
+.brandline .lab{font-size:11px;color:var(--ink-3);font-weight:600;letter-spacing:.02em}
+.nav{display:flex;align-items:center;gap:22px;margin-right:auto;font-size:13.5px;font-weight:650;color:var(--ink-3)}
+.nav a{text-decoration:none;color:inherit}
+.nav a.on{color:var(--ink)}
+.search{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:14px;padding:11px 16px;
+  color:var(--ink-3);font-size:13px;min-width:220px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.search svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0}
+.icon-circle{width:40px;height:40px;border-radius:50%;background:var(--card);display:grid;place-items:center;
+  box-shadow:0 1px 3px rgba(0,0,0,.05);cursor:pointer;flex-shrink:0}
+.icon-circle svg{width:16px;height:16px;stroke:var(--ink-2);fill:none;stroke-width:1.8}
+.acct{display:flex;align-items:center;gap:9px}
+.acct img{width:40px;height:40px;border-radius:50%;object-fit:cover;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.acct .nm{font-size:13px;font-weight:700}
+.acct .role{font-size:11px;color:var(--ink-3)}
+
+/* hero */
+.hero{display:flex;align-items:center;gap:16px;margin-bottom:26px;flex-wrap:wrap}
+.hero h1{font-size:25px;font-weight:800;letter-spacing:-.02em;margin-right:auto}
+.hero h1 span{color:var(--ink-3);font-weight:500}
+.range{display:inline-flex;background:var(--card);border-radius:30px;padding:4px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.range button{border:0;background:transparent;padding:9px 16px;border-radius:24px;font-size:12.5px;font-weight:700;
+  color:var(--ink-2);cursor:pointer;font-family:inherit}
+.range button.on{background:var(--black);color:#fff}
+.pill-cta{display:inline-flex;align-items:center;gap:8px;background:var(--black);color:#fff;border:0;
+  border-radius:30px;padding:12px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.pill-cta svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2.2}
+
+/* generic */
+.card{background:var(--card);border-radius:var(--r);padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.reveal{opacity:0;transform:translateY(16px)}
+.lab-sm{font-size:11.5px;color:var(--ink-3);font-weight:650;letter-spacing:.01em}
+.dd{display:inline-flex;align-items:center;gap:5px;background:var(--bg);border-radius:9px;padding:6px 10px;
+  font-size:11px;font-weight:650;color:var(--ink-2);cursor:pointer}
+.dd svg{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2.6}
+
+/* bento layout */
+.bento{display:grid;grid-template-columns:1fr 1.35fr;gap:20px;margin-bottom:20px}
+.col{display:flex;flex-direction:column;gap:20px}
+.forecast-row{display:grid;grid-template-columns:1.35fr 1fr;gap:20px}
+.price-stack{display:flex;flex-direction:column;gap:20px}
+
+/* pulse (dark) card */
+.pulse{background:linear-gradient(155deg,#1c1d15,var(--black) 65%);color:#fff;position:relative;overflow:hidden}
+.pulse::before{content:'';position:absolute;inset:0;background:
+  radial-gradient(280px 200px at 92% -10%,rgba(182,246,196,.18),transparent 60%);pointer-events:none}
+.pulse .ph{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1;margin-bottom:22px}
+.pulse .ph b{font-size:16px;font-weight:750}
+.pulse .ph .sub{font-size:11.5px;color:rgba(255,255,255,.5);margin-top:2px}
+.pulse .pdd{background:rgba(255,255,255,.1);color:#fff}
+.bars{display:flex;align-items:flex-end;gap:16px;height:150px;position:relative;z-index:1;margin-bottom:8px}
+.barcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;height:100%;justify-content:flex-end}
+.barcol .stack{width:100%;max-width:64px;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;
+  transform:scaleY(0);transform-origin:bottom}
+.barcol .stack .seg-a{background:var(--mint)}
+.barcol .stack .seg-b{background:var(--lav)}
+.barcol .mo{font-size:11.5px;color:rgba(255,255,255,.55);font-weight:650}
+.pulse .foot{display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:1;
+  border-top:1px solid rgba(255,255,255,.1);padding-top:16px}
+.pulse .tvl b{font-size:26px;font-weight:800;display:block}
+.pulse .tvl span{font-size:11px;color:rgba(255,255,255,.5)}
+.pulse .chg{font-size:12px;font-weight:750;color:var(--mint);display:flex;align-items:center;gap:4px}
+.pulse .chg svg{width:11px;height:11px}
+
+/* balance (mint) gauge card */
+.balance{background:var(--mint);color:var(--mint-ink);display:flex;flex-direction:column}
+.balance .bh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.balance .bh .lab-sm{color:rgba(12,61,31,.6)}
+.balance .arrows{display:flex;gap:6px}
+.balance .arrows button{width:28px;height:28px;border-radius:50%;border:1px solid rgba(12,61,31,.18);background:transparent;
+  display:grid;place-items:center;cursor:pointer}
+.balance .arrows button svg{width:12px;height:12px;stroke:var(--mint-ink);fill:none;stroke-width:2.4}
+.gauge-wrap{position:relative;width:180px;height:180px;margin:6px auto 2px}
+.gauge-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+.gauge-wrap .mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.gauge-wrap .mid b{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.gauge-wrap .mid span{font-size:10.5px;color:rgba(12,61,31,.65);margin-top:2px;max-width:110px}
+.balance .bstat{display:flex;justify-content:center;align-items:center;gap:6px;font-size:12.5px;font-weight:700;margin-top:4px}
+.balance .bstat svg{width:12px;height:12px;stroke:var(--mint-d);fill:none;stroke-width:2.6}
+
+/* recent transactions */
+.tx .th{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.tx-icon{width:44px;height:44px;border-radius:50%;background:var(--black);display:grid;place-items:center;flex-shrink:0}
+.tx-icon svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:1.8}
+.tx .th b{font-size:15px;font-weight:750;display:block}
+.tx .th span{font-size:11.5px;color:var(--ink-3)}
+.tx .avatars{display:flex;margin-left:auto}
+.tx .avatars img{width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid var(--card);margin-left:-8px}
+.tx-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line-2)}
+.tx-row:last-child{border-bottom:0;padding-bottom:0}
+.tx-row img{width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.tx-row .who{flex:1;min-width:0}
+.tx-row .who b{font-size:13px;font-weight:700;display:block}
+.tx-row .who span{font-size:11px;color:var(--ink-3)}
+.tx-row .amt{text-align:right}
+.tx-row .amt b{font-size:13px;font-weight:750;display:block}
+.tx-row .amt b.pos{color:var(--mint-d)}
+.tx-row .amt b.neg{color:#b5432f}
+.tx-row .amt span{font-size:10.5px;color:var(--ink-3)}
+.tx-row .dot{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex-shrink:0}
+.tx-row .dot svg{width:15px;height:15px;stroke-width:2}
+
+/* market forecast timeline */
+.forecast .fh{font-size:15px;font-weight:750;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.forecast .fh .fico{width:30px;height:30px;border-radius:50%;background:var(--mint);display:grid;place-items:center}
+.forecast .fh .fico svg{width:14px;height:14px;stroke:var(--mint-ink);fill:none;stroke-width:2.2}
+.timeline{position:relative;padding-left:26px}
+.timeline::before{content:'';position:absolute;left:5px;top:6px;bottom:6px;width:1.5px;background:var(--line)}
+.tl-item{position:relative;padding-bottom:22px}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{content:'';position:absolute;left:-26px;top:2px;width:11px;height:11px;border-radius:50%;
+  background:var(--card);border:2px solid var(--ink-3)}
+.tl-item.on::before{background:var(--black);border-color:var(--black)}
+.tl-item b{font-size:13px;font-weight:750;display:block;margin-bottom:2px}
+.tl-item span{font-size:12px;color:var(--ink-3);line-height:1.4}
+
+/* price / cap cards */
+.pricecard{position:relative;overflow:hidden}
+.pricecard .pc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.pricecard .pc-top span.lab-sm{opacity:.7}
+.pricecard .arrow-badge{width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.08);display:grid;place-items:center}
+.pricecard .arrow-badge svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.6}
+.pricecard .pval{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+.mint-price{background:var(--mint);color:var(--mint-ink)}
+.mint-price .arrow-badge{color:var(--mint-ink)}
+.progress-h{height:10px;border-radius:20px;background:rgba(12,61,31,.14);overflow:hidden;position:relative}
+.progress-h i{display:block;height:100%;background:var(--mint-ink);border-radius:20px;transform-origin:left;transform:scaleX(0)}
+.pchg{font-size:11.5px;font-weight:750;margin-top:8px}
+.lav-cap{background:var(--lav);color:var(--lav-ink)}
+.lav-cap .arrow-badge{color:var(--lav-ink)}
+.lav-cap svg.spark{width:100%;height:44px;display:block;margin-top:4px}
+
+/* allocation table */
+.alloc{margin-top:4px}
+.alloc-h{display:flex;align-items:center;margin-bottom:16px}
+.alloc-h h3{font-size:15px;font-weight:750;margin-right:auto}
+.alloc-h .dd{background:var(--bg)}
+.alloc-row{display:grid;grid-template-columns:2.1fr 1fr 1fr .9fr 1.3fr;gap:14px;align-items:center;
+  padding:13px 0;border-bottom:1px solid var(--line-2);font-size:13px}
+.alloc-row:last-child{border-bottom:0}
+.alloc-row.head{color:var(--ink-3);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding-bottom:10px}
+.asset{display:flex;align-items:center;gap:12px}
+.coin{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:14px;font-weight:800;color:#fff}
+.asset b{font-weight:750;display:block;font-size:13.5px}
+.asset span{font-size:11px;color:var(--ink-3)}
+.chg-cell{font-weight:750}
+.chg-cell.pos{color:var(--mint-d)}
+.chg-cell.neg{color:#b5432f}
+.alloc-bar{height:8px;border-radius:20px;background:var(--line-2);overflow:hidden}
+.alloc-bar i{display:block;height:100%;border-radius:20px;transform-origin:left;transform:scaleX(0)}
+
+.footnote{margin-top:26px;font-size:11px;color:var(--ink-3);text-align:center}
+
+@media (max-width:1140px){
+  .bento{grid-template-columns:1fr}
+  .forecast-row{grid-template-columns:1fr}
+  .alloc-row{grid-template-columns:1.6fr 1fr 1fr .8fr}
+  .alloc-row span.hide-sm{display:none}
+}
+@media (max-width:700px){
+  .topbar{flex-wrap:wrap}
+  .nav{order:5;width:100%}
+  .search{min-width:100%;order:6}
+  .hero h1{font-size:20px}
+  .alloc-row{grid-template-columns:1.4fr 1fr 1fr}
+  .alloc-row .hide-xs{display:none}
+  .panel{padding:18px 16px 26px;border-radius:24px}
+}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1!important;transform:none!important}
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="panel">
+
+  <div class="topbar">
+    <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg></div>
+    <div class="brandline"><div class="word">Subhub</div><div class="lab">Subscription Analytics</div></div>
+    <div class="nav">
+      <a class="on" href="#">Overview</a>
+      <a href="#">Plans</a>
+      <a href="#">Customers</a>
+      <a href="#">Reports</a>
+    </div>
+    <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Search customers, plans…</div>
+    <div class="icon-circle"><svg viewBox="0 0 24 24" stroke="currentColor"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg></div>
+    <div class="acct"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%230f8a3e'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3ESW%3C/text%3E%3C/svg%3E" alt="user"><div><div class="nm">Sasha Wren</div><div class="role">Revenue Lead</div></div></div>
+  </div>
+
+  <div class="hero">
+    <h1>Good afternoon, Sasha <span>— your MRR is up 6.2% this week</span></h1>
+    <div class="range"><button class="on">30D</button><button>90D</button><button>1Y</button></div>
+    <button class="pill-cta"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add Plan</button>
+  </div>
+
+  <section class="bento">
+    <div class="col">
+      <div class="card pulse reveal">
+        <div class="ph">
+          <div><b>Revenue Pulse</b><div class="sub">Updated 4 minutes ago</div></div>
+          <span class="dd pdd">Monthly<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="bars" id="bars">
+          <div class="barcol"><div class="stack" style="height:52%"><div class="seg-a" style="height:60%"></div><div class="seg-b" style="height:40%"></div></div><span class="mo">Jul</span></div>
+          <div class="barcol"><div class="stack" style="height:38%"><div class="seg-a" style="height:55%"></div><div class="seg-b" style="height:45%"></div></div><span class="mo">Aug</span></div>
+          <div class="barcol"><div class="stack" style="height:70%"><div class="seg-a" style="height:65%"></div><div class="seg-b" style="height:35%"></div></div><span class="mo">Sep</span></div>
+          <div class="barcol"><div class="stack" style="height:46%"><div class="seg-a" style="height:50%"></div><div class="seg-b" style="height:50%"></div></div><span class="mo">Oct</span></div>
+          <div class="barcol"><div class="stack" style="height:100%"><div class="seg-a" style="height:68%"></div><div class="seg-b" style="height:32%"></div></div><span class="mo">Nov</span></div>
+        </div>
+        <div class="foot">
+          <div class="tvl"><b class="num" data-to="20486" data-prefix="$">0</b><span>Total MRR</span></div>
+          <div class="chg"><svg viewBox="0 0 24 24" stroke="var(--mint)" fill="none" stroke-width="2.4"><path d="M5 12l5-5 4 4 5-7"/></svg>+18.4%</div>
+        </div>
+      </div>
+
+      <div class="card balance reveal">
+        <div class="bh"><span class="lab-sm">Goal Attainment</span>
+          <div class="arrows"><button id="balPrev"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button><button id="balNext"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
+        </div>
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 160 160">
+            <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(12,61,31,.16)" stroke-width="15"/>
+            <circle id="balArc" cx="80" cy="80" r="68" fill="none" stroke="var(--mint-ink)" stroke-width="15" stroke-linecap="round"/>
+          </svg>
+          <div class="mid"><b class="num" id="balVal">$128K</b><span id="balLab">vs $112K target</span></div>
+        </div>
+        <div class="bstat"><svg viewBox="0 0 24 24"><path d="M5 12l5-5 4 4 5-7"/></svg><span id="balChg">+14.0%</span></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card tx reveal">
+        <div class="th">
+          <div class="tx-icon"><svg viewBox="0 0 24 24"><path d="M7 8l-4 4 4 4M17 8l4 4-4 4M14 4l-4 16"/></svg></div>
+          <div><b>Recent Activity</b><span>Across all plans</span></div>
+          <div class="avatars"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%230f8a3e'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3EAK%3C/text%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%235b3fd6'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3EEN%3C/text%3E%3C/svg%3E" alt=""><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23e0a33a'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3EPK%3C/text%3E%3C/svg%3E" alt=""></div>
+        </div>
+        <div class="tx-row">
+          <div class="dot" style="background:var(--mint)"><svg viewBox="0 0 24 24" stroke="var(--mint-ink)" fill="none"><path d="M12 19V5M5 12l7-7 7 7"/></svg></div>
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%230f8a3e'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3EAK%3C/text%3E%3C/svg%3E" alt="">
+          <div class="who"><b>New signups · Stripe sync</b><span>Batch #A203 · 12 min ago</span></div>
+          <div class="amt"><b class="pos">+18 accounts</b><span>Auto-synced</span></div>
+        </div>
+        <div class="tx-row">
+          <div class="dot" style="background:var(--lav)"><svg viewBox="0 0 24 24" stroke="var(--lav-ink)" fill="none"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%235b3fd6'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3EEN%3C/text%3E%3C/svg%3E" alt="">
+          <div class="who"><b>Churn recorded · Enterprise</b><span>Cohort #B117 · 48 min ago</span></div>
+          <div class="amt"><b class="neg">−1 account churned</b><span>MRR −$480</span></div>
+        </div>
+        <div class="tx-row">
+          <div class="dot" style="background:#f1efe3"><svg viewBox="0 0 24 24" stroke="var(--ink-2)" fill="none"><path d="M17 8l-5-5-5 5M12 3v13"/></svg></div>
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23e0a33a'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3EPK%3C/text%3E%3C/svg%3E" alt="">
+          <div class="who"><b>Plan upgraded · Acme Co</b><span>Expansion · 2h ago</span></div>
+          <div class="amt"><b class="pos">+$340 MRR</b><span>Top account</span></div>
+        </div>
+        <div class="tx-row">
+          <div class="dot" style="background:var(--mint)"><svg viewBox="0 0 24 24" stroke="var(--mint-ink)" fill="none"><path d="M12 19V5M5 12l7-7 7 7"/></svg></div>
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23627eea'/%3E%3Ctext x='40' y='52' font-family='sans-serif' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3EMB%3C/text%3E%3C/svg%3E" alt="">
+          <div class="who"><b>Plan switched · Pro → Business</b><span>Account #A203 · 5h ago</span></div>
+          <div class="amt"><b class="pos">+8 upgrades</b><span>Auto-applied</span></div>
+        </div>
+      </div>
+
+      <div class="forecast-row">
+        <div class="card forecast reveal">
+          <div class="fh"><span class="fico"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/></svg></span>Product Roadmap</div>
+          <div class="timeline">
+            <div class="tl-item"><b>2024</b><span>Usage-based billing launches for all plans.</span></div>
+            <div class="tl-item"><b>2025</b><span>Annual plans reach 40% of total revenue.</span></div>
+            <div class="tl-item"><b>2026</b><span>ARR crosses $10M across 5 regions.</span></div>
+            <div class="tl-item on"><b>2027</b><span>Predictive churn scoring becomes standard.</span></div>
+          </div>
+        </div>
+        <div class="price-stack">
+          <div class="card pricecard mint-price reveal">
+            <div class="pc-top"><span class="lab-sm">Churn Rate</span><span class="arrow-badge"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M7 7h10v10"/></svg></span></div>
+            <div class="pval num" data-to="4.2" data-dec="1" data-suffix="%">0.0%</div>
+            <div class="progress-h"><i id="btcBar"></i></div>
+            <div class="pchg">−28.2% lower vs past 90 days</div>
+          </div>
+          <div class="card pricecard lav-cap reveal">
+            <div class="pc-top"><span class="lab-sm">Net Retention</span><span class="arrow-badge"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M7 7h10v10"/></svg></span></div>
+            <div class="pval">112%</div>
+            <svg class="spark" id="sparkCap" viewBox="0 0 200 44" preserveAspectRatio="none"></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="card alloc reveal">
+    <div class="alloc-h"><h3>Revenue by Plan</h3><span class="dd">This month<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></div>
+    <div class="alloc-row head">
+      <span>Plan</span><span>MRR</span><span class="hide-sm">ARPA</span><span>24h</span><span class="hide-xs">Share</span>
+    </div>
+    <div class="alloc-row">
+      <div class="asset"><span class="coin" style="background:#f2a900">S</span><div><b>Starter</b><span>Self-serve</span></div></div>
+      <span class="num">$18.4K</span><span class="num hide-sm">$29</span><span class="chg-cell pos num">+3.1%</span>
+      <div class="alloc-bar"><i data-w="42" style="background:#f2a900"></i></div>
+    </div>
+    <div class="alloc-row">
+      <div class="asset"><span class="coin" style="background:#627eea">P</span><div><b>Pro</b><span>Growing teams</span></div></div>
+      <span class="num">$52.1K</span><span class="num hide-sm">$79</span><span class="chg-cell pos num">+5.4%</span>
+      <div class="alloc-bar"><i data-w="34" style="background:#627eea"></i></div>
+    </div>
+    <div class="alloc-row">
+      <div class="asset"><span class="coin" style="background:#14a672">B</span><div><b>Business</b><span>Scale-ups</span></div></div>
+      <span class="num">$34.0K</span><span class="num hide-sm">$149</span><span class="chg-cell pos num">+11.8%</span>
+      <div class="alloc-bar"><i data-w="16" style="background:#14a672"></i></div>
+    </div>
+    <div class="alloc-row">
+      <div class="asset"><span class="coin" style="background:#a855f7">E</span><div><b>Enterprise</b><span>Custom</span></div></div>
+      <span class="num">$41.2K</span><span class="num hide-sm">$399</span><span class="chg-cell neg num">−0.4%</span>
+      <div class="alloc-bar"><i data-w="8" style="background:#a855f7"></i></div>
+    </div>
+  </div>
+
+  <div class="footnote">Demo dashboard · illustrative data · built with the finesse craft system</div>
+</div>
+<script src="lib/gsap.min.js"></script>
+<script>
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* bicolor bar chart */
+(function(){
+  const stacks=document.querySelectorAll('.stack');
+  if(reduce){stacks.forEach(s=>s.style.transform='scaleY(1)');}
+  else{gsap.to(stacks,{scaleY:1,duration:.9,ease:'power3.out',stagger:.08,delay:.3});}
+})();
+
+/* circular balance gauge with prev/next cycle */
+(function(){
+  const arc=document.getElementById('balArc');
+  const C=2*Math.PI*68; arc.style.strokeDasharray=C;
+  const views=[
+    {frac:.78,val:'$128K',lab:'vs $112K target',chg:'+14.0%'},
+    {frac:.61,val:'$96K',lab:'from existing plans',chg:'+6.3%'},
+    {frac:.44,val:'$71K',lab:'from new signups',chg:'+9.7%'}
+  ];
+  let idx=0;
+  function paint(animate){
+    const v=views[idx];
+    const off=C*(1-v.frac);
+    if(reduce||!animate){arc.style.strokeDashoffset=off;}
+    else{gsap.to(arc,{strokeDashoffset:off,duration:1.1,ease:'power2.out'});}
+    document.getElementById('balVal').textContent=v.val;
+    document.getElementById('balLab').textContent=v.lab;
+    document.getElementById('balChg').textContent=v.chg;
+  }
+  arc.style.strokeDashoffset=C;
+  paint(true);
+  document.getElementById('balNext').addEventListener('click',()=>{idx=(idx+1)%views.length;paint(true);});
+  document.getElementById('balPrev').addEventListener('click',()=>{idx=(idx-1+views.length)%views.length;paint(true);});
+})();
+
+/* sparkline helper */
+function drawSpark(id,vals,color){
+  const svg=document.getElementById(id);
+  const vb=svg.viewBox.baseVal; const W=vb.width,H=vb.height,pad=2;
+  const max=Math.max(...vals),min=Math.min(...vals);
+  const X=i=>pad+i*((W-pad*2)/(vals.length-1));
+  const Y=v=>H-pad-((v-min)/((max-min)||1))*(H-pad*2);
+  const d=vals.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(' ');
+  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d',d);path.setAttribute('fill','none');path.setAttribute('stroke',color);
+  path.setAttribute('stroke-width','2.4');path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');
+  svg.appendChild(path);
+  const L=path.getTotalLength();
+  path.style.strokeDasharray=L;
+  path.style.strokeDashoffset=reduce?0:L;
+  if(!reduce){gsap.to(path,{strokeDashoffset:0,duration:1.3,ease:'power2.out',delay:.5});}
+}
+drawSpark('sparkCap',[820,860,910,880,960,1020,1080,1160,1230,1300],'#2b1c66');
+
+/* response-time progress bar */
+(function(){
+  const bar=document.getElementById('btcBar');
+  if(reduce){bar.style.transform='scaleX(.72)';}
+  else{gsap.to(bar,{scaleX:.72,duration:1.1,ease:'power2.out',delay:.4});}
+})();
+
+/* allocation bars */
+(function(){
+  const bars=document.querySelectorAll('.alloc-bar i');
+  bars.forEach((b,i)=>{
+    const w=(+b.dataset.w)/50;
+    if(reduce){b.style.transform='scaleX('+w+')';}
+    else{gsap.to(b,{scaleX:w,duration:.9,ease:'power2.out',delay:.5+i*.08});}
+  });
+})();
+
+/* number roll-ups */
+function rollNums(){
+  document.querySelectorAll('.num[data-to]').forEach(el=>{
+    const to=parseFloat(el.dataset.to),dec=+(el.dataset.dec||0),pre=el.dataset.prefix||'',suf=el.dataset.suffix||'';
+    const fmt=v=>pre+(dec?v.toFixed(dec):Math.round(v).toLocaleString())+suf;
+    if(reduce){el.textContent=fmt(to);return;}
+    const o={v:0};gsap.to(o,{v:to,duration:1.3,ease:'power2.out',onUpdate:()=>el.textContent=fmt(o.v)});
+  });
+}
+rollNums();
+
+if(reduce){document.querySelectorAll('.reveal').forEach(e=>{e.style.opacity=1;e.style.transform='none';});}
+else{gsap.to('.reveal',{opacity:1,y:0,duration:.7,ease:'power3.out',stagger:.07});}
+</script>
+</body>
+</html>

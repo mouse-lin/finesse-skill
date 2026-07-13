@@ -54,6 +54,8 @@ Product register (component system · data viz · information architecture):
 |:---:|:---:|
 | ![Buildly — AI growth intelligence, canonical sidebar shell + area-chart draw-in + donut](assets/examples/buildly.jpg) | ![Pulsegrid — infrastructure monitoring, glowing sparklines + premium custom slider](assets/examples/stakent.jpg) |
 | ![ACRU — team productivity, canonical sidebar shell + hover-tooltip bar chart](assets/examples/acru.jpg) | ![PawCare+ — pet health companion, real-photo hotspot annotations + theme switcher](assets/examples/pawcare.jpg) |
+| ![Nodeflux — API console, floating panel + true bento (2.15fr 1.7fr 1fr…) + concentric usage rings](assets/examples/nodeflux.jpg) | ![Inkline — publishing CMS, top-nav triptych + browser-preview hotspot annotations](assets/examples/inkline.jpg) |
+| ![Huddle — team workspace, top-nav bento + colored task cards + multi-arc donut + voice waveform](assets/examples/huddle.jpg) | ![Threadline — support operations, floating panel + asymmetric bento + circular gauge + allocation table](assets/examples/ledgerio.jpg) |
 
 ## Installation & Tool Support
 

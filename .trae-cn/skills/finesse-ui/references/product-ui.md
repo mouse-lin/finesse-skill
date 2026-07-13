@@ -2,13 +2,62 @@
 
 The **product** register: design SERVES the product. Dashboards, admin panels, analytics, data tables, app shells, settings. Optimize for **clarity · density · usability** — fast task completion, no errors. Spectacle is not the goal here; **craft still is.**
 
-> This path still inherits the **substrate** (`design-dna.md`: tinted neutrals, no pure #fff/#000, translucent borders, OKLCH, dark-mode parity) and the **cheapness blacklist** (`anti-cheap.md`). A dashboard can be dense and functional without looking cheap. SPECTACLE dial = 1–4; DENSITY = 6–9; motion is feedback only.
+> A dashboard is a **different design language from a brand page**, not a brand page with charts. It inherits only the **universal craft floor** from `design-dna.md` (tinted neutrals, no pure `#fff`/`#000`, translucent/hairline borders, tinted shadows, contrast floors, OKLCH, dark-mode parity) — and it does **NOT** inherit the brand-page moves: **no grain, no vignette, no `clamp()` hero type, no dark-by-default, no hero engine.** The premium here comes from §0's product substrate, not from brand fireworks. SPECTACLE dial = 1–4; DENSITY = 6–9; motion is feedback only. Still bound by the **cheapness blacklist** (`anti-cheap.md`).
+
+---
+
+## 0. The Product Substrate — what actually makes a dashboard look premium
+
+Distilled from 10 shipped showcase dashboards. This is the layer that separates them from the default **flat white card + hard grey border + generic blue/green** admin look. Lay this *before* filling in tables/charts/forms.
+
+> **Read the shipped code first — non-optional; skipping it is how dashboards come out generic.** These examples ARE our own showcase-gallery dashboards (`showcase/gallery.html`) bundled into `../examples/`. Open the closest one, study how the substrate / cards / KPI tiles / charts are actually built, then **lift patterns, not whole files** (each brief still gets its own accent + soul):
+> - `acru-financial-dashboard.html` — **light**, canonical sidebar; stacked-bar + hover tooltip, half-ring gauge, credit-card widget.
+> - `buildly-growth-dashboard.html` / `stakent-monitoring-dashboard.html` — **dark**, canonical sidebar; line/area draw-in, glowing sparklines, five KPI roll-up counters, slider tiers.
+> - `pawcare-adaptive-health.html` — **floating rounded panel**; hotspot pins on a real photo, accent-picker + dark-mode toggle, hand-built ECG / ring marks.
+>
+> Full index + a per-file "what to study" table: `../examples/EXAMPLES.md`. **Match the example to the morphology you're building** (sidebar / floating-panel / bento / triptych — §1) and to light-vs-dark.
+
+### 0.1 Surfaces & cards (the #1 premium signal in product UI)
+
+- **The page is never pure `#fff`/`#000`** — it's an off-tint neutral, tinted toward the brand hue. Light dashboards sit on a tinted paper (`#eef0ec` sage · `#f3f2ef` ivory · `#eef1fb` lilac · `#e9e9ec` cool-grey · `#d8f1f6` aqua); dark ones on a tinted near-black (`#08080a` · `#0a0a10`). A flat `#ffffff` page background is the first tell of a cheap dashboard.
+- **Card recipe:** `background:#fff` (light) or a tinted-dark panel (`#141417`/`#13131c`); `border-radius:16–22px` (mode ≈ 20); `padding:18–22px`; and **either** a hairline border `1px solid` at 3–8% alpha (`rgba(255,255,255,.07)` dark · `#e2e2e7`-class 4–6%-black light) **or no border at all**, letting a shadow do the separation. **Never a hard `1px solid #ccc/#ddd/#333` box** — that single line is what reads cheap.
+- **Whisper shadow, not a hard edge.** The signature is a near-invisible ambient: `box-shadow: 0 1px 3px rgba(0,0,0,.03–.06)`, **tinted toward the ink** (`rgba(30,20,70,…)` on a violet page, `rgba(19,61,74,…)` on a teal page), never pure black. Big shadows are **reserved for floating wrappers and modals**, not sprinkled on every card.
+- **Radius tiers (lock them):** card `--r: 16–22px` · small controls `--r-sm: 11–15px` · outer floating shell `--r-lg: 32px`.
+- **The floating-panel move** (consoles/ops tools that want a product-y frame): the whole dashboard sits on one raised panel over a **darker** outer page — a two-level neutral pair (`--page` darker `#e9e6dd`/`#dee2d4`/`#e6e9df`, `--bg` lighter panel). `max-width:~1440–1480px; margin:26px auto; border-radius:32px; padding:26px 30px 38px; box-shadow:0 40px 90px -50px rgba(20,24,20,.35)` — the **negative spread** makes it tight and cinematic, not a puffy drop shadow. Add a faint brand-tinted corner glow (`radial-gradient(280px 200px at 90% -10%, rgba(accent,.18), transparent 60%)`).
+- **Accent-glow shadows only where earned** — `0 8px 24px rgba(accent,.4)` belongs on the **primary CTA / key card**, never on every surface. **Focus rings** are soft tinted (`0 0 0 3px var(--accent-soft)`), not the browser default outline.
+
+### 0.2 Color — a distinct branded palette, never the generic dashboard triad
+
+- **Pick ONE branded accent** (or a duotone pair) and lock it, exactly like the brand register — just restrained (SPECTACLE low). The reflex **`#3B82F6` blue + `#22C55E` green + `#F97316` orange** corporate triad is the dashboard equivalent of AI-purple: predictable from the word "dashboard" alone → banned as an identity (`anti-cheap.md` §Charts, §0 Two-Altitude Check). Every one of the 10 showcase dashboards uses a *distinct* pair, none the generic triad: **warm-orange · violet · lime-green · ink+amber · indigo+coral · teal+amber · sky-aqua · royal-purple+amber · mint+lavender · teal+coral.**
+- **Tint the substrate to the brand** — sage paper for a green finance app, lilac for an indigo one, aqua for a blue one, warm-grey for a teal one. The *page itself* carries the brand, not just one button.
+- **Reinforce the accent beyond a button:** soft-tint chips (`--accent-soft`, `-l` variants at 8–20% alpha) on icons/badges, and the corner glow on a floating panel.
+- **Semantic up/down green-red are functional, kept separate** from the brand accent — don't let status colors become the page's identity.
+- **Domain palette starting points** live in `design-dna.md` §6 (Trust SaaS, Analytics, Financial dark, Developer-tool, Clinical calm, Authority navy) — pick by product domain, then tint the substrate to it. Not every dashboard is Trust-SaaS blue.
+
+### 0.3 KPI / stat tile — the anatomy (so a tile reads as designed, not a number in a box)
+
+Top → bottom, consistent across all 10:
+1. **Top row:** a tinted **icon chip** (`30–36px`, `border-radius:9–10px`, bg = `panel-2`/`accent-soft`) **+** a **delta/status chip** (`font-size:11–12px; font-weight:600–700`, green/red or a badge).
+2. **Label:** `font-size:11.5–12.5px; color:var(--ink-3)`, optionally uppercase `letter-spacing:.03–.05em`.
+3. **Big number:** `font-size:22–30px; font-weight:700–800`, **always** `font-variant-numeric:tabular-nums; letter-spacing:-.02em`, counting up from 0 on load.
+4. **Optional:** unit in `<small>`, a "prev" subtext, or a **30–70px inline sparkline** (SVG polyline, stroke-dashoffset draw-on).
+
+Don't ship a uniform `repeat(6,1fr)` row of identical tiles — vary the grid (see §1 bento) and mix tile types.
+
+### 0.4 Motion — feedback, not spectacle (SPECTACLE 1–4)
+
+Three moves cover a dashboard, all **above-the-fold on load** (no ScrollTrigger gating the first screen) and each **paired with a reduced-motion terminal state** (`chart-crafting.md` §6):
+- **Reveal stagger** — `.reveal{opacity:0; transform:translateY(16px)}` → one `gsap.to('.reveal',{opacity:1,y:0,stagger:.06–.08})`, whose `onStart` kicks off the counters and chart draw-ins so they move *with* the cards.
+- **Number roll-up** — counters tween 0 → target, formatted in `onUpdate`.
+- **Chart draw-on** — line stroke-dashoffset, bar/ring grow.
+
+No bounce/elastic, no decorative motion that conveys no state. These use **GSAP** — see `chart-crafting.md` §6 for how to actually load it (self-host `./lib/` · CDN · npm) and the CSS-only fallback; a `gsap.*` call with no GSAP on the page silently does nothing.
 
 ---
 
 ## 1. Layout Shell & Information Architecture
 
-**Canonical shell:** sidebar (240px desktop / 60px collapsed-icons / drawer on mobile) + topbar (56–64px: breadcrumb, page actions, user menu) + content (max-width 1400px, `repeat(auto-fit, minmax(280px, 1fr))` grid).
+**Canonical shell:** sidebar (`230–250px` desktop / 60px collapsed-icons / drawer on mobile; sticky, full-height, `padding:22–24px 16–18px`) + topbar (56–64px: breadcrumb, page actions, user menu) + content (`padding:20–22px 26–28px 40px`; the column absorbs width, so a hard `max-width` is optional). Content sub-grids: a KPI row `repeat(4–5,1fr)`, a primary split `1fr 300–340px` (chart + right rail), **gap `14–18px`**.
 
 - **Nav IA:** ≤8 top-level items; group as main / config / account(pinned bottom); 24px between groups. Icon **+** label always (never icon-only). Selected state must be obvious (left bar or bg fill).
 - **Depth ≤3 levels.** Breadcrumb when depth ≥3; every crumb clickable, current crumb dimmed.
@@ -19,6 +68,14 @@ The **product** register: design SERVES the product. Dashboards, admin panels, a
 - **Floating rounded panel:** the whole dashboard sits as one card on a tinted page background — `max-width:~1440px; margin:2rem auto; border-radius:28–32px` with a soft ambient shadow (`0 40px 90px -50px`, not a hard drop shadow). Reads as a self-contained "app" rather than a bare page; works well for consoles/ops tools where the brand wants a product-y frame around the UI.
 - **Bento console:** asymmetric `fr` columns in one grid (e.g. `2.15fr 1.7fr 1fr 1fr 1fr`) mixing a hero card (API key, primary metric) with square stat tiles — suits a console with many small heterogeneous stats where a uniform KPI row would waste space on the short ones.
 - **Top pill-nav (no sidebar):** a rounded navbar with segmented pill links replaces the sidebar when IA is shallow (≤5 top sections) and mobile parity matters more than deep nesting — collapses to icon-only or hides below the tablet breakpoint rather than drawer-izing.
+- **Centered bento / triptych (top-nav, no sidebar):** `max-width:1440px; margin:0 auto; padding:22–26px 30px 44px`; content is an fr-weighted bento or a fixed-flex-fixed triptych `grid-template-columns:296px 1fr 320px; gap:16–20px; align-items:start` (the `start` gives independent, masonry-like column heights).
+
+**Bento recipe — how tile-size variation is actually coded** (the fix for "a grid of 6 identical cards"):
+1. **Uneven fractional tracks** (primary technique): `grid-template-columns: 2.15fr 1.7fr 1fr 1fr 1fr` — width encodes importance; no spans needed at desktop.
+2. **`grid-template-areas` + row span** for true bento: e.g. `"left center right" / "left products products"` — one column runs full height while another spans two.
+3. **`grid-column: 1/-1` at breakpoints** — hero/key tiles go full-width when tracks collapse.
+4. **Vary by content role, not just size:** in one row alternate a dark gradient **key/hero card**, a **multi-stat stack**, small **square utility tiles**, and a **sparkline card** — equal-size tiles still read as varied because their silhouettes differ.
+5. **One non-card centerpiece per page** breaks tile monotony: an image hero, a browser-preview mockup, a Gantt timeline, or a dark gradient key-card. A page fielding 6–10 *different* widget types never looks like a card gallery.
 
 ## 2. Data Tables
 
@@ -48,6 +105,8 @@ Pick by the question the data answers, not by what looks nice:
 | activity over days | calendar heatmap | line |
 
 **Rules:** ≤5–6 colors from an accessible palette (no pure red/green pairing — add texture/pattern too); grid lines low-contrast; data ≥3:1 contrast, labels ≥4.5:1; legend visible + interactive; tooltip on hover/tap; **no 3D, no rotated axis labels**; empty chart → "no data" message, never blank.
+
+**Bars & any hand-built chart** (the #1 dashboard failure — the barcode chart): a bar's `height = value/max` from a **zero baseline** (never `value − min`), ≤~12 **wide** columns (`max-width:48–64px`, not barcode-thin), an **x-axis label under every column**, only the fill animates. Every bar the same height, or maxed to the ceiling, means the value never reached the geometry — that's broken, not styled. Use a **line/area for trends over time**, bars only to compare categories. **Building any chart by hand (single self-contained file, no chart lib) → you MUST load `references/chart-crafting.md`** (§4 bars + the broken-bar tripwire) — this table selects the chart; that file is how you draw it without shipping a barcode.
 
 > This is the starter table for the common cases. For a dashboard with 5+ chart types, an unfamiliar data shape (funnel, gauge, network graph, forecast band, candlestick…), or an a11y-sensitive product — load `references/dataviz.md` for the full 25-type matrix, per-type accessibility grade + mandatory fallback, and library recommendations by rendering approach.
 
@@ -88,7 +147,7 @@ Reach for standard components; never reinvent affordances. Typical inventory: **
 
 Three-layer tokens: **primitive** (`--blue-600:#2563EB`, `--space-4:1rem`) → **semantic** (`--color-primary`, `--spacing-section`) → **component** (`--button-padding`, `--card-padding`).
 
-**Palette starting points** (see `design-dna.md` §6 for full table + hex): Trust SaaS (blue+orange), Financial dark (near-black+green/red), Analytics dashboard (blue+amber), Developer tool/IDE (slate+run-green), Clinical calm (cyan+health-green), Authority navy (navy+gold). Pick by product domain, not by default — not every dashboard is Trust SaaS blue+orange.
+**Palette starting points** (see `design-dna.md` §6 for full table + hex): Trust SaaS (blue+orange), Financial dark (near-black+green/red), Analytics dashboard (blue+amber), Developer tool/IDE (slate+run-green), Clinical calm (cyan+health-green), Authority navy (navy+gold). Pick by product domain, not by default — not every dashboard is Trust SaaS blue+orange. **Then apply §0.2:** lock one branded accent, tint the substrate to it, and avoid the generic blue+green+orange triad as an identity.
 
 - **Spacing:** 4px base (4/8/12/16/24/32/48). Denser than marketing. Always tokens, never hardcoded.
 - **Type scale (fixed, NOT `clamp()`):** 12 / 14 / 16 / 18 / 20 / 24px. Product users are on fixed-size screens; respond by changing columns, not font size (tables must stay aligned).
@@ -115,9 +174,12 @@ Details that separate a polished product from a rough one:
 - **Inconsistent component vocabulary** (same action, different look). → lock variants.
 - **Spinner-only loading** with layout shift. → skeletons.
 - **Color as the only signal** in charts/status. → icon/text/pattern too (full anti-pattern list in `references/dataviz.md` §5).
+- **Flat-white-card dashboard** — a pure `#fff`/`#000` page, cards outlined with a hard `1px solid #ccc/#ddd/#333`, no tinted shadow, and a generic blue+green+orange chart palette. The single most common cheap-dashboard tell. → §0 product substrate: off-tint page, hairline-or-none border, whisper **tinted** shadow, one **branded** accent, KPI-tile anatomy.
+- **Brand-page moves smuggled into a dashboard** — grain overlay, vignette, `clamp()` giant hero type, forced dark-default, or a WebGL/Three.js hero engine on an admin panel. → those are brand-register grammar (`design-dna.md`); a dashboard uses §0 instead.
 
 ## 10. Product Pre-Flight (in addition to the shared §8)
 
+- [ ] **Product substrate (§0):** off-tint page (no pure `#fff`/`#000`); cards use a hairline-or-none border + a whisper **tinted** shadow (not a hard grey box); one **branded** accent (not the generic blue+green+orange triad), substrate tinted to it; KPI tiles follow the anatomy; **no brand grain / vignette / `clamp()` hero type / hero engine** on the dashboard.
 - [ ] IA ≤3 levels, sidebar ≤8 grouped items, key info visible on first screen.
 - [ ] Tables: alignment rules, locked row density, sort/filter/pagination, empty + skeleton states.
 - [ ] Charts: type fits the question, legend + tooltip, no 3D, accessible palette; a11y grade checked + mandatory fallback shipped if Fragile/Never-primary (`references/dataviz.md` §2, §6).

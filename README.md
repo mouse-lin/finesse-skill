@@ -54,6 +54,8 @@ product 路线（组件系统 · 数据可视化 · 信息架构）：
 |:---:|:---:|
 | ![Buildly — AI 增长分析，经典侧边栏 shell + 面积图描线 + 甜甜圈](assets/examples/buildly.jpg) | ![Pulsegrid — 基础设施监控，发光 sparkline + 高级自定义滑块](assets/examples/stakent.jpg) |
 | ![ACRU — 团队效率，侧边栏经典 shell + 悬停 tooltip 柱状图](assets/examples/acru.jpg) | ![PawCare+ — 宠物健康看护，真实照片热点标注 + 主题色切换](assets/examples/pawcare.jpg) |
+| ![Nodeflux — API 控制台，浮层面板 + 真 bento（2.15fr 1.7fr 1fr…）+ 同心用量环](assets/examples/nodeflux.jpg) | ![Inkline — 内容发布 CMS，三栏 triptych + 浏览器预览热点标注](assets/examples/inkline.jpg) |
+| ![Huddle — 团队协作，顶部导航 bento + 撞色任务卡 + 多弧甜甜圈 + 语音波形](assets/examples/huddle.jpg) | ![Threadline — 客服运营，浮层面板 + 不对称 bento + 环形仪表盘 + 分配表](assets/examples/ledgerio.jpg) |
 
 ## 安装 & 工具支持
 
